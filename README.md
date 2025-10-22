@@ -31,7 +31,7 @@ Ce projet permet de **générer automatiquement des publicités créatives** à 
 📸 Upload Image → 🤖 Analyse IA → 🎨 Génération Visuelle → 📧 Envoi Email
 ```
 
-**Temps total : 30-60 secondes par image**
+**Temps pour la génération encore à estimé car dépend du model et de la machine**
 
 ## ✨ Fonctionnalités
 
@@ -85,30 +85,6 @@ Ce projet permet de **générer automatiquement des publicités créatives** à 
 │  (Gmail/SMTP)   │
 └─────────────────┘
 ```
-
-## 🔧 Prérequis
-
-### Système
-
-- **OS** : Windows 10/11, macOS, ou Linux
-- **RAM** : 16GB minimum (32GB recommandé)
-- **GPU** : Nvidia/AMD recommandé (CPU possible mais lent)
-- **Espace disque** : 15GB minimum
-
-### Logiciels
-
-| Logiciel | Version | Installation |
-|----------|---------|--------------|
-| **N8N** | ≥1.0.0 | `npm install -g n8n` |
-| **Ollama** | Latest | [ollama.com/download](https://ollama.com/download) |
-| **Node.js** | ≥18.0 | [nodejs.org](https://nodejs.org) |
-| **Python** | ≥3.8 | (optionnel, pour tests) |
-
-### APIs & Services
-
-- **Laozhang API** - [Obtenir une clé](https://laozhang.ai)
-- **Email** - Gmail OAuth2 ou serveur SMTP
-- *(Optionnel)* Slack/Discord pour notifications
 
 ## 📦 Installation
 
@@ -344,45 +320,27 @@ curl -X POST https://api.laozhang.ai/v1/generate \
 - Vérifiez les spams
 - Testez les credentials email dans N8N
 - Consultez les logs d'exécution du workflow
-
-## 🤝 Contribution
-
-Les contributions sont les bienvenues ! Voici comment participer :
-
-1. **Fork** le projet
-2. **Créez** votre branche (`git checkout -b feature/AmazingFeature`)
-3. **Committez** vos changements (`git commit -m 'Add AmazingFeature'`)
-4. **Push** vers la branche (`git push origin feature/AmazingFeature`)
-5. **Ouvrez** une Pull Request
-
-### Guidelines
-
-- Code en anglais, commentaires en français acceptés
-- Tests unitaires pour les nouvelles features
-- Documentation mise à jour
-- Respectez le style de code existant
-
+  
 ## 📄 License
 
 Ce projet est sous licence MIT. Voir le fichier [LICENSE](LICENSE) pour plus de détails.
 
 ## 👥 Auteurs
 
-- **Votre Nom** - *Développement initial* - [@votre-username](https://github.com/votre-username)
+- Tigrou - *Développement initial*
 
 ## 🙏 Remerciements
 
 - [N8N](https://n8n.io) - Plateforme d'automatisation
 - [Ollama](https://ollama.ai) - IA locale
-- [Laozhang](https://laozhang.ai) - Génération d'images
+- [Laozhang](https://laozhang.ai) - Génération d'images -- **A vérifier si version local possible pour pas de dépendance**
 - Communauté open-source
 
 ## 📞 Support
 
 - **Issues** : [GitHub Issues](https://github.com/votre-username/ai-ad-generator/issues)
 - **Discussions** : [GitHub Discussions](https://github.com/votre-username/ai-ad-generator/discussions)
-- **Email** : support@votre-domaine.com
-
+- **Email** : vdp.corentin@gmail.com
 ---
 
 <div align="center">
