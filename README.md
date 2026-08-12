@@ -1,59 +1,55 @@
-# 🎨 Générateur de Publicités IA avec N8N
+# Générateur de Publicités IA avec n8n
 
-> Automatisation complète de génération de publicités : de l'upload d'images à la livraison par email, 100% automatisé avec IA locale.
+> **🚧 Work in progress** — projet mis en pause, reprise en cours. Le pipeline d'analyse et de génération fonctionne (voir les exemples réels plus bas), mais la stack est en cours de migration vers du 100 % open source et local. Ne pas considérer les instructions d'installation comme définitives.
 
-[![N8N](https://img.shields.io/badge/N8N-Automation-EA4B71?style=for-the-badge&logo=n8n)](https://n8n.io)
-[![Ollama](https://img.shields.io/badge/Ollama-Local_AI-000000?style=for-the-badge)](https://ollama.ai)
+Automatisation de la génération de visuels publicitaires : une photo produit brute en entrée, des visuels publicitaires exploitables en sortie, livrés par email.
+
+[![n8n](https://img.shields.io/badge/n8n-Automation-EA4B71?style=for-the-badge&logo=n8n)](https://n8n.io)
+[![Ollama](https://img.shields.io/badge/Ollama-Local_AI-000000?style=for-the-badge)](https://ollama.com)
 [![License](https://img.shields.io/badge/License-MIT-green.svg?style=for-the-badge)](LICENSE)
 
-## 📋 Table des matières
+---
 
-- [Vue d'ensemble](#-vue-densemble)
-- [Fonctionnalités](#-fonctionnalités)
-- [Architecture](#-architecture)
-- [Prérequis](#-prérequis)
-- [Installation](#-installation)
-- [Configuration](#-configuration)
-- [Utilisation](#-utilisation)
-- [API et Intégrations](#-api-et-intégrations)
-- [Exemples](#-exemples)
-- [Troubleshooting](#-troubleshooting)
-- [Contribution](#-contribution)
-- [License](#-license)
+## Résultats
 
-## 🎯 Vue d'ensemble
+Photos produit brutes (packshot e-commerce, fond blanc) → visuels générés, sans retouche manuelle.
 
-Ce projet permet de **générer automatiquement des publicités créatives** à partir de simples photos de produits. L'utilisateur upload ses images via une page web, et reçoit par email des visuels publicitaires professionnels générés par IA.
+### Pringles Cheesy Cheese
 
-### Workflow complet
+| Entrée | Sortie |
+|:---:|:---:|
+| <img src="docs/images/input-pringles.jpg" width="260"/> | <img src="docs/images/output-pringles.jpg" width="260"/> |
+| Packshot catalogue | Mise en scène lifestyle, lumière chaude, contexte de consommation |
+
+### Red Bull The Peach Edition
+
+| Entrée | Sortie |
+|:---:|:---:|
+| <img src="docs/images/input-redbull.jpg" width="180"/> | <img src="docs/images/output-redbull.jpg" width="420"/> |
+| Packshot fond blanc | Fond radial signature, ingrédients mis en avant, condensation ajoutée |
+
+Le modèle conserve le packaging, la typographie et l'identité de marque, et reconstruit uniquement l'environnement.
+
+---
+
+## Vue d'ensemble
 
 ```
-📸 Upload Image → 🤖 Analyse IA → 🎨 Génération Visuelle → 📧 Envoi Email
+📸 Upload image → 🧠 Analyse produit (VLM) → 🎨 Génération visuelle → 📧 Envoi email
 ```
 
-**Temps pour la génération encore à estimé car dépend du model et de la machine**
+L'utilisateur dépose une photo produit sur une page web et reçoit par email plusieurs propositions publicitaires. Tout tourne en local : pas de clé API, pas de rate limiting, pas de données envoyées à un tiers.
 
-## ✨ Fonctionnalités
+## Fonctionnalités
 
-### 🔥 Principales
+- Upload multi-images via interface web
+- Analyse produit par modèle vision local (description, thème, palette, tagline, prompt de génération)
+- Génération de plusieurs variantes par produit
+- Email automatique avec les visuels en HD
+- 100 % local, 100 % open source
+- Support JPG, PNG, WebP
 
-- ✅ **Upload multi-images** via interface web intuitive
-- 🧠 **Analyse IA locale** avec Ollama (gratuit, privé)
-- 🎨 **Génération de 3 variantes** publicitaires par image
-- 📧 **Email automatique** avec visuels HD et concepts
-- 🔒 **100% local** - vos données restent sur vos serveurs
-- 🚀 **Sans limites** - pas de rate limiting API
-
-### 🛠️ Techniques
-
-- Validation des images via CTA spécifique
-- Extraction automatique de l'email utilisateur
-- Prompts optimisés pour l'analyse marketing
-- Templates email HTML responsive
-- Gestion d'erreurs complète
-- Support multi-formats (JPG, PNG, WebP)
-
-## 🏗️ Architecture
+## Architecture
 
 ```
 ┌─────────────────┐
@@ -63,152 +59,109 @@ Ce projet permet de **générer automatiquement des publicités créatives** à 
          │ POST /webhook
          ▼
 ┌─────────────────┐
-│   N8N Webhook   │
-│   (Validation)  │
+│   n8n Webhook   │
+│   (validation)  │
 └────────┬────────┘
          │
          ▼
-┌─────────────────┐
-│  Ollama Vision  │
-│  (llama3.2)     │
-└────────┬────────┘
-         │ JSON Analysis
+┌──────────────────────┐
+│  Ollama — Qwen3-VL   │  analyse du produit
+│  (vision, local)     │  → JSON structuré
+└────────┬─────────────┘
+         │ prompt de génération
+         ▼
+┌──────────────────────┐
+│  ComfyUI             │  génération image-to-image
+│  Qwen-Image 2.0      │  (référence = photo produit)
+└────────┬─────────────┘
+         │ N images
          ▼
 ┌─────────────────┐
-│  Laozhang API   │
-│  (Image Gen)    │
-└────────┬────────┘
-         │ 3 images
-         ▼
-┌─────────────────┐
-│  Email Service  │
-│  (Gmail/SMTP)   │
+│  Email (SMTP)   │
 └─────────────────┘
 ```
 
-## 📦 Installation
+## Stack
 
-### 1️⃣ Clone du repository
+| Rôle | Choix | Licence | VRAM (Q4/fp8) |
+|---|---|---|---|
+| Orchestration | [n8n](https://n8n.io) | Sustainable Use | — |
+| Analyse vision | [Qwen3-VL-8B](https://ollama.com) via Ollama | Apache 2.0 | ~6 Go |
+| Analyse vision (petite config) | Qwen3-VL-4B | Apache 2.0 | ~3,5 Go |
+| Génération d'image | [Qwen-Image 2.0](https://github.com/QwenLM) via ComfyUI | Apache 2.0 | ~8–12 Go |
+| Alternative génération | FLUX.2 `schnell` | Apache 2.0 | ~13 Go |
+
+> **Changement de stack.** La v1 utilisait `llama3.2-vision` pour l'analyse et l'API tierce Laozhang pour la génération — donc une clé API payante et une dépendance externe. Les deux sont remplacés : Qwen3-VL surclasse nettement llama3.2-vision en compréhension d'image, et Qwen-Image 2.0 tourne en local sous Apache 2.0, sans restriction commerciale. FLUX.2 est une alternative valable pour l'édition multi-références, mais seule la variante `schnell` est libre — la variante `dev` est non commerciale.
+
+## Prérequis
+
+- Node.js 18+ (ou Docker)
+- [Ollama](https://ollama.com/download)
+- [ComfyUI](https://github.com/comfyanonymous/ComfyUI) avec l'API activée
+- GPU ~12 Go de VRAM recommandé (les deux modèles ne tournent pas simultanément)
+
+## Installation
 
 ```bash
-git clone https://github.com/votre-username/ai-ad-generator.git
-cd ai-ad-generator
+git clone https://github.com/Cvandeput/ad-generator.git
+cd ad-generator
 ```
 
-### 2️⃣ Installation de N8N
+### n8n
 
 ```bash
-# Installation globale
-npm install -g n8n
-
-# Ou avec Docker
-docker run -it --rm \
-  --name n8n \
-  -p 5678:5678 \
-  -v ~/.n8n:/home/node/.n8n \
-  n8nio/n8n
+npm install -g n8n && n8n start
+# ou
+docker run -it --rm --name n8n -p 5678:5678 -v ~/.n8n:/home/node/.n8n n8nio/n8n
 ```
 
-### 3️⃣ Installation d'Ollama
+### Modèle vision
 
-Suivez le guide officiel : **[ollama.com/download](https://ollama.com/download)**
-
-Puis installez le modèle vision :
 ```bash
-ollama pull llama3.2-vision
+ollama pull qwen3-vl:8b     # ou qwen3-vl:4b sur petite config
+ollama serve
 ```
 
-### 4️⃣ Import du workflow N8N
+### Modèle de génération
 
-1. Démarrez N8N : `n8n start`
-2. Ouvrez `http://localhost:5678`
-3. Menu (☰) → **Import from File**
-4. Sélectionnez `n8n-workflow.json`
-5. Cliquez sur **Import**
+Installer ComfyUI, placer les poids Qwen-Image 2.0 dans `models/`, démarrer avec `--listen` pour exposer l'API sur `http://localhost:8188`.
 
-## ⚙️ Configuration
+### Import du workflow
 
-### Variables d'environnement
+n8n → menu ☰ → **Import from File** → `generateur-publicite.json`.
 
-Créez un fichier `.env` :
+## Configuration
+
+`.env` :
 
 ```env
-# N8N
 N8N_HOST=localhost
 N8N_PORT=5678
-N8N_PROTOCOL=http
 
-# Ollama
 OLLAMA_HOST=http://localhost:11434
-OLLAMA_MODEL=llama3.2-vision
+OLLAMA_MODEL=qwen3-vl:8b
 
-# Laozhang
-LAOZHANG_API_URL=https://api.laozhang.ai/v1/generate
-LAOZHANG_API_KEY=votre_cle_api_laozhang
+COMFYUI_HOST=http://localhost:8188
+COMFYUI_WORKFLOW=workflows/qwen-image-i2i.json
 
-# Email
-EMAIL_SERVICE=gmail
+EMAIL_SERVICE=smtp
 EMAIL_USER=votre.email@gmail.com
 EMAIL_FROM=Générateur Publicités <votre.email@gmail.com>
 ```
 
-### Configuration N8N
+Aucune clé API n'est nécessaire — c'est le but.
 
-#### 1. Credentials Laozhang
+**SMTP Gmail** : hôte `smtp.gmail.com`, port `587`, et un *app password*, pas le mot de passe du compte.
 
-- Node "Laozhang Generation" → Credentials
-- Type : HTTP Header Auth
-- Header : `Authorization`
-- Value : `Bearer VOTRE_CLE_API`
+**Webhook** : `http://localhost:5678/webhook/generate-ads`. Pour un accès externe, `ngrok http 5678`.
 
-#### 2. Credentials Email
+## Utilisation
 
-**Option A - Gmail OAuth2 :**
-```
-1. Google Cloud Console → Créer un projet
-2. Activer Gmail API
-3. Créer OAuth 2.0 credentials
-4. N8N → Credentials → Gmail OAuth2
-5. Suivre le flow d'authentification
-```
+1. Déployer `ad-generator.html` et y renseigner l'URL du webhook.
+2. L'utilisateur upload sa photo, saisit son email, valide.
+3. Il reçoit les visuels par email.
 
-**Option B - SMTP :**
-```
-Host: smtp.gmail.com
-Port: 587
-Username: votre.email@gmail.com
-Password: app_password (pas votre mot de passe normal)
-```
-
-#### 3. Webhook URL
-
-Une fois le workflow activé, votre webhook sera :
-```
-http://localhost:5678/webhook/generate-ads
-```
-
-Pour un accès externe (optionnel) :
-```bash
-# Avec ngrok
-ngrok http 5678
-
-# URL publique temporaire
-https://xxxx-xx-xx-xx-xx.ngrok.io/webhook/generate-ads
-```
-
-## 🚀 Utilisation
-
-### Interface Web
-
-1. **Déployez** le fichier `web/index.html` sur votre serveur
-2. **Configurez** l'URL du webhook dans le JavaScript
-3. Les utilisateurs peuvent :
-   - Uploader leurs images produits
-   - Entrer leur email
-   - Cliquer sur "Générer mes publicités"
-   - Recevoir les résultats par email
-
-### Test manuel via API
+Test manuel :
 
 ```bash
 curl -X POST http://localhost:5678/webhook/generate-ads \
@@ -216,137 +169,48 @@ curl -X POST http://localhost:5678/webhook/generate-ads \
   -d '{
     "email": "test@example.com",
     "ctaClicked": true,
-    "images": [{
-      "data": "BASE64_IMAGE_DATA",
-      "name": "produit.jpg",
-      "source": "cta_upload"
-    }]
+    "images": [{ "data": "BASE64", "name": "produit.jpg", "source": "cta_upload" }]
   }'
 ```
 
-### Test avec l'interface de test Ollama
-
-```bash
-# Ouvrez test-ollama.html dans votre navigateur
-# Glissez une image
-# Testez l'analyse avant d'envoyer au workflow complet
-```
-
-## 🔌 API et Intégrations
-
-### Format de réponse Ollama
+### Sortie de l'analyse vision
 
 ```json
 {
-  "productDescription": "Montre de luxe en acier inoxydable",
-  "adTheme": "lifestyle premium",
-  "tagline": "Le temps est votre plus bel accessoire",
-  "visualConcept": "Mise en scène minimaliste sur fond noir...",
-  "colorPalette": "Noir profond, argent métallique, touches d'or",
-  "laozahangPrompt": "Luxury watch advertisement, professional product photography..."
+  "productDescription": "Boîte de chips Pringles Cheesy Cheese, 165 g, packaging jaune",
+  "adTheme": "convivialité, apéro entre amis",
+  "tagline": "Le goût qui rassemble",
+  "visualConcept": "Boîte posée sur une table en bois, chips éparpillées, arrière-plan flou avec deux personnes",
+  "colorPalette": "Jaune saturé, brun bois, rouge Pringles",
+  "generationPrompt": "Product advertisement photography, Pringles can on wooden table..."
 }
 ```
 
-### Webhooks disponibles
+## Reste à faire
 
-| Endpoint | Méthode | Description |
-|----------|---------|-------------|
-| `/webhook/generate-ads` | POST | Upload et génération complète |
-| `/webhook/status` | GET | Statut du système |
+- [ ] Migrer les nodes de génération de Laozhang vers l'API ComfyUI
+- [ ] Workflow ComfyUI image-to-image versionné dans le repo
+- [ ] Générer N variantes en une seule passe
+- [ ] Template email HTML responsive
+- [ ] Gestion d'erreurs et retry sur timeout GPU
+- [ ] Mesurer le temps de génération réel par image
 
-### Intégrations futures
+## Troubleshooting
 
-- [ ] Zapier connector
-- [ ] Shopify plugin
-- [ ] WordPress widget
-- [ ] API REST publique
+**Ollama ne répond pas** — `ollama serve`, puis `curl http://localhost:11434/api/version`.
 
-## 📸 Exemples
+**Model not found** — `ollama list`, puis `ollama pull qwen3-vl:8b`.
 
-### Entrée : Photo produit
-![Exemple entrée](docs/images/input-example.jpg)
+**Webhook n8n muet** — vérifier que le workflow est activé (toggle en haut à droite), pas seulement sauvegardé.
 
-### Sortie : Email reçu
-![Exemple email](docs/images/email-example.jpg)
+**Génération qui échoue** — vérifier la VRAM disponible : Ollama et ComfyUI chargés simultanément saturent un GPU 12 Go. Décharger le modèle vision avant la génération.
 
-### Visuels générés
-| Variante 1 | Variante 2 | Variante 3 |
-|------------|------------|------------|
-| ![Pub 1](docs/images/ad1.jpg) | ![Pub 2](docs/images/ad2.jpg) | ![Pub 3](docs/images/ad3.jpg) |
+**Email non reçu** — vérifier les spams et l'app password SMTP.
 
-## 🐛 Troubleshooting
+## License
 
-### Ollama ne démarre pas
+MIT — voir [LICENSE](LICENSE).
 
-```bash
-# Vérifier le service
-ollama serve
+## Auteur
 
-# Tester la connexion
-curl http://localhost:11434/api/version
-```
-
-### Erreur "Model not found"
-
-```bash
-# Lister les modèles installés
-ollama list
-
-# Réinstaller le modèle
-ollama pull llama3.2-vision
-```
-
-### Webhook N8N ne répond pas
-
-1. Vérifiez que N8N tourne : `http://localhost:5678`
-2. Activez le workflow (toggle en haut à droite)
-3. Testez avec le bouton "Test workflow"
-
-### Images non générées par Laozhang
-
-- Vérifiez votre clé API
-- Consultez les logs N8N
-- Testez l'API directement :
-
-```bash
-curl -X POST https://api.laozhang.ai/v1/generate \
-  -H "Authorization: Bearer VOTRE_CLE" \
-  -H "Content-Type: application/json" \
-  -d '{"prompt": "test", "num_images": 1}'
-```
-
-### Email non reçu
-
-- Vérifiez les spams
-- Testez les credentials email dans N8N
-- Consultez les logs d'exécution du workflow
-  
-## 📄 License
-
-Ce projet est sous licence MIT. Voir le fichier [LICENSE](LICENSE) pour plus de détails.
-
-## 👥 Auteurs
-
-- Tigrou - *Développement initial*
-
-## 🙏 Remerciements
-
-- [N8N](https://n8n.io) - Plateforme d'automatisation
-- [Ollama](https://ollama.ai) - IA locale
-- [Laozhang](https://laozhang.ai) - Génération d'images -- **A vérifier si version local possible pour pas de dépendance**
-- Communauté open-source
-
-## 📞 Support
-
-- **Issues** : [GitHub Issues](https://github.com/votre-username/ai-ad-generator/issues)
-- **Discussions** : [GitHub Discussions](https://github.com/votre-username/ai-ad-generator/discussions)
-- **Email** : vdp.corentin@gmail.com
----
-
-<div align="center">
-
-**⭐ Si ce projet vous aide, n'hésitez pas à lui donner une étoile !**
-
-Made with ❤️ and 🤖
-
-</div>
+**Vandeput Corentin** — [devworks.be](https://devworks.be) · vdp.corentin@gmail.com
