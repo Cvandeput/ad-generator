@@ -1,0 +1,136 @@
+{
+  "name": "Génération Publicités IA — Nano Banana (Vertex AI)",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "generate-ads",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "name": "Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        240,
+        300
+      ],
+      "webhookId": "generate-ads"
+    },
+    {
+      "parameters": {
+        "jsCode": "const payload = $input.first().json;\nconst body = payload.body || payload;\nconst headers = payload.headers || {};\nconst expected = $env.WEBHOOK_TOKEN;\nif (expected && headers['x-webhook-token'] !== expected) { throw new Error('Token webhook invalide'); }\n\nconst { brand, category, flavor, theme, images } = body;\nif (!brand || !category || !theme) { throw new Error('Champs requis manquants (brand, category, theme)'); }\nif (!images || !images.length) { throw new Error('Aucune image fournie'); }\n\nconst lead = 'Professional advertising photograph of ' + brand + ' ' + category + (flavor ? ', ' + flavor + ' flavor' : '') + '.';\nconst FIDELITY = \"Keep the exact product packaging, label, logo and typography from the reference image unchanged and photorealistic.\";\nconst PRESETS = {\n  \"classique\": \"Iconic minimalist studio advertisement: the product stands centered on a glossy reflective surface in front of a smooth gradient backdrop in the brand's signature colors, crisp softbox studio lighting with a subtle rim light, clean high-end commercial poster look, sharp product focus, neutral elegant composition.\",\n  \"ete\": \"Bright outdoor summer beach scene: the product sits on golden sand next to splashing turquoise water and scattered ice cubes, palm-leaf shadows, clear blue sky, strong warm sunlight, vivid saturated summer colors, fresh condensation droplets, relaxed vacation lifestyle mood, shallow depth of field.\",\n  \"extravagant\": \"Maximalist surreal advertisement: the product levitates at the center of an explosive energy burst with splashing liquid crowns, crackling electric arcs, shattered flying ice and swirling neon-colored smoke and sparks, dramatic chiaroscuro spotlight, bold clashing complementary colors, dynamic diagonal composition, frozen high-speed motion, luxurious futuristic set, hyper-detailed.\",\n  \"sport\": \"High-energy sports action scene: the product on the rough concrete of an urban court or stadium track at golden hour, shot from a dynamic low camera angle, motion-blurred athletes and flying water and dust in the background, dramatic hard rim lighting, punchy high-contrast colors, intense adrenaline mood.\",\n  \"fete\": \"Vibrant nightclub party scene: the product on a glossy bar counter surrounded by glowing purple and blue neon lights and laser beams, a blurred dancing crowd as colorful bokeh, dark atmosphere with vivid colored reflections on a wet surface, cinematic night color grade, energetic festive mood.\",\n  \"luxe\": \"Ultra-premium luxury scene: the product on a polished dark marble pedestal with soft golden accent lighting and elegant deep shadows, minimalist sophisticated set, a wisp of subtle smoke, moody overhead spotlight, sleek exclusive editorial aesthetic, refined black-and-gold palette.\",\n  \"noel\": \"Cozy Christmas winter scene: the product on a rustic wooden table surrounded by soft snow, pine branches, red baubles and warm glowing fairy-light bokeh, a soft fireplace glow in the background, warm golden festive color palette, magical holiday mood.\"\n};\nconst scene = PRESETS[theme] || PRESETS.classique;\nconst prompt = lead + ' ' + scene + ' ' + FIDELITY;\n\nconst parts = [{ text: prompt }];\nfor (const img of images) { parts.push({ inline_data: { mime_type: img.mimeType || 'image/jpeg', data: img.data } }); }\n\nconst geminiBody = {\n  contents: [{ role: 'user', parts }],\n  generationConfig: { responseModalities: ['TEXT', 'IMAGE'], imageConfig: { aspectRatio: '4:5' } }\n};\nreturn [{ json: { geminiBody, prompt } }];"
+      },
+      "name": "Build Prompt",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        460,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "=https://aiplatform.googleapis.com/v1/projects/{{ $env.GCP_PROJECT }}/locations/global/publishers/google/models/{{ $env.GEMINI_MODEL || 'gemini-2.5-flash-image' }}:generateContent",
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "googleApi",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify($json.geminiBody) }}",
+        "options": {
+          "timeout": 120000
+        }
+      },
+      "name": "Nano Banana (Vertex)",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        680,
+        300
+      ],
+      "credentials": {
+        "googleApi": {
+          "id": "REMPLACER",
+          "name": "Google Service Account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "const resp = $input.first().json;\nconst candidates = resp.candidates || (resp.body && resp.body.candidates) || [];\nlet image = null;\nlet mimeType = 'image/png';\nfor (const c of candidates) {\n  const parts = (c.content && c.content.parts) || [];\n  for (const p of parts) {\n    const inline = p.inlineData || p.inline_data;\n    if (inline && inline.data) { image = inline.data; mimeType = inline.mimeType || inline.mime_type || mimeType; break; }\n  }\n  if (image) break;\n}\nif (!image) { throw new Error('Vertex/Gemini: aucune image renvoyee. ' + JSON.stringify(resp).slice(0, 800)); }\nconst prompt = $('Build Prompt').first().json.prompt;\nreturn [{ json: { image, mimeType, prompt } }];"
+      },
+      "name": "Extract Image",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        900,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ { \"image\": $json.image, \"mimeType\": $json.mimeType, \"prompt\": $json.prompt } }}",
+        "options": {}
+      },
+      "name": "Respond",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1,
+      "position": [
+        1120,
+        300
+      ]
+    }
+  ],
+  "connections": {
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "Build Prompt",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Build Prompt": {
+      "main": [
+        [
+          {
+            "node": "Nano Banana (Vertex)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Nano Banana (Vertex)": {
+      "main": [
+        [
+          {
+            "node": "Extract Image",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Extract Image": {
+      "main": [
+        [
+          {
+            "node": "Respond",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "pinData": {},
+  "settings": {
+    "executionOrder": "v1"
+  }
+}

@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="fr">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Générateur de Publicités IA</title>
+    <link rel="preconnect" href="https://fonts.gstatic.com/" crossorigin="" />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?display=swap&amp;family=Manrope:wght@400;500;700;800"
+    />
+    <script src="https://cdn.tailwindcss.com?plugins=forms"></script>
+  </head>
+  <body class="min-h-screen bg-[#f4f2f0]" style='font-family: Manrope, "Noto Sans", sans-serif;'>
+    <header class="bg-white border-b border-[#e6e0db]">
+      <div class="max-w-5xl mx-auto px-4 h-16 flex items-center justify-between">
+        <h1 class="text-[#181411] font-extrabold tracking-tight">Générateur de Publicités IA</h1>
+        <div class="flex items-center gap-4">
+          <span id="user-email" class="text-sm text-[#897261]"></span>
+          <button id="logout" class="text-sm font-bold text-[#ec6d13] hover:underline">Déconnexion</button>
+        </div>
+      </div>
+    </header>
+
+    <main class="max-w-5xl mx-auto px-4 py-8 flex flex-col gap-6">
+      <!-- Consommation -->
+      <section class="bg-white rounded-xl border border-[#e6e0db] p-4 flex items-center justify-between gap-4">
+        <div>
+          <p class="text-xs text-[#897261]">Consommation ce mois</p>
+          <p id="usage-month" class="text-[#181411] font-bold">—</p>
+        </div>
+        <div class="text-right">
+          <p class="text-xs text-[#897261]">Total (tout)</p>
+          <p id="usage-all" class="text-[#181411] font-bold">—</p>
+        </div>
+      </section>
+
+      <!-- 1. Images -->
+      <section class="bg-white rounded-xl border border-[#e6e0db] p-6">
+        <h2 class="text-[#181411] text-lg font-bold mb-1">1. Photos du produit</h2>
+        <p class="text-sm text-[#897261] mb-4">Déposez une ou plusieurs images du <strong>même produit</strong> (max 14). Toutes servent de référence.</p>
+        <div id="dropzone"
+          class="border-2 border-dashed border-[#e6e0db] rounded-lg p-8 text-center cursor-pointer hover:border-[#ec6d13] transition-colors">
+          <p class="text-[#181411] font-bold">Glissez-déposez vos images ici</p>
+          <p class="text-sm text-[#897261] mt-1">ou cliquez pour parcourir — JPG, PNG, WebP</p>
+          <input id="file-input" type="file" accept="image/jpeg,image/png,image/webp" multiple class="hidden" />
+        </div>
+        <div id="previews" class="grid grid-cols-3 sm:grid-cols-5 gap-3 mt-4"></div>
+      </section>
+
+      <!-- 2. Infos produit -->
+      <section class="bg-white rounded-xl border border-[#e6e0db] p-6">
+        <h2 class="text-[#181411] text-lg font-bold mb-4">2. Informations produit</h2>
+        <div class="grid sm:grid-cols-3 gap-4">
+          <label class="flex flex-col gap-1">
+            <span class="text-sm font-medium text-[#181411]">Marque *</span>
+            <input id="brand" type="text" placeholder="Red Bull"
+              class="form-input rounded-lg border-[#e6e0db] focus:border-[#ec6d13] focus:ring-[#ec6d13]" />
+          </label>
+          <label class="flex flex-col gap-1">
+            <span class="text-sm font-medium text-[#181411]">Catégorie *</span>
+            <input id="category" type="text" list="categories" placeholder="boisson énergisante"
+              class="form-input rounded-lg border-[#e6e0db] focus:border-[#ec6d13] focus:ring-[#ec6d13]" />
+            <datalist id="categories">
+              <option value="boisson"></option>
+              <option value="boisson énergisante"></option>
+              <option value="alcool"></option>
+              <option value="chips"></option>
+              <option value="snack"></option>
+              <option value="cosmétique"></option>
+              <option value="parfum"></option>
+            </datalist>
+          </label>
+          <label class="flex flex-col gap-1">
+            <span class="text-sm font-medium text-[#181411]">Goût <span class="text-[#897261]">(optionnel)</span></span>
+            <input id="flavor" type="text" placeholder="pêche"
+              class="form-input rounded-lg border-[#e6e0db] focus:border-[#ec6d13] focus:ring-[#ec6d13]" />
+          </label>
+        </div>
+      </section>
+
+      <!-- 3. Thème -->
+      <section class="bg-white rounded-xl border border-[#e6e0db] p-6">
+        <h2 class="text-[#181411] text-lg font-bold mb-1">3. Thème du visuel</h2>
+        <p class="text-sm text-[#897261] mb-4">Choisit le style du décor. Le packaging du produit reste identique.</p>
+        <div id="themes" class="flex flex-wrap gap-3">
+          <button data-theme="classique" class="theme-btn px-4 py-2 rounded-lg border border-[#e6e0db] text-sm font-bold text-[#181411] hover:border-[#ec6d13]">Classique</button>
+          <button data-theme="ete" class="theme-btn px-4 py-2 rounded-lg border border-[#e6e0db] text-sm font-bold text-[#181411] hover:border-[#ec6d13]">Été</button>
+          <button data-theme="extravagant" class="theme-btn px-4 py-2 rounded-lg border border-[#e6e0db] text-sm font-bold text-[#181411] hover:border-[#ec6d13]">Nouveau / Extravagant</button>
+          <button data-theme="sport" class="theme-btn px-4 py-2 rounded-lg border border-[#e6e0db] text-sm font-bold text-[#181411] hover:border-[#ec6d13]">Sport / Énergie</button>
+          <button data-theme="fete" class="theme-btn px-4 py-2 rounded-lg border border-[#e6e0db] text-sm font-bold text-[#181411] hover:border-[#ec6d13]">Nuit / Fête</button>
+          <button data-theme="luxe" class="theme-btn px-4 py-2 rounded-lg border border-[#e6e0db] text-sm font-bold text-[#181411] hover:border-[#ec6d13]">Luxe / Premium</button>
+          <button data-theme="noel" class="theme-btn px-4 py-2 rounded-lg border border-[#e6e0db] text-sm font-bold text-[#181411] hover:border-[#ec6d13]">Noël / Hiver</button>
+        </div>
+      </section>
+
+      <button id="generate" class="h-12 rounded-lg bg-[#ec6d13] text-white font-bold hover:bg-[#d5610f] disabled:opacity-60">
+        Générer la publicité
+      </button>
+      <p id="gen-error" class="text-sm text-red-600 hidden"></p>
+
+      <!-- Résultat -->
+      <section id="result-section" class="bg-white rounded-xl border border-[#e6e0db] p-6 hidden">
+        <h2 class="text-[#181411] text-lg font-bold mb-4">Résultat</h2>
+        <div id="result-body" class="flex flex-col items-center gap-4"></div>
+      </section>
+
+      <!-- Historique -->
+      <section class="bg-white rounded-xl border border-[#e6e0db] p-6">
+        <div class="flex items-center justify-between mb-4">
+          <h2 class="text-[#181411] text-lg font-bold">Historique récent</h2>
+          <a href="/history.html" class="text-sm font-bold text-[#ec6d13] hover:underline">Voir tout & filtrer →</a>
+        </div>
+        <div id="history" class="grid grid-cols-2 sm:grid-cols-4 gap-4">
+          <p class="text-sm text-[#897261]">Chargement…</p>
+        </div>
+      </section>
+    </main>
+
+    <script src="/js/app.js"></script>
+  </body>
+</html>

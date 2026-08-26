@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="fr">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Historique — Générateur de Publicités IA</title>
+    <link rel="preconnect" href="https://fonts.gstatic.com/" crossorigin="" />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?display=swap&amp;family=Manrope:wght@400;500;700;800"
+    />
+    <script src="https://cdn.tailwindcss.com?plugins=forms"></script>
+  </head>
+  <body class="min-h-screen bg-[#f4f2f0]" style='font-family: Manrope, "Noto Sans", sans-serif;'>
+    <header class="bg-white border-b border-[#e6e0db]">
+      <div class="max-w-6xl mx-auto px-4 h-16 flex items-center justify-between">
+        <div class="flex items-center gap-4">
+          <a href="/app.html" class="text-sm font-bold text-[#ec6d13] hover:underline">← Dashboard</a>
+          <h1 class="text-[#181411] font-extrabold tracking-tight">Historique</h1>
+        </div>
+        <div class="flex items-center gap-4">
+          <span id="user-email" class="text-sm text-[#897261]"></span>
+          <button id="logout" class="text-sm font-bold text-[#ec6d13] hover:underline">Déconnexion</button>
+        </div>
+      </div>
+    </header>
+
+    <main class="max-w-6xl mx-auto px-4 py-8 flex flex-col gap-6">
+      <!-- Filtres -->
+      <section class="bg-white rounded-xl border border-[#e6e0db] p-4">
+        <div class="grid sm:grid-cols-4 gap-3">
+          <label class="flex flex-col gap-1">
+            <span class="text-xs font-medium text-[#897261]">Catégorie</span>
+            <select id="f-category" class="form-select rounded-lg border-[#e6e0db] text-sm focus:border-[#ec6d13] focus:ring-[#ec6d13]">
+              <option value="">Toutes</option>
+            </select>
+          </label>
+          <label class="flex flex-col gap-1">
+            <span class="text-xs font-medium text-[#897261]">Thème</span>
+            <select id="f-theme" class="form-select rounded-lg border-[#e6e0db] text-sm focus:border-[#ec6d13] focus:ring-[#ec6d13]">
+              <option value="">Tous</option>
+            </select>
+          </label>
+          <label class="flex flex-col gap-1">
+            <span class="text-xs font-medium text-[#897261]">Marque</span>
+            <input id="f-brand" type="text" placeholder="Rechercher…"
+              class="form-input rounded-lg border-[#e6e0db] text-sm focus:border-[#ec6d13] focus:ring-[#ec6d13]" />
+          </label>
+          <label class="flex flex-col gap-1">
+            <span class="text-xs font-medium text-[#897261]">Tri</span>
+            <select id="f-sort" class="form-select rounded-lg border-[#e6e0db] text-sm focus:border-[#ec6d13] focus:ring-[#ec6d13]">
+              <option value="date-desc">Date (récent → ancien)</option>
+              <option value="date-asc">Date (ancien → récent)</option>
+              <option value="brand-asc">Marque (A → Z)</option>
+            </select>
+          </label>
+        </div>
+        <div class="flex items-center justify-between mt-3">
+          <p id="count" class="text-xs text-[#897261]"></p>
+          <button id="reset" class="text-xs font-bold text-[#ec6d13] hover:underline">Réinitialiser</button>
+        </div>
+      </section>
+
+      <!-- Résultats -->
+      <section id="grid" class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
+        <p class="text-sm text-[#897261]">Chargement…</p>
+      </section>
+    </main>
+
+    <script src="/js/history.js"></script>
+  </body>
+</html>

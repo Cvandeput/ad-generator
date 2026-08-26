@@ -1,0 +1,14 @@
+.env
+progresse.md
+node_modules/
+backend/data/
+tools/out/
+test/
+certbot/
+*.log
+# Clés de service account Google (NE JAMAIS committer)
+sa-key.json
+*-sa.json
+service-account*.json
+
+sa-key.json

@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="fr">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Connexion — Générateur de Publicités IA</title>
+    <link rel="preconnect" href="https://fonts.gstatic.com/" crossorigin="" />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?display=swap&amp;family=Manrope:wght@400;500;700;800"
+    />
+    <script src="https://cdn.tailwindcss.com?plugins=forms"></script>
+  </head>
+  <body class="min-h-screen bg-[#f4f2f0] flex items-center justify-center px-4" style='font-family: Manrope, "Noto Sans", sans-serif;'>
+    <div class="w-full max-w-md">
+      <div class="text-center mb-8">
+        <h1 class="text-[#181411] text-3xl font-extrabold tracking-tight">Générateur de Publicités IA</h1>
+        <p class="text-[#897261] mt-2">Connexion requise pour générer vos visuels.</p>
+      </div>
+
+      <div class="bg-white rounded-xl border border-[#e6e0db] p-6 shadow-sm">
+        <form id="auth-form" class="flex flex-col gap-4">
+          <label class="flex flex-col gap-1">
+            <span class="text-sm font-medium text-[#181411]">Email</span>
+            <input name="email" type="email" required autocomplete="username"
+              class="form-input rounded-lg border-[#e6e0db] bg-white focus:border-[#ec6d13] focus:ring-[#ec6d13]" />
+          </label>
+          <label class="flex flex-col gap-1">
+            <span class="text-sm font-medium text-[#181411]">Mot de passe</span>
+            <input name="password" type="password" required autocomplete="current-password"
+              class="form-input rounded-lg border-[#e6e0db] bg-white focus:border-[#ec6d13] focus:ring-[#ec6d13]" />
+          </label>
+
+          <p id="error" class="text-sm text-red-600 hidden"></p>
+
+          <button id="submit-btn" type="submit"
+            class="mt-2 h-11 rounded-lg bg-[#ec6d13] text-white font-bold hover:bg-[#d5610f] disabled:opacity-60">
+            Se connecter
+          </button>
+        </form>
+      </div>
+    </div>
+
+    <script src="/js/auth.js"></script>
+  </body>
+</html>
