@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Connexion — AdCraft</title>
+    <title>Inscription — AdCraft</title>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="" />
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet" />
@@ -34,8 +34,6 @@
   </head>
   <body class="w-full h-screen overflow-hidden flex flex-col lg:flex-row bg-background">
     <!-- Colonne gauche : carrousel avant / après -->
-    <!-- Fond dégradé sous les images : jamais d'aplat gris vide, même pendant un
-         fondu ou si une image manque (onerror retire l'image cassée). -->
     <div class="hidden lg:block relative w-full lg:w-1/2 h-full bg-gradient-to-br from-surface-container-high to-surface-container overflow-hidden">
       <img alt="Photo brute" class="carousel-slide" src="/img/input-redbull.jpg" onerror="this.remove()" />
       <img alt="Visuel généré" class="carousel-slide" src="/img/output-redbull.jpg" onerror="this.remove()" />
@@ -47,13 +45,13 @@
       </div>
     </div>
 
-    <!-- Colonne droite : connexion -->
+    <!-- Colonne droite : inscription -->
     <div class="w-full lg:w-1/2 h-full flex items-center justify-center relative p-md">
       <main class="relative z-10 w-full max-w-[360px]">
         <div class="bg-surface-container-lowest border border-outline-variant rounded-xl p-lg flex flex-col gap-lg">
           <div class="text-center">
-            <h1 class="font-display-lg text-display-lg text-on-surface">AdCraft</h1>
-            <p class="font-body-sm text-body-sm text-secondary mt-xs">Création visuelle intelligente.</p>
+            <h1 class="font-display-lg text-display-lg text-on-surface">Créer un compte</h1>
+            <p class="font-body-sm text-body-sm text-secondary mt-xs">Rejoignez AdCraft en quelques secondes.</p>
           </div>
 
           <form id="auth-form" class="flex flex-col gap-md">
@@ -67,7 +65,14 @@
             <div class="flex flex-col gap-xs">
               <label class="font-label-sm text-label-sm text-secondary" for="password">Mot de passe</label>
               <input
-                id="password" name="password" type="password" required autocomplete="current-password" placeholder="••••••••"
+                id="password" name="password" type="password" required autocomplete="new-password" minlength="8" placeholder="8 caractères minimum"
+                class="w-full h-[40px] px-sm bg-surface-container-lowest border border-outline-variant rounded-lg font-body-sm text-body-sm text-on-surface placeholder:text-outline focus:outline-none focus:border-primary-container focus:ring-1 focus:ring-primary-container transition-colors"
+              />
+            </div>
+            <div class="flex flex-col gap-xs">
+              <label class="font-label-sm text-label-sm text-secondary" for="password2">Confirmer le mot de passe</label>
+              <input
+                id="password2" name="password2" type="password" required autocomplete="new-password" placeholder="••••••••"
                 class="w-full h-[40px] px-sm bg-surface-container-lowest border border-outline-variant rounded-lg font-body-sm text-body-sm text-on-surface placeholder:text-outline focus:outline-none focus:border-primary-container focus:ring-1 focus:ring-primary-container transition-colors"
               />
             </div>
@@ -79,20 +84,20 @@
                 id="submit-btn" type="submit"
                 class="w-full h-[40px] bg-primary-container text-on-primary rounded-lg font-label-md text-label-md flex items-center justify-center hover:bg-primary transition-colors disabled:opacity-60"
               >
-                Se connecter
+                Créer mon compte
               </button>
             </div>
           </form>
 
           <div class="text-center pt-xs">
-            <a href="/register.html" class="font-body-sm text-body-sm text-secondary hover:text-primary-container transition-colors inline-block">
-              Pas encore de compte ? S'inscrire
+            <a href="/login.html" class="font-body-sm text-body-sm text-secondary hover:text-primary-container transition-colors inline-block">
+              Déjà un compte ? Se connecter
             </a>
           </div>
         </div>
       </main>
     </div>
 
-    <script type="module" src="/js/auth.js"></script>
+    <script type="module" src="/js/register.js"></script>
   </body>
 </html>

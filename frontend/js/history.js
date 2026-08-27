@@ -1,80 +1,83 @@
-// Page historique dédiée : filtres (catégorie, thème, marque) + tri par date.
+// Page historique : filtres (recherche marque, catégorie, thème, tri) + échecs.
+// N'affiche que les réussites ; les échecs sont signalés par le bandeau repliable.
+import { api, requireUser } from './api.js';
+import { successCard, failuresBlock, THEME_LABELS, usageLabel } from './components.js';
+import { wireGridDeletes, wireFailures } from './ui.js';
 
-const THEME_LABELS = {
-  classique: 'Classique',
-  ete: 'Été',
-  extravagant: 'Nouveau / Extravagant',
-  sport: 'Sport / Énergie',
-  fete: 'Nuit / Fête',
-  luxe: 'Luxe / Premium',
-  noel: 'Noël / Hiver',
-};
+const PAGE = 12; // multiple des colonnes de la grille (2/3/4) → pas de trous
 
 const gridEl = document.getElementById('grid');
-const countEl = document.getElementById('count');
+const failuresEl = document.getElementById('failures');
+const loadMoreWrap = document.getElementById('load-more');
+const loadMoreBtn = document.getElementById('load-more-btn');
 const fCategory = document.getElementById('f-category');
 const fTheme = document.getElementById('f-theme');
 const fBrand = document.getElementById('f-brand');
 const fSort = document.getElementById('f-sort');
 
 let all = [];
+let shown = PAGE; // nombre de cartes affichées (pagination "Charger plus")
 
 // --- Auth guard ---
-fetch('/api/auth/me')
-  .then((r) => {
-    if (!r.ok) throw new Error('unauth');
-    return r.json();
-  })
-  .then((data) => {
-    document.getElementById('user-email').textContent = data.user.email;
+requireUser()
+  .then((user) => {
+    document.getElementById('user-email').textContent = user.email;
+    document.getElementById('logout').title = `Déconnexion (${user.email})`;
+    loadUsage();
     load();
   })
-  .catch(() => (window.location.href = '/login.html'));
+  .catch(() => {}); // 401 → redirigé par api.js
 
 document.getElementById('logout').addEventListener('click', async () => {
-  await fetch('/api/auth/logout', { method: 'POST' });
+  await api.logout().catch(() => {});
   window.location.href = '/login.html';
 });
 
 async function load() {
-  const res = await fetch('/api/history');
-  if (!res.ok) return;
-  const { generations } = await res.json();
-  all = generations;
+  try {
+    const { items, counts } = await api.history('done');
+    all = items;
+    populateFilters();
 
-  // Remplit le filtre catégories (valeurs distinctes).
-  const cats = [...new Set(all.map((g) => g.category).filter(Boolean))].sort();
-  for (const c of cats) {
-    const o = document.createElement('option');
-    o.value = c;
-    o.textContent = c;
-    fCategory.appendChild(o);
-  }
-  // Remplit le filtre thèmes présents.
-  const themes = [...new Set(all.map((g) => g.theme).filter(Boolean))];
-  for (const t of themes) {
-    const o = document.createElement('option');
-    o.value = t;
-    o.textContent = THEME_LABELS[t] || t;
-    fTheme.appendChild(o);
-  }
+    failuresEl.innerHTML = failuresBlock(counts.error);
+    wireFailures(failuresEl, { withRetry: true, onResolved: () => { load(); loadUsage(); } });
 
-  render();
+    shown = PAGE;
+    render();
+  } catch {
+    /* 401 déjà géré par api.js */
+  }
 }
 
-function fmtDate(s) {
-  // created_at stocké en UTC "YYYY-MM-DD HH:MM:SS".
-  const d = new Date(s.replace(' ', 'T') + 'Z');
-  return d.toLocaleString('fr-FR', { day: '2-digit', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' });
+// (Re)construit les options dynamiques sans les cumuler entre deux chargements.
+function populateFilters() {
+  resetSelect(fCategory);
+  resetSelect(fTheme);
+  for (const c of [...new Set(all.map((g) => g.category).filter(Boolean))].sort()) {
+    fCategory.appendChild(option(c, c));
+  }
+  for (const t of [...new Set(all.map((g) => g.theme).filter(Boolean))]) {
+    fTheme.appendChild(option(t, THEME_LABELS[t] || t));
+  }
 }
 
-function render() {
+function resetSelect(sel) {
+  while (sel.options.length > 1) sel.remove(1); // garde l'option "Toutes/Tous"
+}
+function option(value, text) {
+  const o = document.createElement('option');
+  o.value = value;
+  o.textContent = text;
+  return o;
+}
+
+function filteredRows() {
   const cat = fCategory.value;
   const theme = fTheme.value;
   const brand = fBrand.value.trim().toLowerCase();
   const sort = fSort.value;
 
-  let rows = all.filter((g) => {
+  const rows = all.filter((g) => {
     if (cat && g.category !== cat) return false;
     if (theme && g.theme !== theme) return false;
     if (brand && !(g.brand || '').toLowerCase().includes(brand)) return false;
@@ -86,59 +89,71 @@ function render() {
     if (sort === 'date-asc') return a.createdAt.localeCompare(b.createdAt);
     return b.createdAt.localeCompare(a.createdAt); // date-desc
   });
+  return rows;
+}
 
-  countEl.textContent = `${rows.length} génération${rows.length > 1 ? 's' : ''}`;
+function render() {
+  const rows = filteredRows();
 
-  if (rows.length === 0) {
-    gridEl.innerHTML = '<p class="text-sm text-[#897261]">Aucun résultat.</p>';
+  if (rows.length) {
+    gridEl.innerHTML = rows.slice(0, shown).map((g) => successCard(g)).join('');
+    loadMoreWrap.classList.toggle('hidden', rows.length <= shown);
     return;
   }
 
-  gridEl.innerHTML = rows.map(card).join('');
-}
-
-function card(g) {
-  const label = [g.brand, g.flavor].filter(Boolean).join(' · ');
-  const themeLabel = THEME_LABELS[g.theme] || g.theme;
-  const date = fmtDate(g.createdAt);
-  if (g.status === 'done' && g.url) {
-    return `
-      <div class="rounded-lg border border-[#e6e0db] bg-white overflow-hidden flex flex-col">
-        <img src="${g.url}" class="w-full aspect-square object-cover" loading="lazy" />
-        <div class="p-2 flex flex-col gap-0.5">
-          <p class="text-xs font-bold text-[#181411] truncate">${esc(label)}</p>
-          <p class="text-[10px] text-[#897261] truncate">${esc(g.category)} · ${esc(themeLabel)}</p>
-          <p class="text-[10px] text-[#897261]">${date}</p>
-          <a href="${g.url}?download=1" download class="text-xs font-bold text-[#ec6d13] hover:underline mt-1">Télécharger</a>
-        </div>
-      </div>`;
-  }
-  const badge = g.status === 'error' ? 'Échec' : 'En cours…';
-  return `
-    <div class="rounded-lg border border-[#e6e0db] bg-white p-2 flex flex-col justify-between aspect-square">
-      <div>
-        <p class="text-xs font-bold text-[#181411] truncate">${esc(label)}</p>
-        <p class="text-[10px] text-[#897261] truncate">${esc(g.category)} · ${esc(themeLabel)}</p>
+  loadMoreWrap.classList.add('hidden');
+  // État vide explicite : distingue "rien du tout" de "que des échecs".
+  const hasFailures = failuresEl.querySelector('details.js-failures');
+  gridEl.innerHTML = `
+    <div class="col-span-full border border-outline-variant border-dashed rounded-xl h-[360px] flex flex-col items-center justify-center text-center p-lg bg-surface-container-low/30">
+      <div class="w-16 h-16 bg-surface-container-high rounded-full flex items-center justify-center mb-md">
+        <span class="material-symbols-outlined text-[32px] text-secondary">image_not_supported</span>
       </div>
-      <div>
-        <p class="text-[10px] text-[#897261]">${date}</p>
-        <p class="text-xs text-[#897261]">${badge}</p>
-      </div>
+      <h2 class="font-headline-md text-headline-md text-on-surface mb-xs">Aucun résultat</h2>
+      <p class="font-body-base text-body-base text-secondary max-w-md">${
+        hasFailures
+          ? 'Aucune génération réussie pour cette sélection — dépliez les échecs ci-dessus pour comprendre.'
+          : 'Aucun visuel généré pour le moment. Lancez une génération pour voir vos créations ici.'
+      }</p>
     </div>`;
 }
 
-function esc(s) {
-  return String(s ?? '').replace(/[&<>"']/g, (c) =>
-    ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c])
-  );
+// Réinitialise la pagination à chaque changement de filtre (sinon "Charger plus"
+// resterait sur un ancien seuil pour un jeu de résultats différent).
+function rerenderFromFilters() {
+  shown = PAGE;
+  render();
 }
 
-[fCategory, fTheme, fSort].forEach((el) => el.addEventListener('change', render));
-fBrand.addEventListener('input', render);
+// Suppression depuis la grille : retire aussi de `all` pour que le prochain
+// render() ne fasse pas réapparaître la carte.
+wireGridDeletes(gridEl, {
+  onDeleted: (id) => {
+    all = all.filter((g) => g.id !== id);
+    render();
+    loadUsage();
+  },
+});
+
+loadMoreBtn.addEventListener('click', () => {
+  shown += PAGE;
+  render();
+});
+
+[fCategory, fTheme, fSort].forEach((el) => el.addEventListener('change', rerenderFromFilters));
+fBrand.addEventListener('input', rerenderFromFilters);
 document.getElementById('reset').addEventListener('click', () => {
   fCategory.value = '';
   fTheme.value = '';
   fBrand.value = '';
   fSort.value = 'date-desc';
-  render();
+  rerenderFromFilters();
 });
+
+async function loadUsage() {
+  try {
+    document.getElementById('usage-header').textContent = usageLabel(await api.usage());
+  } catch {
+    /* silencieux */
+  }
+}

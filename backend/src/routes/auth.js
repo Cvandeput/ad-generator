@@ -18,7 +18,33 @@ function publicUser(row) {
   return { id: row.id, email: row.email, createdAt: row.created_at };
 }
 
-// Pas d'inscription publique : comptes pré-créés au démarrage (voir seed.js).
+// Validation minimale (le front valide aussi, mais on ne s'y fie pas).
+const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+const MIN_PASSWORD = 8;
+
+// Inscription publique : crée un compte puis ouvre la session. En complément des
+// comptes pré-créés au démarrage (voir seed.js).
+router.post('/register', authLimiter, async (req, res) => {
+  const email = String(req.body.email || '').trim().toLowerCase();
+  const password = String(req.body.password || '');
+
+  if (!EMAIL_RE.test(email)) return res.status(400).json({ error: 'Email invalide' });
+  if (password.length < MIN_PASSWORD) {
+    return res.status(400).json({ error: `Mot de passe : ${MIN_PASSWORD} caractères minimum` });
+  }
+
+  if (db.prepare('SELECT id FROM users WHERE email = ?').get(email)) {
+    return res.status(409).json({ error: 'Un compte existe déjà avec cet email' });
+  }
+
+  const hash = await bcrypt.hash(password, 12);
+  const info = db.prepare('INSERT INTO users (email, password_hash) VALUES (?, ?)').run(email, hash);
+  const user = db.prepare('SELECT * FROM users WHERE id = ?').get(info.lastInsertRowid);
+
+  req.session.userId = user.id;
+  res.status(201).json({ user: publicUser(user) });
+});
+
 router.post('/login', authLimiter, async (req, res) => {
   const email = String(req.body.email || '').trim().toLowerCase();
   const password = String(req.body.password || '');

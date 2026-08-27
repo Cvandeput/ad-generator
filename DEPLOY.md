@@ -126,8 +126,24 @@ docker run --rm -v "$(pwd)/certbot/conf:/etc/letsencrypt" -v "$(pwd)/certbot/www
 3. Upload image + infos + thème → **Générer** → image + historique + conso.
 4. Si erreur : `docker compose logs -f backend`, et l'onglet **Executions** de n8n.
 
+## 7. Maintenance
+
+**Purge des générations en échec** (lignes `status='error'` + fichiers orphelins de `outputs/`) :
+```bash
+docker compose exec backend node tools/purge-errors.js          # dry-run : liste, ne supprime rien
+docker compose exec backend node tools/purge-errors.js --yes    # suppression réelle
+```
+
+**CSS (Tailwind)** : le front ne charge plus Tailwind via CDN ; `frontend/css/app.css`
+est **buildé et versionné** (nginx le sert tel quel, aucun rebuild au déploiement).
+À régénérer uniquement si tu changes des classes Tailwind dans le HTML/JS :
+```bash
+cd frontend && npm install && npm run build:css   # met à jour frontend/css/app.css (à committer)
+```
+
 ## Dépannage
 - **502 à la génération** → backend n'atteint pas n8n. Vérifie `N8N_WEBHOOK_URL` (host.docker.internal vs IP), workflow **activé**, token identique des deux côtés.
 - **401 Vertex** dans n8n → scope credential manquant (`cloud-platform`) ou API Vertex non activée sur le projet.
 - **429** → quota Vertex ; demande une hausse (Cloud Console → IAM & Admin → Quotas).
-- **Cookie pas gardé** → il faut `NODE_ENV=production` + accès en **HTTPS** (cookie secure).
+- **Cookie pas gardé** → il faut `NODE_ENV=production` + accès en **HTTPS** (cookie secure). En dev local sans TLS avec `NODE_ENV=production`, poser `SESSION_COOKIE_SECURE=false`.
+- **Page nue / styles manquants** → `frontend/css/app.css` absent ou non buildé (voir §7).

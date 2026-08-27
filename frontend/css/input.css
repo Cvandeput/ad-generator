@@ -1,0 +1,51 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Base : Inter + fond neutre du design system AdCraft Studio. */
+@layer base {
+  body {
+    font-family: 'Inter', sans-serif;
+    background-color: theme('colors.background');
+    color: theme('colors.on-surface');
+  }
+  /* Icônes Material Symbols (police chargée via Google Fonts dans le <head>). */
+  .material-symbols-outlined {
+    font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+    line-height: 1;
+    user-select: none;
+  }
+}
+
+@layer components {
+  /* Barre de progression de l'attente longue (génération jusqu'à ~120 s) :
+     progression réelle par le temps, pas un spinner figé. */
+  .progress-track {
+    @apply h-2 w-full overflow-hidden rounded-full bg-surface-container-high;
+  }
+  .progress-bar {
+    @apply h-full rounded-full bg-primary-container transition-[width] duration-1000 ease-linear;
+  }
+  /* Scrollbar discrète, cohérente avec l'esthétique minimale. */
+}
+
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: #dadad9;
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #c4c5d7;
+}
+
+/* Dropzone en survol de drag. */
+.drag-over {
+  border-color: #1d4ed8 !important;
+  background-color: #f3f4f3 !important;
+}

@@ -1,0 +1,422 @@
+<!DOCTYPE html>
+
+<html class="light" lang="fr"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>AdCraft - Génération</title>
+<!-- Material Symbols -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Google Fonts: Inter -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<!-- Tailwind Configuration from Style Guidance -->
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                            "outline": "#747686",
+                            "surface-dim": "#dadad9",
+                            "on-error": "#ffffff",
+                            "error": "#ba1a1a",
+                            "background": "#f9f9f8",
+                            "surface-container": "#eeeeed",
+                            "tertiary-fixed": "#ffdbcf",
+                            "tertiary-container": "#a73400",
+                            "primary": "#0037b0",
+                            "secondary-fixed": "#e9e1dd",
+                            "secondary-fixed-dim": "#ccc5c2",
+                            "inverse-primary": "#b7c4ff",
+                            "secondary-container": "#e9e1dd",
+                            "on-error-container": "#93000a",
+                            "inverse-on-surface": "#f1f1f0",
+                            "inverse-surface": "#2f3130",
+                            "on-surface-variant": "#434655",
+                            "on-surface": "#1a1c1c",
+                            "secondary": "#625d5b",
+                            "surface": "#f9f9f8",
+                            "on-secondary-container": "#686361",
+                            "error-container": "#ffdad6",
+                            "surface-container-low": "#f3f4f3",
+                            "on-secondary": "#ffffff",
+                            "primary-container": "#1d4ed8",
+                            "on-secondary-fixed": "#1e1b19",
+                            "tertiary": "#7f2500",
+                            "on-tertiary-fixed": "#390c00",
+                            "surface-tint": "#2151da",
+                            "on-primary-container": "#cad3ff",
+                            "surface-container-lowest": "#ffffff",
+                            "on-secondary-fixed-variant": "#4a4643",
+                            "on-background": "#1a1c1c",
+                            "on-tertiary-fixed-variant": "#832700",
+                            "primary-fixed": "#dce1ff",
+                            "on-primary-fixed-variant": "#0039b5",
+                            "outline-variant": "#c4c5d7",
+                            "on-tertiary-container": "#ffc9b7",
+                            "on-tertiary": "#ffffff",
+                            "tertiary-fixed-dim": "#ffb59c",
+                            "on-primary": "#ffffff",
+                            "surface-variant": "#e2e2e2",
+                            "surface-container-highest": "#e2e2e2",
+                            "on-primary-fixed": "#001551",
+                            "surface-bright": "#f9f9f8",
+                            "surface-container-high": "#e8e8e7",
+                            "primary-fixed-dim": "#b7c4ff"
+                    },
+                    "borderRadius": {
+                            "DEFAULT": "0.125rem",
+                            "lg": "0.25rem",
+                            "xl": "0.5rem",
+                            "full": "0.75rem"
+                    },
+                    "spacing": {
+                            "container-max": "1280px",
+                            "gutter": "20px",
+                            "xl": "48px",
+                            "sm": "8px",
+                            "lg": "24px",
+                            "md": "16px",
+                            "unit": "4px",
+                            "xs": "4px"
+                    },
+                    "fontFamily": {
+                            "display-lg": [
+                                    "Inter"
+                            ],
+                            "label-md": [
+                                    "Inter"
+                            ],
+                            "body-base": [
+                                    "Inter"
+                            ],
+                            "headline-md": [
+                                    "Inter"
+                            ],
+                            "body-sm": [
+                                    "Inter"
+                            ],
+                            "display-lg-mobile": [
+                                    "Inter"
+                            ],
+                            "label-sm": [
+                                    "Inter"
+                            ]
+                    },
+                    "fontSize": {
+                            "display-lg": [
+                                    "32px",
+                                    {
+                                            "lineHeight": "40px",
+                                            "letterSpacing": "-0.02em",
+                                            "fontWeight": "600"
+                                    }
+                            ],
+                            "label-md": [
+                                    "12px",
+                                    {
+                                            "lineHeight": "16px",
+                                            "letterSpacing": "0.01em",
+                                            "fontWeight": "600"
+                                    }
+                            ],
+                            "body-base": [
+                                    "14px",
+                                    {
+                                            "lineHeight": "20px",
+                                            "fontWeight": "400"
+                                    }
+                            ],
+                            "headline-md": [
+                                    "20px",
+                                    {
+                                            "lineHeight": "28px",
+                                            "letterSpacing": "-0.01em",
+                                            "fontWeight": "600"
+                                    }
+                            ],
+                            "body-sm": [
+                                    "13px",
+                                    {
+                                            "lineHeight": "18px",
+                                            "fontWeight": "400"
+                                    }
+                            ],
+                            "display-lg-mobile": [
+                                    "24px",
+                                    {
+                                            "lineHeight": "32px",
+                                            "letterSpacing": "-0.02em",
+                                            "fontWeight": "600"
+                                    }
+                            ],
+                            "label-sm": [
+                                    "11px",
+                                    {
+                                            "lineHeight": "14px",
+                                            "fontWeight": "400"
+                                    }
+                            ]
+                    }
+            },
+                },
+        }
+    </script>
+<style>
+        /* Hide scrollbar for clean aesthetic */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #dadad9;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #c4c5d7;
+        }
+        
+        /* Custom dragging state for dropzone */
+        .drag-over {
+            border-color: #1d4ed8 !important;
+            background-color: #f3f4f3 !important;
+        }
+    </style>
+</head>
+<body class="bg-background text-on-surface font-body-base min-h-screen flex flex-col">
+<!-- TopNavBar -->
+<header class="bg-surface-container-lowest border-b border-outline-variant w-full sticky top-0 z-50">
+<div class="flex justify-between items-center w-full px-lg py-md max-w-container-max mx-auto">
+<!-- Brand -->
+<div class="flex items-center gap-md">
+<span class="font-display-lg text-display-lg font-bold text-on-surface">AdCraft</span>
+</div>
+<!-- Navigation Links -->
+<nav class="hidden md:flex items-center gap-lg">
+<a class="text-secondary hover:bg-surface-container transition-colors px-md py-sm rounded-DEFAULT font-label-md text-label-md" href="#">Historique</a>
+</nav>
+<!-- Trailing Actions -->
+<div class="flex items-center gap-md">
+<span class="font-label-md text-label-md text-secondary hidden md:block">145 images • 5,07 €</span>
+<button class="bg-primary-container text-on-primary font-label-md text-label-md px-md py-sm rounded-DEFAULT hover:opacity-90 transition-opacity scale-98 active:opacity-80">Générer</button>
+<div class="w-8 h-8 rounded-full bg-surface-variant overflow-hidden border border-outline-variant flex-shrink-0">
+<img alt="Photo de profil utilisateur" class="w-full h-full object-cover" data-alt="A professional headshot of a creative director in a minimalist studio setting. The lighting is soft and even, highlighting a clean, modern aesthetic suitable for a high-end AI tool profile picture. Neutral color palette." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBzqIxMzrDXHI5tbHQacvBx1OlBiAp53CJg4ZyuEgFf7VIz0Xmg2DqsAbMPDb37LZLmw02ulsugq1er-jhe-OnjExcu8PGceASqa-llvCKkaGX91kwhzQRVj_z5xBzI4H-GzkPgcieal9a-MspQSgKqtTbfy5OGpmlmCNODALnsfGikqb8bsVyVwYy3-XQcrmlk2SPe88d7GZweGxF1P-PYuYaRSqqb0w6H3QR-qVVGwvVYIh4sCls"/>
+</div>
+</div>
+</div>
+</header>
+<!-- Main Content Area -->
+<main class="flex-grow w-full max-w-container-max mx-auto px-lg py-xl flex flex-col lg:flex-row gap-xl">
+<!-- Left Panel: Controls (Inputs & Themes) -->
+<section class="w-full lg:w-[480px] flex-shrink-0 flex flex-col gap-xl">
+<!-- Asset Upload Section -->
+<div class="flex flex-col gap-sm">
+<h2 class="font-headline-md text-headline-md text-on-surface">Produits source</h2>
+<p class="font-body-sm text-body-sm text-secondary">Déposez de 1 à 14 photos du produit détouré.</p>
+<!-- Dropzone -->
+<div class="border border-dashed border-outline-variant rounded-lg bg-surface-container-lowest p-xl flex flex-col items-center justify-center text-center cursor-pointer hover:bg-surface-container transition-colors min-h-[160px]" id="dropzone">
+<span class="material-symbols-outlined text-secondary text-[32px] mb-sm" data-icon="cloud_upload">cloud_upload</span>
+<span class="font-label-md text-label-md text-on-surface">Glissez-déposez vos images ici</span>
+<span class="font-body-sm text-body-sm text-secondary mt-xs">ou cliquez pour parcourir</span>
+</div>
+<!-- Uploaded Thumbnails Container -->
+<div class="flex flex-wrap gap-sm mt-sm">
+<!-- Thumbnail 1 -->
+<div class="relative w-16 h-16 rounded-DEFAULT border border-outline-variant bg-surface-container-lowest group overflow-hidden flex-shrink-0">
+<img alt="Asset" class="w-full h-full object-contain p-sm" data-alt="A clean, high-resolution rendering of a sleek perfume bottle on a pure white background. Minimalist lighting, sharp reflections, representing a raw product asset before AI generation." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCLv9wnGvwwjxhRh1ESg_vwbH6MnhJK1mSM7EtlWTLBLA8ocPEPv8UALJBzE_cuklqAwz5X-Iomxa7IbO-PJoYu4AiHzs4_TruH7WqYUjSWqhKRY0Taaq4ESv-V23glaf9JpkpI2GWIqUm0fNLNjH86zvWApzx-q2EU1BS4Ccwmq4KP8ISFZ4LuP9FmEabtnXZJ5chgdF7PghJ-bqeBvDgHBYhRGSweudobuJAGUw70uP9ULfk9Tso"/>
+<button aria-label="Supprimer" class="absolute top-1 right-1 w-5 h-5 bg-surface-container-lowest rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity border border-outline-variant shadow-sm text-error hover:bg-error-container hover:text-error">
+<span class="material-symbols-outlined text-[12px]" data-icon="close">close</span>
+</button>
+</div>
+</div>
+</div>
+<hr class="border-t border-outline-variant w-full"/>
+<!-- Context Inputs -->
+<div class="flex flex-col gap-md">
+<h2 class="font-headline-md text-headline-md text-on-surface">Contexte &amp; Produit</h2>
+<div class="flex flex-col gap-sm">
+<label class="font-label-md text-label-md text-on-surface">Marque</label>
+<input class="w-full border border-outline-variant rounded-DEFAULT px-md py-sm font-body-base text-on-surface bg-surface-container-lowest focus:outline-none focus:border-primary-container focus:ring-1 focus:ring-primary-container placeholder:text-secondary transition-colors" placeholder="Ex: Maison Margiela" type="text"/>
+</div>
+<div class="flex gap-md">
+<div class="flex flex-col gap-sm flex-1">
+<label class="font-label-md text-label-md text-on-surface">Catégorie</label>
+<select class="w-full border border-outline-variant rounded-DEFAULT px-md py-sm font-body-base text-on-surface bg-surface-container-lowest focus:outline-none focus:border-primary-container focus:ring-1 focus:ring-primary-container appearance-none transition-colors">
+<option disabled="" selected="" value="">Sélectionner...</option>
+<option value="parfum">Parfum</option>
+<option value="cosmetique">Cosmétique</option>
+<option value="boisson">Boisson</option>
+<option value="accessoire">Accessoire</option>
+</select>
+</div>
+<div class="flex flex-col gap-sm flex-1">
+<label class="font-label-md text-label-md text-on-surface">Goût / Variante</label>
+<input class="w-full border border-outline-variant rounded-DEFAULT px-md py-sm font-body-base text-on-surface bg-surface-container-lowest focus:outline-none focus:border-primary-container focus:ring-1 focus:ring-primary-container placeholder:text-secondary transition-colors" placeholder="Ex: Rose &amp; Oud" type="text"/>
+</div>
+</div>
+</div>
+<hr class="border-t border-outline-variant w-full"/>
+<!-- Theme Selector -->
+<div class="flex flex-col gap-md">
+<div class="flex justify-between items-center">
+<h2 class="font-headline-md text-headline-md text-on-surface">Thème de mise en scène</h2>
+<span class="font-body-sm text-body-sm text-secondary">Sélectionnez 1 thème</span>
+</div>
+<!-- Bento Grid for Themes -->
+<div class="grid grid-cols-2 md:grid-cols-3 gap-md">
+<!-- Theme: Classique -->
+<button class="relative group rounded-lg border border-outline-variant overflow-hidden aspect-[4/3] flex flex-col justify-end text-left hover:border-primary-container transition-colors focus:outline-none focus:ring-2 focus:ring-primary-container focus:ring-offset-2">
+<div class="absolute inset-0 bg-surface-container-low group-hover:bg-surface-container transition-colors z-0">
+<div class="w-full h-full bg-cover bg-center opacity-40 mix-blend-multiply" data-alt="A subtle, elegant neutral background featuring soft marble textures and gentle studio lighting. Extremely minimalist, suitable for a 'Classic' aesthetic in a high-end advertising tool. Whites, light grays, and soft beige tones." style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuCyzQ37nUa-yHHbDXHafegqJmAnSzwTHNL8-V3EF5LvdTNj6fYHqXZcgpRemyLqJCZkELsF2U3YwGDL1nE_ZNLPKSPXEJdjqlmGHyoLv7Zb8Xyr4bbt7YGf608X7ObbO7cYtUs923uu0gXCoROimGWW2eAk2FP5un96iOpPv4v9cIQLNZvtV5esOZlYs2GBa3gmjRK10QPmLEeLWJ_7GayO4rL5YAqzpnnmviKKu7bFYPUqHRrwids')"></div>
+</div>
+<div class="relative z-10 p-sm bg-gradient-to-t from-surface-container-lowest/90 to-transparent w-full">
+<span class="font-label-md text-label-md text-on-surface block">Classique</span>
+</div>
+</button>
+<!-- Theme: Été -->
+<button class="relative group rounded-lg border border-outline-variant overflow-hidden aspect-[4/3] flex flex-col justify-end text-left hover:border-primary-container transition-colors">
+<div class="absolute inset-0 bg-surface-container-low z-0">
+<div class="w-full h-full bg-cover bg-center opacity-40 mix-blend-multiply group-hover:opacity-60 transition-opacity" data-alt="A bright, sunlit minimalist scene featuring clear water ripples, white sand textures, and harsh but clean summer shadows. High contrast, light mode aesthetic, evoking a premium 'Summer' vibe for luxury product placement." style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuCiXLa96T1Pw_SPpooA_H64zZ-MhLenluSAUc1pu83_5iDdgUjnOWQVrijOuUMoj7Gh7vBa-3cPVDtyKne1IAR8jbC2z0Y9W-wsxra4hV80f7nXE8s8F2F6VPX88jJ_EtnGwYoHPzz0xUH8lTozeYEOR_-xOf9_h6GpBegYPlSvyu3sNKzTEhhVvQwvdRY6an9tNKiS0tDhCASukWjjRw43ie_Rh856WQCoqAIRsHtpw7LX0q0CWxw')"></div>
+</div>
+<div class="relative z-10 p-sm bg-gradient-to-t from-surface-container-lowest/90 to-transparent w-full">
+<span class="font-label-md text-label-md text-on-surface block">Été</span>
+</div>
+</button>
+<!-- Theme: Extravagant -->
+<button class="relative group rounded-lg border border-outline-variant overflow-hidden aspect-[4/3] flex flex-col justify-end text-left hover:border-primary-container transition-colors">
+<div class="absolute inset-0 bg-surface-container-low z-0">
+<div class="w-full h-full bg-cover bg-center opacity-40 mix-blend-multiply group-hover:opacity-60 transition-opacity" data-alt="Surreal, highly artistic minimalist composition with floating geometric shapes, iridescent materials, and unexpected splashes of vibrant color against a clean white backdrop. Evokes an 'Extravagant' yet sophisticated luxury aesthetic." style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuAH6o1ZtnNZGEs3KX0I3hSJFOGaUIiiAh6_aDrrT6fWhYHl-ZkSKEdG7jZ1UTbxOWGdgWrdBKPQLTxABQ-g7lsRmom2W2K_dsRmeczD4e0ZaYYG73G19i0TzamEhZm98Hd-ovfYZR5ITpCgZRE74JkynQZobPZinqyeikF270-IJmTwvytv9TEnYwlOzjZEbd7Nfy1KKVv1PJ_XvRwYcPnlvQ0aoHcab_uhNL44HltTaHg1XeJkgHg')"></div>
+</div>
+<div class="relative z-10 p-sm bg-gradient-to-t from-surface-container-lowest/90 to-transparent w-full">
+<span class="font-label-md text-label-md text-on-surface block">Extravagant</span>
+</div>
+</button>
+<!-- Theme: Sport -->
+<button class="relative group rounded-lg border border-outline-variant overflow-hidden aspect-[4/3] flex flex-col justify-end text-left hover:border-primary-container transition-colors">
+<div class="absolute inset-0 bg-surface-container-low z-0">
+<div class="w-full h-full bg-cover bg-center opacity-40 mix-blend-multiply group-hover:opacity-60 transition-opacity" data-alt="Dynamic, high-energy minimalist background featuring sleek carbon fiber textures, crisp diagonal light streaks, and stark contrast. Clean whites and deep greys with a touch of neon, suitable for a premium 'Sport' aesthetic." style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuDowlrHgOU4BctIgwRLnxV70e_AmzYt9Ah0-pgKeABT07ngMzkqgt0G8IJWeioqfmOSvQYHWjayYEQ4tigtANfjBq3jQsb7qMvkguMrsMVYTW9J2ze8fiTEk3bGPAA79_JEzUMCbX8wH8QK1uSoZl8t92ucHDv3XRie1HBNvUr4lPsDaGx2ttzm1CescUH-I-V3Mk-G0-rCa4WQG29yfvct9NulCnNtKwLuhEIX4jME2qpNtsmikRY')"></div>
+</div>
+<div class="relative z-10 p-sm bg-gradient-to-t from-surface-container-lowest/90 to-transparent w-full">
+<span class="font-label-md text-label-md text-on-surface block">Sport</span>
+</div>
+</button>
+<!-- Theme: Nuit/Fête -->
+<button class="relative group rounded-lg border border-outline-variant overflow-hidden aspect-[4/3] flex flex-col justify-end text-left hover:border-primary-container transition-colors">
+<div class="absolute inset-0 bg-surface-container-low z-0">
+<div class="w-full h-full bg-cover bg-center opacity-40 mix-blend-multiply group-hover:opacity-60 transition-opacity" data-alt="A moody, sophisticated minimalist scene hinting at night life. Darker sleek surfaces, subtle bokeh lights in the distance, sharp rim lighting on invisible geometric forms. Evokes 'Night/Party' but maintains the high-end clean tool aesthetic." style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuA581PfhNUBRGtXsXJEZXsL5NxVNuXShJOJBhPGmRspFJn0PrZVTVppVMDN-nJzrhk2-ZRx8JRaH1rH-WM1m0eD56oDdL4KnUbZLRDjxCQvnhmQeZU6iLzgCc3f3BJBQTdAuwE5Xib7W0Pcrr5bozNXORZU6ciRQydye1kvihTIxFlH6Yj50WpPnKGQh-cS1OyrZvQ4KdhyOFyuupzwCFDilCS2EzXtwbR9FwhmY_4ojlCJweiuFx4')"></div>
+</div>
+<div class="relative z-10 p-sm bg-gradient-to-t from-surface-container-lowest/90 to-transparent w-full">
+<span class="font-label-md text-label-md text-on-surface block">Nuit/Fête</span>
+</div>
+</button>
+<!-- Theme: Luxe -->
+<!-- Active State Example -->
+<button class="relative group rounded-lg border-2 border-primary-container overflow-hidden aspect-[4/3] flex flex-col justify-end text-left">
+<div class="absolute inset-0 bg-surface-container-low z-0">
+<div class="w-full h-full bg-cover bg-center opacity-60 mix-blend-multiply" data-alt="Rich, ultra-premium minimalist texture featuring brushed gold accents against stark white and cream surfaces. Soft, diffused lighting creating subtle gradients. Epitomizes a 'Luxury' brand environment." style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuBxyIsl6PK9N5xqdNNtSjove3Gprk0NT3vbQBAl8gEHG0FHyS13FVHj24ACfs28mqLVhq807uLBefuUPV4M4hO-t8vnBWpfKG9_r9PaMNc3NyjHb-GK-RaRY2IzNhw5xaq3o6JuNYAMmXceB3eC4YROnFYAGLYajni9INDdcQSIY75VXJBroEgTJ8uSMN7iVITP23doEQwkz-DAQJpMKBPKgLTotEx39NtlrRdsq3LuT2mmA51pcdA')"></div>
+</div>
+<div class="absolute top-2 right-2 z-20 bg-surface-container-lowest rounded-full w-5 h-5 flex items-center justify-center shadow-sm">
+<span class="material-symbols-outlined text-primary-container text-[14px]" data-icon="check" data-weight="fill">check</span>
+</div>
+<div class="relative z-10 p-sm bg-gradient-to-t from-surface-container-lowest/90 to-transparent w-full">
+<span class="font-label-md text-label-md text-on-surface block font-bold text-primary-container">Luxe</span>
+</div>
+</button>
+<!-- Theme: Noël -->
+<button class="relative group rounded-lg border border-outline-variant overflow-hidden aspect-[4/3] flex flex-col justify-end text-left hover:border-primary-container transition-colors">
+<div class="absolute inset-0 bg-surface-container-low z-0">
+<div class="w-full h-full bg-cover bg-center opacity-40 mix-blend-multiply group-hover:opacity-60 transition-opacity" data-alt="A festive yet minimalist scene suitable for high-end retail. Frosty white surfaces, subtle hints of pine green, and delicate gold sparkles out of focus. Clean, bright light mode aesthetic representing 'Christmas'." style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuBGwZF75K6uUUiYK5jhM4_cfcqPfEwnyaJHwnGwaLz_7RFvPT_yUA5e9dlfcRXSWIrfqSjSUWoBTbKK3jgg_Wq1yqF8Ab27ekKah2FN14SKgg5TDjp0f085k3YyKKiWxSgP9jweXL4RxJb82PptEiyyUL5uJ671VN8YrKGE3_yAoHTtt3pTJgieSR4ix6zf0W1q9noVzL7E9eLMIdIftohnIocDpNBsIUe2KJ24mb3z4xlUNww2EJE')"></div>
+</div>
+<div class="relative z-10 p-sm bg-gradient-to-t from-surface-container-lowest/90 to-transparent w-full">
+<span class="font-label-md text-label-md text-on-surface block">Noël</span>
+</div>
+</button>
+</div>
+</div>
+</section>
+<!-- Right Panel: Canvas / Preview -->
+<section class="flex-grow flex flex-col gap-md items-center justify-center bg-surface rounded-xl border border-outline-variant min-h-[600px] p-xl relative overflow-hidden">
+<!-- Toolbar (Top) -->
+<div class="absolute top-lg left-1/2 -translate-x-1/2 bg-surface-container-lowest border border-outline-variant rounded-full px-sm py-xs flex items-center gap-xs shadow-sm z-20">
+<button class="w-8 h-8 flex items-center justify-center rounded-full hover:bg-surface-container text-secondary hover:text-on-surface transition-colors" title="Zoom Arrière">
+<span class="material-symbols-outlined text-[20px]" data-icon="zoom_out">zoom_out</span>
+</button>
+<span class="font-label-sm text-label-sm text-secondary px-xs">100%</span>
+<button class="w-8 h-8 flex items-center justify-center rounded-full hover:bg-surface-container text-secondary hover:text-on-surface transition-colors" title="Zoom Avant">
+<span class="material-symbols-outlined text-[20px]" data-icon="zoom_in">zoom_in</span>
+</button>
+<div class="w-px h-4 bg-outline-variant mx-xs"></div>
+<button class="w-8 h-8 flex items-center justify-center rounded-full hover:bg-surface-container text-secondary hover:text-on-surface transition-colors" title="Centrer">
+<span class="material-symbols-outlined text-[20px]" data-icon="center_focus_strong">center_focus_strong</span>
+</button>
+</div>
+<!-- Canvas Container (4:5 Ratio) -->
+<div class="relative w-full max-w-[400px] aspect-[4/5] bg-surface-container-lowest border border-outline-variant shadow-sm rounded-DEFAULT flex flex-col items-center justify-center text-center p-lg z-10">
+<!-- Empty State Content -->
+<div class="flex flex-col items-center gap-md opacity-60">
+<span class="material-symbols-outlined text-[48px] text-outline-variant" data-icon="auto_awesome">auto_awesome</span>
+<div class="flex flex-col gap-xs">
+<span class="font-headline-md text-headline-md text-on-surface">Toile de Création</span>
+<span class="font-body-sm text-body-sm text-secondary">Configurez vos paramètres et cliquez sur "Générer" pour visualiser le résultat.</span>
+</div>
+</div>
+<!-- Format Indicator -->
+<div class="absolute bottom-sm right-sm bg-surface-container/50 px-sm py-xs rounded-DEFAULT">
+<span class="font-label-sm text-label-sm text-secondary">4:5 (Instagram)</span>
+</div>
+</div>
+</section>
+</main>
+<!-- Footer -->
+<footer class="bg-surface border-t border-outline-variant w-full mt-auto">
+<div class="flex flex-col md:flex-row justify-between items-center w-full px-lg py-lg max-w-container-max mx-auto gap-md">
+<!-- Brand / Copyright -->
+<span class="font-label-md text-label-md font-bold text-on-surface">© 2024 AdCraft AI. Tous droits réservés.</span>
+<!-- Links -->
+<nav class="flex flex-wrap justify-center gap-md md:gap-lg">
+<a class="text-on-secondary-fixed-variant hover:text-primary transition-colors opacity-100 hover:opacity-80 font-label-sm text-label-sm" href="#">Mentions légales</a>
+<a class="text-on-secondary-fixed-variant hover:text-primary transition-colors opacity-100 hover:opacity-80 font-label-sm text-label-sm" href="#">Confidentialité</a>
+<a class="text-on-secondary-fixed-variant hover:text-primary transition-colors opacity-100 hover:opacity-80 font-label-sm text-label-sm" href="#">Conditions d'utilisation</a>
+<a class="text-on-secondary-fixed-variant hover:text-primary transition-colors opacity-100 hover:opacity-80 font-label-sm text-label-sm flex items-center gap-xs" href="#">
+                    Français (FR)
+                    <span class="material-symbols-outlined text-[14px]" data-icon="language">language</span>
+</a>
+</nav>
+</div>
+</footer>
+<!-- Minimal Script for Dropzone interaction visual feedback -->
+<script>
+        const dropzone = document.getElementById('dropzone');
+        
+        ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+            dropzone.addEventListener(eventName, preventDefaults, false);
+        });
+
+        function preventDefaults (e) {
+            e.preventDefault();
+            e.stopPropagation();
+        }
+
+        ['dragenter', 'dragover'].forEach(eventName => {
+            dropzone.addEventListener(eventName, highlight, false);
+        });
+
+        ['dragleave', 'drop'].forEach(eventName => {
+            dropzone.addEventListener(eventName, unhighlight, false);
+        });
+
+        function highlight(e) {
+            dropzone.classList.add('drag-over');
+        }
+
+        function unhighlight(e) {
+            dropzone.classList.remove('drag-over');
+        }
+    </script>
+</body></html>

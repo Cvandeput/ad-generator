@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+
+<html class="light" lang="fr"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Historique des Générations - AdCraft</title>
+<!-- Material Symbols -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Tailwind CSS -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<!-- Tailwind Config -->
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "outline": "#747686",
+                        "surface-dim": "#dadad9",
+                        "on-error": "#ffffff",
+                        "error": "#ba1a1a",
+                        "background": "#f9f9f8",
+                        "surface-container": "#eeeeed",
+                        "tertiary-fixed": "#ffdbcf",
+                        "tertiary-container": "#a73400",
+                        "primary": "#0037b0",
+                        "secondary-fixed": "#e9e1dd",
+                        "secondary-fixed-dim": "#ccc5c2",
+                        "inverse-primary": "#b7c4ff",
+                        "secondary-container": "#e9e1dd",
+                        "on-error-container": "#93000a",
+                        "inverse-on-surface": "#f1f1f0",
+                        "inverse-surface": "#2f3130",
+                        "on-surface-variant": "#434655",
+                        "on-surface": "#1a1c1c",
+                        "secondary": "#625d5b",
+                        "surface": "#f9f9f8",
+                        "on-secondary-container": "#686361",
+                        "error-container": "#ffdad6",
+                        "surface-container-low": "#f3f4f3",
+                        "on-secondary": "#ffffff",
+                        "primary-container": "#1d4ed8",
+                        "on-secondary-fixed": "#1e1b19",
+                        "tertiary": "#7f2500",
+                        "on-tertiary-fixed": "#390c00",
+                        "surface-tint": "#2151da",
+                        "on-primary-container": "#cad3ff",
+                        "surface-container-lowest": "#ffffff",
+                        "on-secondary-fixed-variant": "#4a4643",
+                        "on-background": "#1a1c1c",
+                        "on-tertiary-fixed-variant": "#832700",
+                        "primary-fixed": "#dce1ff",
+                        "on-primary-fixed-variant": "#0039b5",
+                        "outline-variant": "#c4c5d7",
+                        "on-tertiary-container": "#ffc9b7",
+                        "on-tertiary": "#ffffff",
+                        "tertiary-fixed-dim": "#ffb59c",
+                        "on-primary": "#ffffff",
+                        "surface-variant": "#e2e2e2",
+                        "surface-container-highest": "#e2e2e2",
+                        "on-primary-fixed": "#001551",
+                        "surface-bright": "#f9f9f8",
+                        "surface-container-high": "#e8e8e7",
+                        "primary-fixed-dim": "#b7c4ff"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.125rem",
+                        "lg": "0.25rem",
+                        "xl": "0.5rem",
+                        "full": "0.75rem"
+                    },
+                    "spacing": {
+                        "container-max": "1280px",
+                        "gutter": "20px",
+                        "xl": "48px",
+                        "sm": "8px",
+                        "lg": "24px",
+                        "md": "16px",
+                        "unit": "4px",
+                        "xs": "4px"
+                    },
+                    "fontFamily": {
+                        "display-lg": ["Inter", "sans-serif"],
+                        "label-md": ["Inter", "sans-serif"],
+                        "body-base": ["Inter", "sans-serif"],
+                        "headline-md": ["Inter", "sans-serif"],
+                        "body-sm": ["Inter", "sans-serif"],
+                        "display-lg-mobile": ["Inter", "sans-serif"],
+                        "label-sm": ["Inter", "sans-serif"]
+                    },
+                    "fontSize": {
+                        "display-lg": ["32px", { "lineHeight": "40px", "letterSpacing": "-0.02em", "fontWeight": "600" }],
+                        "label-md": ["12px", { "lineHeight": "16px", "letterSpacing": "0.01em", "fontWeight": "600" }],
+                        "body-base": ["14px", { "lineHeight": "20px", "fontWeight": "400" }],
+                        "headline-md": ["20px", { "lineHeight": "28px", "letterSpacing": "-0.01em", "fontWeight": "600" }],
+                        "body-sm": ["13px", { "lineHeight": "18px", "fontWeight": "400" }],
+                        "display-lg-mobile": ["24px", { "lineHeight": "32px", "letterSpacing": "-0.02em", "fontWeight": "600" }],
+                        "label-sm": ["11px", { "lineHeight": "14px", "fontWeight": "400" }]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        body { font-family: 'Inter', sans-serif; }
+    </style>
+</head>
+<body class="bg-surface min-h-screen flex flex-col text-on-surface">
+<!-- TopNavBar -->
+<header class="bg-surface-container-lowest dark:bg-surface-container-lowest sticky top-0 border-b border-outline-variant dark:border-outline-variant z-50">
+<div class="flex justify-between items-center w-full px-lg py-md max-w-container-max mx-auto">
+<div class="flex items-center gap-8">
+<!-- Brand Logo -->
+<a class="font-display-lg text-display-lg font-bold text-on-surface dark:text-on-surface hover:opacity-80 transition-opacity" href="#">
+                    AdCraft
+                </a>
+<!-- Navigation -->
+<nav class="hidden md:flex gap-6 h-full items-center">
+<a class="text-primary dark:text-primary font-bold border-b-2 border-primary pb-1 font-label-md text-label-md hover:bg-surface-container dark:hover:bg-surface-container-high transition-colors scale-98 active:opacity-80" href="#">
+                        Historique
+                    </a>
+</nav>
+</div>
+<!-- Actions -->
+<div class="flex items-center gap-6">
+<span class="hidden md:block font-body-sm text-body-sm text-secondary dark:text-secondary">
+                    145 images • 5,07 €
+                </span>
+<button class="bg-primary-container text-on-primary font-label-md text-label-md px-4 py-2 rounded-lg hover:opacity-90 transition-opacity flex items-center gap-2">
+<span class="material-symbols-outlined text-[16px]">magic_button</span>
+                    Générer
+                </button>
+<button class="w-8 h-8 rounded-full overflow-hidden border border-outline-variant shrink-0">
+<img alt="Photo de profil utilisateur" class="w-full h-full object-cover" data-alt="Portrait photo of a young professional user in a minimalist studio setting with soft lighting, neutral background, reflecting a sophisticated tool interface." src="https://lh3.googleusercontent.com/aida-public/AB6AXuD5k6hF38VpaJwqlWnsDAsMUcUUnTfur4dgZaW-hjPvRi-RpiGqVgZ67n8G43aB09Q4fuSLisSWNjUphjByPj7Zbo3DNj-rAeDpMcDGBSx8Khoo0qbRukwqV6DBI4EBDCwu9efNOx_-g3QX-533a5jdFFKmnsv1zY7m7EPi2LtlWX2Ju2s3eLiRkUndaktU35jNmuwM7Qvl9KYDVM8ARKfXV4kHA59NLIBEtaP-3qbY8m0LMCwZ81g"/>
+</button>
+</div>
+</div>
+</header>
+<!-- Main Content -->
+<main class="flex-1 w-full max-w-container-max mx-auto px-md md:px-lg py-xl">
+<!-- Header Section -->
+<div class="flex justify-between items-end mb-8">
+<div>
+<h1 class="font-display-lg text-display-lg mb-2">Historique des Générations</h1>
+<p class="font-body-base text-body-base text-secondary">Consultez et gérez vos visuels publicitaires générés.</p>
+</div>
+</div>
+<!-- Alert Banner (Error) -->
+<details class="bg-surface-container-lowest text-on-surface-variant rounded-lg border-l-4 border-l-error border border-y-outline-variant border-r-outline-variant mb-6 group" role="alert">
+<summary class="flex items-center justify-between p-md cursor-pointer list-none [&amp;::-webkit-details-marker]:hidden">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-outline" style="font-variation-settings: 'wght' 300;">error</span>
+<p class="font-body-base text-body-base font-medium">La génération a échoué. Veuillez réessayer.</p>
+</div>
+<span class="material-symbols-outlined text-outline transition-transform group-open:rotate-180">expand_more</span>
+</summary>
+<div class="px-md pb-md font-body-sm text-body-sm border-t border-outline-variant/30 pt-3 mt-1">
+Détails de l'erreur: Timeout du serveur API. Vérifiez votre connexion.
+</div>
+</details>
+<!-- Failed Generation Item -->
+<div class="bg-surface-container-lowest border border-error/40 rounded-xl p-6 mb-8 relative overflow-hidden group hover:border-error transition-colors shadow-sm">
+<!-- Subtle error accent line -->
+<div class="absolute left-0 top-0 bottom-0 w-1 bg-error"></div>
+<div class="flex flex-col md:flex-row md:justify-between md:items-start gap-4 ml-2">
+<!-- Error Details -->
+<div class="flex items-start gap-4">
+<div class="w-12 h-12 rounded-lg bg-surface-container-high flex items-center justify-center text-error shrink-0 border border-outline-variant">
+<span class="material-symbols-outlined text-[24px]">broken_image</span>
+</div>
+<div>
+<h3 class="font-headline-md text-headline-md text-on-surface mb-1">Échec de la tâche #ADC-892</h3>
+<p class="font-body-sm text-body-sm text-on-surface-variant mb-2">
+<span class="font-medium text-on-surface">Date:</span> 12/10/2024 • 
+                            <span class="font-medium text-on-surface">Produit:</span> Montre Sport • 
+                            <span class="font-medium text-on-surface">Modèle:</span> Studio Minimaliste
+                        </p>
+<div class="inline-flex items-center gap-1.5 bg-error-container/50 text-error px-2 py-1 rounded font-label-sm text-label-sm mt-1">
+<span class="material-symbols-outlined text-[14px]">warning</span>
+                            Raison: Qualité des photos source insuffisante.
+                        </div>
+</div>
+</div>
+<!-- Actions -->
+<div class="flex items-center gap-3 mt-4 md:mt-0">
+<button class="bg-surface-container-lowest text-on-surface border border-outline-variant font-label-md text-label-md px-4 py-2 rounded-lg hover:bg-surface-container transition-colors flex items-center gap-2">
+<span class="material-symbols-outlined text-[16px]">refresh</span>
+                        Relancer
+                    </button>
+<button class="bg-surface-container-lowest text-error border border-error font-label-md text-label-md px-4 py-2 rounded-lg hover:bg-error-container transition-colors flex items-center gap-2">
+<span class="material-symbols-outlined text-[16px]">delete</span>
+                        Supprimer
+                    </button>
+</div>
+</div>
+</div>
+<!-- Empty State Main Grid -->
+<div class="border border-outline-variant border-dashed rounded-xl h-[400px] flex flex-col items-center justify-center text-center p-8 bg-surface-container-low/30">
+<div class="w-16 h-16 bg-surface-container-high rounded-full flex items-center justify-center mb-6">
+<span class="material-symbols-outlined text-[32px] text-secondary">image_not_supported</span>
+</div>
+<h2 class="font-headline-md text-headline-md text-on-surface mb-2">Aucun résultat</h2>
+<p class="font-body-base text-body-base text-secondary max-w-md">
+                Aucun visuel généré avec succès pour le moment. Lancez une nouvelle génération pour voir vos résultats apparaître ici.
+            </p>
+</div>
+</main>
+<!-- Footer -->
+<footer class="bg-surface dark:bg-surface border-t border-outline-variant dark:border-outline-variant mt-auto">
+<div class="flex flex-col md:flex-row justify-between items-center w-full px-lg py-lg max-w-container-max mx-auto gap-4">
+<div class="font-label-md text-label-md font-bold text-on-surface opacity-100 hover:opacity-80 transition-opacity">
+                AdCraft
+            </div>
+<div class="flex flex-wrap justify-center gap-6 font-label-sm text-label-sm">
+<a class="text-on-secondary-fixed-variant dark:text-on-secondary-fixed-variant hover:text-primary dark:hover:text-primary transition-colors" href="#">Mentions légales</a>
+<a class="text-on-secondary-fixed-variant dark:text-on-secondary-fixed-variant hover:text-primary dark:hover:text-primary transition-colors" href="#">Confidentialité</a>
+<a class="text-on-secondary-fixed-variant dark:text-on-secondary-fixed-variant hover:text-primary dark:hover:text-primary transition-colors" href="#">Conditions d'utilisation</a>
+<a class="text-on-secondary-fixed-variant dark:text-on-secondary-fixed-variant hover:text-primary dark:hover:text-primary transition-colors" href="#">Français (FR)</a>
+</div>
+<div class="font-body-sm text-body-sm text-on-surface-variant dark:text-on-surface-variant">
+                © 2024 AdCraft AI. Tous droits réservés.
+            </div>
+</div>
+</footer>
+</body></html>
