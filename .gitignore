@@ -1,5 +1,6 @@
 .env
 progress.md
+SECURITY-REVIEW.md
 node_modules/
 backend/data/
 tools/out/
