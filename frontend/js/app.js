@@ -98,13 +98,19 @@ function renderPreviews() {
   files.forEach((f, i) => {
     const url = URL.createObjectURL(f);
     const cell = document.createElement('div');
-    cell.className =
-      'relative w-16 h-16 rounded border border-outline-variant bg-surface-container-lowest group overflow-hidden flex-shrink-0';
+    cell.className = 'group relative w-28 flex flex-col gap-xs flex-shrink-0';
+    // Vignette agrandie ; clic sur l'image = ouverture pleine taille dans un
+    // nouvel onglet (vérifier qu'on a chargé la bonne photo). Nom affiché sous.
     cell.innerHTML = `
-      <img src="${url}" class="w-full h-full object-contain p-sm" />
-      <button data-i="${i}" class="remove absolute top-1 right-1 w-5 h-5 bg-surface-container-lowest rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity border border-outline-variant text-error" aria-label="Retirer">
-        <span class="material-symbols-outlined text-[12px]">close</span>
-      </button>`;
+      <div class="relative w-28 h-28 rounded border border-outline-variant bg-surface-container-lowest overflow-hidden">
+        <a href="${url}" target="_blank" rel="noopener" title="Ouvrir « ${escapeHtml(f.name)} » en grand" class="block w-full h-full">
+          <img src="${url}" class="w-full h-full object-contain p-xs" alt="${escapeHtml(f.name)}" />
+        </a>
+        <button data-i="${i}" class="remove absolute top-1 right-1 w-5 h-5 bg-surface-container-lowest rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity border border-outline-variant text-error z-10" aria-label="Retirer">
+          <span class="material-symbols-outlined text-[12px]">close</span>
+        </button>
+      </div>
+      <span class="font-label-sm text-label-sm text-secondary truncate w-28" title="${escapeHtml(f.name)}">${escapeHtml(f.name)}</span>`;
     previews.appendChild(cell);
   });
   previews.querySelectorAll('.remove').forEach((btn) =>

@@ -13,12 +13,16 @@
     />
     <link rel="stylesheet" href="/css/app.css" />
     <style>
+      /* contain (pas cover) : les images sources ont des ratios différents
+         (canette portrait, pub paysage) — cover les massacrait au recadrage.
+         contain montre l'image entière, centrée, sur le dégradé de fond. */
       .carousel-slide {
         position: absolute;
         inset: 0;
         width: 100%;
         height: 100%;
-        object-fit: cover;
+        object-fit: contain;
+        padding: 2.5rem;
         opacity: 0;
         animation: fadeSlide 20s infinite;
       }

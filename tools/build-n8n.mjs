@@ -19,7 +19,7 @@ const DA_SYSTEM = `You are an art director for commercial product photography. G
 
 Method:
 1. Identify what the product is literally made of, where it comes from, and when it is consumed.
-2. Derive an environment from that identity — not a generic studio, not a stock background. Crisps come from potatoes and farms. San Pellegrino comes from an Italian table. Energy drinks belong where energy is spent. A frozen croissant belongs in a morning kitchen.
+2. Derive an environment from that identity - not a generic studio, not a stock background. Crisps come from potatoes and farms. San Pellegrino comes from an Italian table. Energy drinks belong where energy is spent. A frozen croissant belongs in a morning kitchen.
 3. Choose a surface the product physically rests on, and at most four props that belong in that world. Every prop must have a reason to be there.
 4. Respect the requested theme as a STYLE constraint applied to that environment, not as a replacement for it. "Luxe" on crisps is a refined farmhouse, not a marble podium.
 
@@ -116,8 +116,9 @@ const { brand, category, flavor, theme, description, artDirection, images } = bo
 if (!brand || !category || !theme) { throw new Error('Champs requis manquants (brand, category, theme)'); }
 if (!images || !images.length) { throw new Error('Aucune image fournie'); }
 
-// Défense en profondeur : le backend nettoie déjà, mais le node peut être appelé
-// directement. Retire caractères de contrôle, collapse les espaces, tronque.
+// Defense en profondeur : le backend nettoie deja, mais le node peut etre appele
+// directement. Retire caracteres de controle, collapse les espaces, tronque.
+// (commentaires sans accents : evite tout probleme d'encodage dans l'editeur n8n)
 const clean = (s, max) => String(s || '').replace(/\\p{Cc}/gu, ' ').replace(/\\s+/g, ' ').trim().slice(0, max);
 const desc = clean(description, 120);
 const art = clean(artDirection, 200);
@@ -144,8 +145,8 @@ return [{ json: { daBody, body, desc, art } }];
 // body original, applique la priorité (manuel > IA > repli), assemble le prompt
 // image final et journalise la source de la direction artistique. ---
 const buildPromptCode = `
-const da = $input.first().json;                       // réponse Directeur Artistique (ou erreur si continueOnFail)
-const ctx = $('Build DA Request').first().json;       // body original + champs nettoyés
+const da = $input.first().json;                       // reponse Directeur Artistique (ou erreur si continueOnFail)
+const ctx = $('Build DA Request').first().json;       // body original + champs nettoyes
 const { body, desc, art } = ctx;
 const { brand, category, flavor, theme, images } = body;
 const NL = String.fromCharCode(10);
@@ -156,7 +157,7 @@ const AVOID = ${JSON.stringify(AVOID)};
 const PRESETS = ${JSON.stringify(PRESETS, null, 2)};
 
 // Extrait et valide le JSON du Directeur Artistique. Un JSON syntaxiquement
-// valide mais amputé d'un champ déclenche aussi le repli.
+// valide mais ampute d'un champ declenche aussi le repli.
 function parseDA(resp) {
   try {
     const cands = (resp && resp.candidates) || (resp && resp.body && resp.body.candidates) || [];
@@ -171,7 +172,7 @@ function parseDA(resp) {
   } catch (e) { return null; }
 }
 
-// Transforme les 7 champs en bloc SCÈNE (jamais le packaging).
+// Transforme les 7 champs en bloc SCENE (jamais le packaging).
 function renderScene(o) {
   const props = o.props.slice(0, 4).join(', ');
   return [
@@ -183,7 +184,7 @@ function renderScene(o) {
   ].join(NL);
 }
 
-// Priorité : décor manuel > scène IA valide > repli thème statique.
+// Priorite : decor manuel > scene IA valide > repli theme statique.
 let scene, source;
 if (art) {
   scene = art; source = 'manual';
@@ -224,7 +225,7 @@ return [{ json: { image, mimeType, prompt: bp.prompt, artDirectionSource: bp.art
 `.trim();
 
 const workflow = {
-  name: 'Génération Publicités IA — Nano Banana (Vertex AI)',
+  name: 'Generation Publicites IA - Nano Banana (Vertex AI)',
   nodes: [
     {
       parameters: { httpMethod: 'POST', path: 'generate-ads', responseMode: 'responseNode', options: {} },

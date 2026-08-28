@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="fr">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>AdCraft — Transformez vos photos produits en publicités</title>
+    <meta name="description" content="AdCraft transforme une simple photo de produit en visuel publicitaire professionnel grâce à l'IA, en quelques secondes." />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="" />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&display=block"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="/css/app.css" />
+    <style>
+      .hero-bg { background: linear-gradient(to bottom, #ffffff 0%, #f9f9f8 100%); }
+    </style>
+  </head>
+  <body class="bg-background text-on-surface font-body-base antialiased">
+    <!-- TopNavBar -->
+    <header class="bg-surface-container-lowest border-b border-outline-variant sticky top-0 z-50">
+      <div class="flex justify-between items-center w-[80%] mx-auto px-lg py-md">
+        <a class="font-display-lg text-display-lg font-bold text-on-surface" href="/">AdCraft</a>
+        <div class="flex items-center gap-md">
+          <a class="font-label-md text-label-md text-on-surface-variant hover:text-on-surface transition-colors" href="/login.html">Connexion</a>
+          <a class="font-label-md text-label-md bg-primary-container text-on-primary px-lg py-sm rounded-lg hover:bg-primary transition-colors" href="/register.html">Commencer maintenant</a>
+        </div>
+      </div>
+    </header>
+
+    <main>
+      <!-- Hero -->
+      <section class="hero-bg pt-24 pb-24 px-lg text-center border-b border-outline-variant">
+        <div class="max-w-3xl mx-auto">
+          <h1 class="font-display-lg text-display-lg text-on-surface mb-md">Transformez vos photos de produits en publicités professionnelles.</h1>
+          <p class="font-body-base text-body-base text-on-surface-variant mb-xl max-w-2xl mx-auto">
+            Générez des visuels haut de gamme en quelques secondes grâce à l'IA. Le packaging reste
+            fidèle à l'original ; seul le décor change. Parfait pour l'e-commerce, les réseaux sociaux
+            et le marketing.
+          </p>
+          <div class="flex justify-center gap-md flex-wrap">
+            <a class="font-label-md text-label-md bg-primary-container text-on-primary px-xl py-md rounded-lg hover:bg-primary transition-colors" href="/register.html">Commencer maintenant</a>
+            <a class="font-label-md text-label-md bg-surface-container-lowest border border-outline-variant text-on-surface px-xl py-md rounded-lg hover:bg-surface-container transition-colors" href="#demo">Voir la démo</a>
+          </div>
+        </div>
+      </section>
+
+      <!-- Démonstration avant / après -->
+      <section class="py-24 px-lg bg-surface-container-lowest border-b border-outline-variant" id="demo">
+        <div class="w-[80%] mx-auto">
+          <div class="text-center mb-xl">
+            <h2 class="font-headline-md text-headline-md text-on-surface mb-sm">Avant / Après</h2>
+            <p class="font-body-base text-body-base text-on-surface-variant">La même canette, une vraie mise en scène.</p>
+          </div>
+          <div class="max-w-4xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-lg items-stretch">
+            <!-- Avant -->
+            <figure class="flex flex-col gap-sm">
+              <div class="aspect-[4/5] rounded-xl border border-outline-variant bg-surface overflow-hidden flex items-center justify-center">
+                <img alt="Photo brute du produit" class="w-full h-full object-contain p-lg" src="/img/input-redbull.jpg" onerror="this.closest('figure').style.display='none'" />
+              </div>
+              <figcaption class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider text-center">Photo brute</figcaption>
+            </figure>
+            <!-- Après -->
+            <figure class="flex flex-col gap-sm">
+              <div class="aspect-[4/5] rounded-xl border border-outline-variant bg-surface overflow-hidden flex items-center justify-center">
+                <img alt="Visuel publicitaire généré" class="w-full h-full object-contain p-lg" src="/img/output-redbull.jpg" onerror="this.closest('figure').style.display='none'" />
+              </div>
+              <figcaption class="font-label-sm text-label-sm text-primary uppercase tracking-wider text-center">Visuel généré</figcaption>
+            </figure>
+          </div>
+        </div>
+      </section>
+
+      <!-- Comment ça marche -->
+      <section class="py-24 px-lg bg-background border-b border-outline-variant">
+        <div class="w-[80%] mx-auto">
+          <div class="text-center mb-xl">
+            <h2 class="font-headline-md text-headline-md text-on-surface mb-sm">Comment ça marche</h2>
+            <p class="font-body-base text-body-base text-on-surface-variant">Trois étapes pour un résultat professionnel.</p>
+          </div>
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-md max-w-4xl mx-auto">
+            <!-- Étape 1 -->
+            <div class="bg-surface-container-lowest border border-outline-variant rounded-xl p-lg flex flex-col items-start hover:bg-surface-container transition-colors">
+              <div class="w-10 h-10 rounded-full bg-surface-container flex items-center justify-center mb-md border border-outline-variant">
+                <span class="font-label-md text-label-md text-on-surface">1</span>
+              </div>
+              <h3 class="font-headline-md text-headline-md text-on-surface mb-sm">Déposez vos photos</h3>
+              <p class="font-body-sm text-body-sm text-on-surface-variant">Uploadez la photo de votre produit, même prise au smartphone.</p>
+              <div class="mt-auto pt-lg w-full">
+                <div class="h-32 bg-surface border border-outline-variant border-dashed rounded-lg flex items-center justify-center">
+                  <span class="material-symbols-outlined text-outline">upload_file</span>
+                </div>
+              </div>
+            </div>
+            <!-- Étape 2 -->
+            <div class="bg-surface-container-lowest border border-outline-variant rounded-xl p-lg flex flex-col items-start hover:bg-surface-container transition-colors">
+              <div class="w-10 h-10 rounded-full bg-surface-container flex items-center justify-center mb-md border border-outline-variant">
+                <span class="font-label-md text-label-md text-on-surface">2</span>
+              </div>
+              <h3 class="font-headline-md text-headline-md text-on-surface mb-sm">Choisissez un thème</h3>
+              <p class="font-body-sm text-body-sm text-on-surface-variant">Un style parmi la bibliothèque, ou décrivez précisément le décor voulu.</p>
+              <div class="mt-auto pt-lg w-full flex gap-sm flex-wrap">
+                <span class="font-label-sm text-label-sm bg-surface-container text-on-surface px-md py-xs rounded-full">Luxe</span>
+                <span class="font-label-sm text-label-sm bg-surface-container text-on-surface px-md py-xs rounded-full">Été</span>
+                <span class="font-label-sm text-label-sm bg-surface-container text-on-surface px-md py-xs rounded-full">Sport</span>
+              </div>
+            </div>
+            <!-- Étape 3 -->
+            <div class="bg-surface-container-lowest border border-outline-variant rounded-xl p-lg flex flex-col items-start hover:bg-surface-container transition-colors">
+              <div class="w-10 h-10 rounded-full bg-primary-container flex items-center justify-center mb-md">
+                <span class="font-label-md text-label-md text-on-primary">3</span>
+              </div>
+              <h3 class="font-headline-md text-headline-md text-on-surface mb-sm">Téléchargez</h3>
+              <p class="font-body-sm text-body-sm text-on-surface-variant">Récupérez le visuel prêt à publier.</p>
+              <div class="mt-auto pt-lg w-full">
+                <img alt="Exemple de visuel généré" class="w-full h-32 object-cover rounded-lg border border-outline-variant" src="/img/output-pringles.jpg" onerror="this.style.display='none'" />
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- CTA -->
+      <section class="py-24 px-lg bg-surface-container-low border-b border-outline-variant text-center">
+        <div class="max-w-2xl mx-auto">
+          <h2 class="font-display-lg text-display-lg text-on-surface mb-md">Prêt à créer des visuels impactants ?</h2>
+          <p class="font-body-base text-body-base text-on-surface-variant mb-xl">Créez un compte et lancez votre première génération.</p>
+          <a class="font-label-md text-label-md bg-primary-container text-on-primary px-xl py-md rounded-lg hover:bg-primary transition-colors inline-block" href="/register.html">Commencer maintenant</a>
+        </div>
+      </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-surface text-on-surface-variant border-t border-outline-variant">
+      <div class="flex flex-col md:flex-row justify-between items-center w-[80%] mx-auto px-lg py-lg gap-md md:gap-0">
+        <div class="font-label-md text-label-md font-bold text-on-surface">© 2026 AdCraft. Tous droits réservés.</div>
+        <nav class="flex flex-wrap justify-center gap-md">
+          <a class="font-label-sm text-label-sm hover:text-primary transition-colors" href="/login.html">Connexion</a>
+          <a class="font-label-sm text-label-sm hover:text-primary transition-colors" href="/register.html">Inscription</a>
+        </nav>
+      </div>
+    </footer>
+  </body>
+</html>

@@ -13,12 +13,12 @@
     />
     <link rel="stylesheet" href="/css/app.css" />
   </head>
-  <body class="bg-background text-on-surface font-body-base min-h-screen flex flex-col">
+  <body class="bg-background text-on-surface font-body-base h-screen flex flex-col overflow-hidden">
     <!-- TopNavBar -->
-    <header class="bg-surface-container-lowest border-b border-outline-variant w-full sticky top-0 z-50">
-      <div class="flex justify-between items-center w-full px-lg py-md max-w-container-max mx-auto">
+    <header class="bg-surface-container-lowest border-b border-outline-variant w-full flex-shrink-0 z-50">
+      <div class="flex justify-between items-center w-[80%] mx-auto px-lg py-md">
         <div class="flex items-center gap-lg">
-          <span class="font-display-lg text-display-lg font-bold text-on-surface">AdCraft</span>
+          <a href="/" class="font-display-lg text-display-lg font-bold text-on-surface">AdCraft</a>
           <nav class="hidden md:flex items-center gap-md">
             <a class="text-secondary hover:bg-surface-container transition-colors px-md py-sm rounded font-label-md text-label-md" href="/history.html">Historique</a>
           </nav>
@@ -37,25 +37,25 @@
       </div>
     </header>
 
-    <!-- Zone principale -->
-    <main class="flex-grow w-full max-w-container-max mx-auto px-lg py-xl flex flex-col lg:flex-row gap-xl">
-      <!-- Panneau gauche : contrôles -->
-      <section class="w-full lg:w-[480px] flex-shrink-0 flex flex-col gap-xl">
-        <!-- Upload -->
-        <div class="flex flex-col gap-sm">
-          <h2 class="font-headline-md text-headline-md text-on-surface">Produits source</h2>
-          <p class="font-body-sm text-body-sm text-secondary">Déposez de 1 à 14 photos du même produit (JPG, PNG, WebP).</p>
-          <div id="dropzone" class="border border-dashed border-outline-variant rounded-lg bg-surface-container-lowest p-xl flex flex-col items-center justify-center text-center cursor-pointer hover:bg-surface-container transition-colors min-h-[160px]">
-            <span class="material-symbols-outlined text-secondary text-[32px] mb-sm">cloud_upload</span>
-            <span class="font-label-md text-label-md text-on-surface">Glissez-déposez vos images ici</span>
-            <span class="font-body-sm text-body-sm text-secondary mt-xs">ou cliquez pour parcourir</span>
-            <input id="file-input" type="file" accept="image/jpeg,image/png,image/webp" multiple class="hidden" />
-          </div>
-          <div id="previews" class="flex flex-wrap gap-sm mt-sm"></div>
+    <!-- Zone principale : 3 colonnes (Upload | Réglages | Aperçu), pleine hauteur.
+         Le body est en overflow-hidden : la page ne scrolle jamais. Chaque colonne
+         de contrôle peut scroller en interne si l'écran est petit. -->
+    <main class="flex-1 min-h-0 w-[80%] mx-auto px-lg py-lg flex flex-col lg:flex-row gap-lg overflow-hidden">
+      <!-- Colonne 1 : Produits source -->
+      <section class="w-full lg:w-[300px] flex-shrink-0 flex flex-col gap-sm overflow-y-auto">
+        <h2 class="font-headline-md text-headline-md text-on-surface">Produits source</h2>
+        <p class="font-body-sm text-body-sm text-secondary">Déposez de 1 à 14 photos du même produit (JPG, PNG, WebP).</p>
+        <div id="dropzone" class="border border-dashed border-outline-variant rounded-lg bg-surface-container-lowest p-lg flex flex-col items-center justify-center text-center cursor-pointer hover:bg-surface-container transition-colors min-h-[130px]">
+          <span class="material-symbols-outlined text-secondary text-[32px] mb-sm">cloud_upload</span>
+          <span class="font-label-md text-label-md text-on-surface">Glissez-déposez vos images ici</span>
+          <span class="font-body-sm text-body-sm text-secondary mt-xs">ou cliquez pour parcourir</span>
+          <input id="file-input" type="file" accept="image/jpeg,image/png,image/webp" multiple class="hidden" />
         </div>
+        <div id="previews" class="flex flex-wrap gap-md mt-sm"></div>
+      </section>
 
-        <hr class="border-t border-outline-variant w-full" />
-
+      <!-- Colonne 2 : Réglages (contexte + thème + direction artistique) -->
+      <section class="w-full lg:w-[360px] flex-shrink-0 flex flex-col gap-md overflow-y-auto pr-xs">
         <!-- Contexte & produit -->
         <div class="flex flex-col gap-md">
           <h2 class="font-headline-md text-headline-md text-on-surface">Contexte &amp; produit</h2>
@@ -102,10 +102,10 @@
         <div class="flex flex-col gap-md">
           <div class="flex justify-between items-center">
             <h2 class="font-headline-md text-headline-md text-on-surface">Thème de mise en scène</h2>
-            <span class="font-body-sm text-body-sm text-secondary">Sélectionnez 1 thème</span>
+            <span class="font-body-sm text-body-sm text-secondary">1 thème</span>
           </div>
           <!-- Injecté par renderThemeButtons() (source unique THEMES). -->
-          <div id="themes" class="grid grid-cols-2 md:grid-cols-3 gap-md"></div>
+          <div id="themes" class="grid grid-cols-2 gap-sm"></div>
         </div>
 
         <hr class="border-t border-outline-variant w-full" />
@@ -127,8 +127,8 @@
         </details>
       </section>
 
-      <!-- Panneau droit : toile / aperçu -->
-      <section class="flex-grow flex items-center justify-center bg-surface rounded-xl border border-outline-variant min-h-[600px] p-xl relative overflow-hidden">
+      <!-- Colonne 3 : toile / aperçu (occupe le reste de la largeur et la hauteur) -->
+      <section class="flex-grow min-w-0 flex items-center justify-center bg-surface rounded-xl border border-outline-variant p-lg relative overflow-hidden">
         <div id="result-body" class="w-full flex flex-col items-center justify-center gap-md text-center">
           <!-- État vide par défaut -->
           <div class="flex flex-col items-center gap-md opacity-60">
