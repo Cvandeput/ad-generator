@@ -11,7 +11,7 @@
 
 import fs from 'node:fs';
 import path from 'node:path';
-import { PRESETS, FIDELITY, AVOID } from '../shared/prompt.mjs';
+import { PRESETS, FIDELITY, AVOID, PRODUCTS } from '../shared/prompt.mjs';
 
 // --- Directeur Artistique : système, schéma de sortie, exemples few-shot ---
 
@@ -152,6 +152,7 @@ const { brand, category, flavor, theme, images } = body;
 const NL = String.fromCharCode(10);
 
 const lead = 'Professional advertising photograph of ' + brand + ' ' + category + (desc ? ' \\u2014 ' + desc : '') + (flavor ? ', ' + flavor + ' flavor' : '') + '.';
+const PRODUCTS = ${JSON.stringify(PRODUCTS)};
 const FIDELITY = ${JSON.stringify(FIDELITY)};
 const AVOID = ${JSON.stringify(AVOID)};
 const PRESETS = ${JSON.stringify(PRESETS, null, 2)};
@@ -194,14 +195,23 @@ if (art) {
   else { scene = PRESETS[theme] || PRESETS.classique; source = 'fallback'; }
 }
 
-const prompt = lead + ' ' + scene + ' ' + FIDELITY + ' ' + AVOID;
+// PRODUCTS juste apres le lead : impose TOUS les produits de reference avant que
+// la scene ou les interdits ne s'appliquent. FIDELITY ancre a la photo (texte des
+// emballages net + image prioritaire sur le mot-cle marque).
+const prompt = lead + ' ' + PRODUCTS + ' ' + scene + ' ' + FIDELITY + ' ' + AVOID;
 
 const parts = [{ text: prompt }];
 for (const img of images) { parts.push({ inline_data: { mime_type: img.mimeType || 'image/jpeg', data: img.data } }); }
 
+// imageSize (paliers 1K/2K/4K) : uniquement gemini-3-pro-image, ameliore la
+// nettete du texte d'emballage. Gate par env : absent => omis (compat 2.5-flash).
+const imageSize = $env.GEMINI_IMAGE_SIZE;
+const imageConfig = { aspectRatio: '4:5' };
+if (imageSize) { imageConfig.imageSize = imageSize; }
+
 const geminiBody = {
   contents: [{ role: 'user', parts }],
-  generationConfig: { responseModalities: ['TEXT', 'IMAGE'], imageConfig: { aspectRatio: '4:5' } }
+  generationConfig: { responseModalities: ['TEXT', 'IMAGE'], imageConfig }
 };
 return [{ json: { geminiBody, prompt, artDirectionSource: source } }];
 `.trim();

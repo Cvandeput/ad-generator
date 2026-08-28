@@ -12,15 +12,29 @@
 export const lead = (brand, category, flavor, description) =>
   `Professional advertising photograph of ${brand} ${category}${description ? ` — ${description}` : ''}${flavor ? `, ${flavor} flavor` : ''}.`;
 
-// Contrainte de fidélité, courte et en fin (ne doit pas dominer la scène).
+// Chaque photo d'entrée peut être un produit DISTINCT : tous doivent apparaître
+// dans le visuel, ensemble et entièrement visibles. Corrige le cas « je mets
+// plusieurs produits mais un seul sort ». (Avec une seule photo, « chaque
+// produit de référence » = ce produit unique — la phrase reste juste.)
+export const PRODUCTS =
+  'Include every distinct product shown in the reference images, arranged together naturally in the same scene, each fully visible and unobstructed.';
+
+// Fidélité : les IMAGES priment sur le texte. Corrige le cas « marque Ricard +
+// photos Red Bull → bouteille Ricard » : le modèle suivait le mot, pas les
+// pixels. On l'ancre explicitement à la photo, et on durcit la lisibilité du
+// texte d'emballage (point faible des modèles image).
 export const FIDELITY =
-  'Keep the exact product packaging, label, logo and typography from the reference image unchanged and photorealistic.';
+  'The reference images are the ground truth: reproduce each product exactly as photographed — ' +
+  'its real packaging, label, logo, brand name, flavor and colors, photorealistic and unchanged. ' +
+  'Keep every piece of packaging text pixel-exact, sharp, legible and in focus; never rewrite, ' +
+  'translate, invent or distort any text. If the written brand or flavor conflicts with the images, follow the images.';
 
 // Interdits explicites : Nano Banana répond mieux à des négatifs clairs qu'à des
-// formulations positives seules.
+// formulations positives seules. (« extra products » retiré : on veut au
+// contraire TOUS les produits de référence — cf. PRODUCTS.)
 export const AVOID =
-  'AVOID: altered or invented packaging text, distorted logo, extra products, hands, faces, ' +
-  'watermarks, added slogans, cartoon or illustration style, visible AI artefacts.';
+  'AVOID: altered or invented packaging text, distorted or redrawn logo, missing reference products, ' +
+  'hands, faces, watermarks, added slogans, cartoon or illustration style, visible AI artefacts.';
 
 export const PRESETS = {
   classique:
@@ -59,7 +73,7 @@ export const PRESETS = {
 // contrôle manuel « à la Sora » : une idée précise prime sur le preset.
 export function buildPrompt({ brand, category, flavor, theme, description, artDirection }) {
   const scene = artDirection || PRESETS[theme] || PRESETS.classique;
-  return `${lead(brand, category, flavor, description)} ${scene} ${FIDELITY} ${AVOID}`;
+  return `${lead(brand, category, flavor, description)} ${PRODUCTS} ${scene} ${FIDELITY} ${AVOID}`;
 }
 
 // Corps de requête Gemini generateContent (Nano Banana).
@@ -71,8 +85,8 @@ export function buildGeminiBody({
   description,
   artDirection,
   images = [],
-  imageSize = null,
-  aspectRatio = '1:1',
+  imageSize = '2K', // paliers 1K/2K/4K : dispo sur gemini-3-pro-image (texte plus net)
+  aspectRatio = '4:5',
 }) {
   const parts = [{ text: buildPrompt({ brand, category, flavor, theme, description, artDirection }) }];
   for (const img of images) {

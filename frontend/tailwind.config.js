@@ -1,5 +1,5 @@
 /** @type {import('tailwindcss').Config} */
-// Design system "AdCraft Studio" (voir stitch_adcraft_studio_visuel/DESIGN.md).
+// Design system "AdCraft Studio" — tokens alignés sur les maquettes (new design/).
 // Tokens repris tels quels du design pour que le rendu corresponde à la maquette.
 // Les classes vivent dans le HTML ET dans les gabarits JS (cartes en template
 // literals) : scanner les deux, sinon le JIT n'émet pas leurs utilitaires.
@@ -76,6 +76,7 @@ module.exports = {
       },
       fontFamily: {
         sans: ['Inter', 'sans-serif'],
+        'display-xl': ['Inter', 'sans-serif'],
         'display-lg': ['Inter', 'sans-serif'],
         'display-lg-mobile': ['Inter', 'sans-serif'],
         'headline-md': ['Inter', 'sans-serif'],
@@ -85,6 +86,8 @@ module.exports = {
         'label-sm': ['Inter', 'sans-serif'],
       },
       fontSize: {
+        // Titre hero accueil (exception maquette : 52/58). Voir PROMPT-INTEGRATION.
+        'display-xl': ['52px', { lineHeight: '58px', letterSpacing: '-0.03em', fontWeight: '600' }],
         'display-lg': ['32px', { lineHeight: '40px', letterSpacing: '-0.02em', fontWeight: '600' }],
         'display-lg-mobile': ['24px', { lineHeight: '32px', letterSpacing: '-0.02em', fontWeight: '600' }],
         'headline-md': ['20px', { lineHeight: '28px', letterSpacing: '-0.01em', fontWeight: '600' }],

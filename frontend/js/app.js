@@ -8,6 +8,7 @@ const ALLOWED = ['image/jpeg', 'image/png', 'image/webp'];
 const dropzone = document.getElementById('dropzone');
 const fileInput = document.getElementById('file-input');
 const previews = document.getElementById('previews');
+const photoCount = document.getElementById('photo-count');
 const themesEl = document.getElementById('themes');
 const generateBtn = document.getElementById('generate');
 const genLabel = generateBtn.querySelector('.js-generate-label');
@@ -37,16 +38,19 @@ themesEl.querySelectorAll('.theme-btn').forEach((btn) =>
     selectedTheme = btn.dataset.theme;
     themesEl.querySelectorAll('.theme-btn').forEach((b) => {
       const active = b === btn;
-      b.classList.toggle('border-2', active);
-      b.classList.toggle('border-primary-container', active);
-      b.classList.toggle('border-outline-variant', !active);
-      b.classList.toggle('bg-primary-fixed', active);
-      b.classList.toggle('bg-surface-container-lowest', !active);
-      b.querySelector('.theme-check').classList.toggle('hidden', !active);
+      // Bordure accent 2px sur l'aperçu + pastille cochée (cf. renderThemeButtons).
+      const preview = b.querySelector('.theme-preview');
+      preview.classList.toggle('border-2', active);
+      preview.classList.toggle('border-primary-container', active);
+      preview.classList.toggle('border', !active);
+      preview.classList.toggle('border-outline-variant', !active);
+      const check = b.querySelector('.theme-check');
+      check.classList.toggle('hidden', !active);
+      check.classList.toggle('flex', active);
       const label = b.querySelector('.theme-label');
-      label.classList.toggle('text-primary-container', active);
+      label.classList.toggle('text-on-surface', active);
       label.classList.toggle('font-bold', active);
-      label.classList.toggle('text-on-surface', !active);
+      label.classList.toggle('text-on-surface-variant', !active);
     });
   })
 );
@@ -98,27 +102,26 @@ function renderPreviews() {
   files.forEach((f, i) => {
     const url = URL.createObjectURL(f);
     const cell = document.createElement('div');
-    cell.className = 'group relative w-28 flex flex-col gap-xs flex-shrink-0';
-    // Vignette agrandie ; clic sur l'image = ouverture pleine taille dans un
-    // nouvel onglet (vérifier qu'on a chargé la bonne photo). Nom affiché sous.
+    cell.className = 'group relative w-16 h-20 flex-shrink-0 rounded border border-outline-variant bg-surface-container-low overflow-hidden';
+    // Vignette 64×80 (maquette) ; clic = ouverture pleine taille (vérifier la
+    // bonne photo). Bouton retirer au survol.
     cell.innerHTML = `
-      <div class="relative w-28 h-28 rounded border border-outline-variant bg-surface-container-lowest overflow-hidden">
-        <a href="${url}" target="_blank" rel="noopener" title="Ouvrir « ${escapeHtml(f.name)} » en grand" class="block w-full h-full">
-          <img src="${url}" class="w-full h-full object-contain p-xs" alt="${escapeHtml(f.name)}" />
-        </a>
-        <button data-i="${i}" class="remove absolute top-1 right-1 w-5 h-5 bg-surface-container-lowest rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity border border-outline-variant text-error z-10" aria-label="Retirer">
-          <span class="material-symbols-outlined text-[12px]">close</span>
-        </button>
-      </div>
-      <span class="font-label-sm text-label-sm text-secondary truncate w-28" title="${escapeHtml(f.name)}">${escapeHtml(f.name)}</span>`;
+      <a href="${url}" target="_blank" rel="noopener" title="Ouvrir « ${escapeHtml(f.name)} » en grand" class="block w-full h-full">
+        <img src="${url}" class="w-full h-full object-cover" alt="${escapeHtml(f.name)}" />
+      </a>
+      <button data-i="${i}" class="remove absolute top-0.5 right-0.5 w-4 h-4 bg-surface-container-lowest rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity border border-outline-variant text-error z-10" aria-label="Retirer">
+        <span class="material-symbols-outlined text-[11px]">close</span>
+      </button>`;
     previews.appendChild(cell);
   });
   previews.querySelectorAll('.remove').forEach((btn) =>
-    btn.addEventListener('click', () => {
+    btn.addEventListener('click', (e) => {
+      e.preventDefault();
       files.splice(Number(btn.dataset.i), 1);
       renderPreviews();
     })
   );
+  if (photoCount) photoCount.textContent = `${files.length} / ${MAX_IMAGES}`;
 }
 
 // --- Génération ---
@@ -166,7 +169,7 @@ generateBtn.addEventListener('click', async () => {
 
 function setLoading(on) {
   generateBtn.disabled = on;
-  if (genLabel) genLabel.textContent = on ? 'Génération…' : 'Générer';
+  if (genLabel) genLabel.textContent = on ? 'Génération…' : 'Générer le visuel';
 }
 
 // Une étape de l'attente longue (rendue puis pilotée par setStep dans le timer).
@@ -256,15 +259,28 @@ function startProgress(onCancel) {
 function showResult(url) {
   resultBody.innerHTML = `
     <div class="flex flex-col items-center gap-md">
-      <div class="relative w-full max-w-[400px] aspect-[4/5] bg-surface-container-lowest border border-outline-variant rounded-lg overflow-hidden">
+      <div class="relative w-full max-w-[420px] aspect-[4/5] bg-surface-container-low rounded overflow-hidden shadow-[0_1px_2px_rgba(26,28,28,0.06),0_12px_32px_rgba(26,28,28,0.10)]">
         <img src="${url}" class="w-full h-full object-cover" alt="Visuel généré" ${IMG_FALLBACK_ATTRS} />
         ${brokenThumb()}
+        <div class="absolute top-sm left-sm flex items-center gap-xs bg-surface-container-lowest border border-outline-variant rounded-full pl-sm pr-md py-xs">
+          <span class="w-1.5 h-1.5 rounded-full bg-primary-container"></span>
+          <span class="font-label-sm text-label-sm font-semibold text-on-surface-variant">Décor composé par l'IA</span>
+        </div>
       </div>
-      <a href="${url}?download=1" download
-         class="bg-primary-container text-on-primary font-label-md text-label-md px-lg py-sm rounded hover:bg-primary transition-colors flex items-center gap-xs">
-        <span class="material-symbols-outlined text-[16px]">download</span> Télécharger
-      </a>
+      <div class="flex items-center gap-sm">
+        <button type="button" id="js-rerun" class="h-8 px-md border border-outline-variant rounded bg-surface-container-lowest flex items-center gap-xs text-on-surface-variant hover:bg-surface-container transition-colors">
+          <span class="material-symbols-outlined text-[15px]">refresh</span>
+          <span class="font-label-md text-label-md">Relancer</span>
+        </button>
+        <a href="${url}?download=1" download
+           class="h-8 px-md rounded bg-primary-container text-on-primary flex items-center gap-xs hover:bg-primary transition-colors">
+          <span class="material-symbols-outlined text-[15px]">download</span>
+          <span class="font-label-md text-label-md">Télécharger</span>
+        </a>
+      </div>
     </div>`;
+  const rerun = document.getElementById('js-rerun');
+  if (rerun) rerun.addEventListener('click', () => generateBtn.click());
 }
 
 // État vide (défaut + après annulation) : même carte centrée que app.html.

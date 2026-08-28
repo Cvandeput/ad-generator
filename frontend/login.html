@@ -12,89 +12,90 @@
       rel="stylesheet"
     />
     <link rel="stylesheet" href="/css/app.css" />
-    <style>
-      /* contain (pas cover) : les images sources ont des ratios différents
-         (canette portrait, pub paysage) — cover les massacrait au recadrage.
-         contain montre l'image entière, centrée, sur le dégradé de fond. */
-      .carousel-slide {
-        position: absolute;
-        inset: 0;
-        width: 100%;
-        height: 100%;
-        object-fit: contain;
-        padding: 2.5rem;
-        opacity: 0;
-        animation: fadeSlide 20s infinite;
-      }
-      .carousel-slide:nth-child(1) { animation-delay: 0s; }
-      .carousel-slide:nth-child(2) { animation-delay: 5s; }
-      .carousel-slide:nth-child(3) { animation-delay: 10s; }
-      .carousel-slide:nth-child(4) { animation-delay: 15s; }
-      @keyframes fadeSlide {
-        0%, 20% { opacity: 1; z-index: 10; }
-        25%, 100% { opacity: 0; z-index: 0; }
-      }
-    </style>
   </head>
-  <body class="w-full h-screen overflow-hidden flex flex-col lg:flex-row bg-background">
-    <!-- Colonne gauche : carrousel avant / après -->
-    <!-- Fond dégradé sous les images : jamais d'aplat gris vide, même pendant un
-         fondu ou si une image manque (onerror retire l'image cassée). -->
-    <div class="hidden lg:block relative w-full lg:w-1/2 h-full bg-gradient-to-br from-surface-container-high to-surface-container overflow-hidden">
-      <img alt="Photo brute" class="carousel-slide" src="/img/input-redbull.jpg" onerror="this.remove()" />
-      <img alt="Visuel généré" class="carousel-slide" src="/img/output-redbull.jpg" onerror="this.remove()" />
-      <img alt="Photo brute" class="carousel-slide" src="/img/input-pringles.jpg" onerror="this.remove()" />
-      <img alt="Visuel généré" class="carousel-slide" src="/img/output-pringles.jpg" onerror="this.remove()" />
-      <div class="absolute bottom-8 left-8 z-20 bg-surface-container-lowest/80 backdrop-blur-md px-md py-sm rounded-full border border-outline-variant flex items-center gap-sm">
-        <span class="material-symbols-outlined text-on-surface text-[18px]">compare</span>
-        <span class="font-label-md text-label-md text-on-surface">Avant / Après</span>
+  <body class="bg-background text-on-surface font-body-base w-full min-h-screen flex flex-col lg:flex-row">
+    <!-- Volet gauche : démonstration avant / après (masqué en mobile) -->
+    <div class="hidden lg:flex lg:w-[50%] flex-shrink-0 bg-surface-container border-r border-outline-variant p-xl flex-col justify-between">
+      <a href="/" class="flex items-center gap-sm">
+        <img src="/img/logo-adcraft.png" alt="AdCraft" class="h-6 w-auto" />
+      </a>
+
+      <div class="flex flex-col gap-lg">
+        <div class="flex items-stretch gap-lg">
+          <div class="flex-1 flex flex-col gap-sm">
+            <div class="aspect-[4/5] rounded-xl overflow-hidden border border-outline-variant bg-gradient-to-br from-surface-container-lowest to-surface-container-low flex items-center justify-center">
+              <span class="material-symbols-outlined text-outline text-[32px]">image</span>
+            </div>
+            <span class="font-label-sm text-label-sm font-semibold tracking-[0.08em] uppercase text-outline">Photo brute</span>
+          </div>
+          <div class="w-8 flex-shrink-0 flex items-center justify-center">
+            <span class="material-symbols-outlined text-outline text-[22px]">arrow_forward</span>
+          </div>
+          <div class="flex-1 flex flex-col gap-sm">
+            <div class="aspect-[4/5] rounded-xl overflow-hidden border border-outline-variant bg-gradient-to-br from-primary-fixed to-inverse-primary shadow-[0_8px_24px_rgba(26,28,28,0.10)] flex items-center justify-center">
+              <span class="material-symbols-outlined text-primary-container text-[32px]">auto_awesome</span>
+            </div>
+            <span class="font-label-sm text-label-sm font-semibold tracking-[0.08em] uppercase text-primary-container">Visuel généré</span>
+          </div>
+        </div>
+
+        <div class="flex flex-col gap-xs">
+          <span class="font-headline-md text-headline-md text-on-surface">Le packaging ne bouge pas. Le décor, si.</span>
+          <span class="font-body-base text-body-base text-on-surface-variant max-w-[460px]">Une photo de produit, trois informations, un thème — et le visuel est prêt à publier.</span>
+        </div>
       </div>
+
+      <span class="font-label-sm text-label-sm text-outline">© 2026 AdCraft</span>
     </div>
 
-    <!-- Colonne droite : connexion -->
-    <div class="w-full lg:w-1/2 h-full flex items-center justify-center relative p-md">
-      <main class="relative z-10 w-full max-w-[360px]">
-        <div class="bg-surface-container-lowest border border-outline-variant rounded-xl p-lg flex flex-col gap-lg">
-          <div class="text-center">
-            <h1 class="font-display-lg text-display-lg text-on-surface">AdCraft</h1>
-            <p class="font-body-sm text-body-sm text-secondary mt-xs">Création visuelle intelligente.</p>
+    <!-- Volet droit : formulaire -->
+    <div class="flex-1 flex flex-col">
+      <div class="h-[60px] flex-shrink-0 flex items-center px-lg">
+        <a href="/" class="flex items-center gap-xs text-secondary hover:text-on-surface transition-colors">
+          <span class="material-symbols-outlined text-[18px]">arrow_back</span>
+          <span class="font-label-md text-label-md">Retour à l'accueil</span>
+        </a>
+      </div>
+
+      <div class="flex-1 flex items-center justify-center px-lg pb-xl">
+        <main class="w-full max-w-[380px] flex flex-col gap-lg">
+          <div class="flex flex-col gap-xs">
+            <h1 class="font-display-lg text-display-lg text-on-surface">Connexion</h1>
+            <p class="font-body-base text-body-base text-secondary">Accédez à votre studio et à vos visuels.</p>
           </div>
 
           <form id="auth-form" class="flex flex-col gap-md">
             <div class="flex flex-col gap-xs">
-              <label class="font-label-sm text-label-sm text-secondary" for="email">Email</label>
+              <label class="font-label-md text-label-md text-on-surface" for="email">Adresse e-mail</label>
               <input
                 id="email" name="email" type="email" required autocomplete="username" placeholder="nom@exemple.com"
-                class="w-full h-[40px] px-sm bg-surface-container-lowest border border-outline-variant rounded-lg font-body-sm text-body-sm text-on-surface placeholder:text-outline focus:outline-none focus:border-primary-container focus:ring-1 focus:ring-primary-container transition-colors"
+                class="w-full h-[40px] px-md bg-surface-container-lowest border border-outline-variant rounded font-body-base text-on-surface placeholder:text-outline focus:outline-none focus:border-primary-container focus:ring-1 focus:ring-primary-container transition-colors"
               />
             </div>
             <div class="flex flex-col gap-xs">
-              <label class="font-label-sm text-label-sm text-secondary" for="password">Mot de passe</label>
+              <label class="font-label-md text-label-md text-on-surface" for="password">Mot de passe</label>
               <input
                 id="password" name="password" type="password" required autocomplete="current-password" placeholder="••••••••"
-                class="w-full h-[40px] px-sm bg-surface-container-lowest border border-outline-variant rounded-lg font-body-sm text-body-sm text-on-surface placeholder:text-outline focus:outline-none focus:border-primary-container focus:ring-1 focus:ring-primary-container transition-colors"
+                class="w-full h-[40px] px-md bg-surface-container-lowest border border-outline-variant rounded font-body-base text-on-surface placeholder:text-outline focus:outline-none focus:border-primary-container focus:ring-1 focus:ring-primary-container transition-colors"
               />
             </div>
 
             <p id="error" class="font-body-sm text-body-sm text-error hidden"></p>
 
-            <div class="pt-sm">
-              <button
-                id="submit-btn" type="submit"
-                class="w-full h-[40px] bg-primary-container text-on-primary rounded-lg font-label-md text-label-md flex items-center justify-center hover:bg-primary transition-colors disabled:opacity-60"
-              >
-                Se connecter
-              </button>
-            </div>
+            <button
+              id="submit-btn" type="submit"
+              class="w-full h-[40px] bg-primary-container text-on-primary rounded font-label-md text-label-md flex items-center justify-center hover:bg-primary transition-colors disabled:opacity-60"
+            >
+              Se connecter
+            </button>
           </form>
 
-          <div class="text-center pt-xs">
-            <a href="/register.html" class="font-body-sm text-body-sm text-secondary hover:text-primary-container transition-colors inline-block">
-              Pas encore de compte ? S'inscrire
-            </a>
+          <div class="flex items-start gap-sm p-md bg-surface-container-low border border-outline-variant rounded-lg">
+            <span class="material-symbols-outlined text-outline text-[18px]">info</span>
+            <span class="font-body-sm text-body-sm text-on-surface-variant">L'accès se fait sur invitation. Contactez l'administrateur pour obtenir un compte.</span>
           </div>
-        </div>
-      </main>
+        </main>
+      </div>
     </div>
 
     <script type="module" src="/js/auth.js"></script>

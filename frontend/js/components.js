@@ -1,15 +1,16 @@
 // Fragments d'UI réutilisables (design system "AdCraft Studio"), partagés entre
 // le dashboard et l'historique. Un seul endroit à retoucher par composant.
 
-// Source unique des thèmes (valeur envoyée au backend + libellé affiché).
+// Source unique des thèmes (valeur envoyée au backend + libellé affiché +
+// dégradé d'aperçu de la tuile, repris de la maquette Studio).
 export const THEMES = [
-  { value: 'classique', label: 'Classique' },
-  { value: 'ete', label: 'Été' },
-  { value: 'extravagant', label: 'Extravagant' },
-  { value: 'sport', label: 'Sport' },
-  { value: 'fete', label: 'Nuit / Fête' },
-  { value: 'luxe', label: 'Luxe' },
-  { value: 'noel', label: 'Noël' },
+  { value: 'classique', label: 'Classique', gradient: 'linear-gradient(135deg,#f3f4f3 0%,#e8e8e7 100%)' },
+  { value: 'ete', label: 'Été', gradient: 'linear-gradient(135deg,#fde9c8 0%,#f5c98d 100%)' },
+  { value: 'extravagant', label: 'Extravagant', gradient: 'linear-gradient(135deg,#d6dcff 0%,#b7c4ff 100%)' },
+  { value: 'sport', label: 'Sport', gradient: 'linear-gradient(135deg,#dfe4e6 0%,#b4bcc0 100%)' },
+  { value: 'fete', label: 'Nuit', gradient: 'linear-gradient(135deg,#3a3f57 0%,#1f2333 100%)' },
+  { value: 'luxe', label: 'Luxe', gradient: 'linear-gradient(135deg,#e9e1dd 0%,#ccc5c2 100%)' },
+  { value: 'noel', label: 'Noël', gradient: 'linear-gradient(135deg,#dbe7e4 0%,#a9c6bf 100%)' },
 ];
 export const THEME_LABELS = Object.fromEntries(THEMES.map((t) => [t.value, t.label]));
 
@@ -30,6 +31,25 @@ export function fmtDate(s) {
     hour: '2-digit',
     minute: '2-digit',
   });
+}
+
+// Date relative pour les cartes d'historique (maquette : « Il y a 2 h »,
+// « Hier, 18:04 », « 12 oct., 16:45 »). created_at stocké en UTC.
+export function fmtRelative(s) {
+  if (!s) return '';
+  const d = new Date(s.replace(' ', 'T') + 'Z');
+  const now = new Date();
+  const diffMin = Math.floor((now - d) / 60000);
+  const hhmm = d.toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' });
+  if (diffMin < 1) return "À l'instant";
+  if (diffMin < 60) return `Il y a ${diffMin} min`;
+  if (diffMin < 1440 && d.getDate() === now.getDate()) return `Il y a ${Math.floor(diffMin / 60)} h`;
+  const yesterday = new Date(now);
+  yesterday.setDate(now.getDate() - 1);
+  if (d.getDate() === yesterday.getDate() && d.getMonth() === yesterday.getMonth() && d.getFullYear() === yesterday.getFullYear()) {
+    return `Hier, ${hhmm}`;
+  }
+  return `${d.toLocaleDateString('fr-FR', { day: 'numeric', month: 'short' })}, ${hhmm}`;
 }
 
 export function productLabel(g) {
@@ -58,46 +78,50 @@ export function brokenThumb() {
     </div>`;
 }
 
-// Tuiles de thème : libellé seul (minimaliste). État actif (bordure accent +
-// fond légèrement teinté + coche) géré par app.js.
+// Tuiles de thème : aperçu visuel (dégradé) + libellé sous la tuile. État actif
+// (bordure accent 2px + pastille cochée) géré par app.js sur .theme-preview.
 export function renderThemeButtons() {
   return THEMES.map(
     (t) => `
-      <button type="button" data-theme="${t.value}"
-        class="theme-btn relative rounded-lg border border-outline-variant bg-surface-container-lowest px-md py-md flex items-center justify-between gap-sm text-left hover:border-primary-container transition-colors focus:outline-none focus:ring-2 focus:ring-primary-container focus:ring-offset-2">
-        <span class="theme-label font-label-md text-label-md text-on-surface">${escapeHtml(t.label)}</span>
-        <span class="theme-check material-symbols-outlined text-primary-container text-[18px] hidden">check</span>
+      <button type="button" data-theme="${t.value}" class="theme-btn flex flex-col gap-[5px] text-left focus:outline-none">
+        <div class="theme-preview h-[52px] rounded-lg border border-outline-variant flex items-end justify-end p-[5px]" style="background:${t.gradient}">
+          <span class="theme-check w-[14px] h-[14px] rounded-full bg-primary-container hidden items-center justify-center">
+            <span class="material-symbols-outlined text-on-primary text-[9px]">check</span>
+          </span>
+        </div>
+        <span class="theme-label font-label-sm text-label-sm text-on-surface-variant text-center">${escapeHtml(t.label)}</span>
       </button>`
   ).join('');
 }
 
-// Carte d'une génération réussie. Overlay au survol : télécharger + supprimer.
+// Carte d'une génération réussie (maquette Historique) : image plein cadre 4:5,
+// actions révélées au survol dans un dégradé bas, métadonnées sur trois lignes.
 export function successCard(g) {
   const label = productLabel(g);
   const themeLabel = THEME_LABELS[g.theme] || g.theme;
   return `
-    <div class="js-card group flex flex-col gap-xs" data-id="${g.id}">
-      <div class="relative aspect-[4/5] bg-surface-container-lowest border border-outline-variant rounded-lg overflow-hidden">
+    <div class="js-card group flex flex-col gap-sm" data-id="${g.id}">
+      <div class="relative aspect-[4/5] bg-surface-container-low border border-outline-variant rounded-lg overflow-hidden">
         <img src="${g.url}" alt="${escapeHtml(label)}" class="w-full h-full object-cover" loading="lazy" ${IMG_FALLBACK_ATTRS} />
         ${brokenThumb()}
-        <div class="absolute inset-0 bg-inverse-surface/40 backdrop-blur-[2px] flex items-center justify-center gap-md opacity-0 group-hover:opacity-100 transition-opacity z-10">
+        <div class="absolute inset-0 flex items-end justify-end gap-xs p-sm opacity-0 group-hover:opacity-100 transition-opacity z-10"
+             style="background:linear-gradient(to top,rgba(26,28,28,0.55) 0%,rgba(26,28,28,0) 42%)">
           <a href="${g.url}?download=1" download title="Télécharger" aria-label="Télécharger"
-             class="w-10 h-10 bg-surface-container-lowest rounded-full flex items-center justify-center text-on-surface hover:bg-surface-container transition-colors border border-outline-variant">
-            <span class="material-symbols-outlined text-[20px]">download</span>
+             class="w-[30px] h-[30px] bg-surface-container-lowest rounded flex items-center justify-center text-on-surface hover:bg-surface-container transition-colors">
+            <span class="material-symbols-outlined text-[15px]">download</span>
           </a>
-          <button type="button" class="js-delete w-10 h-10 bg-error text-on-error rounded-full flex items-center justify-center hover:opacity-90 transition-opacity"
+          <button type="button" class="js-delete w-[30px] h-[30px] bg-surface-container-lowest rounded flex items-center justify-center text-error hover:bg-surface-container transition-colors"
                   data-id="${g.id}" title="Supprimer" aria-label="Supprimer">
-            <span class="material-symbols-outlined text-[20px]">delete</span>
+            <span class="material-symbols-outlined text-[15px]">delete</span>
           </button>
         </div>
       </div>
-      <div class="px-xs flex flex-col gap-xs">
-        <span class="font-label-md text-label-md text-on-surface truncate">${escapeHtml(label)}</span>
-        ${g.description ? `<span class="font-body-sm text-body-sm text-secondary truncate">${escapeHtml(g.description)}</span>` : ''}
-        <div class="flex">
-          <span class="bg-surface-container-low text-secondary px-xs py-[2px] rounded font-label-sm text-label-sm">${escapeHtml(themeLabel)}</span>
+      <div class="flex flex-col gap-xs">
+        <span class="font-body-sm text-body-sm font-semibold text-on-surface truncate">${escapeHtml(label)}</span>
+        <div class="flex items-center gap-sm">
+          <span class="bg-surface-container text-on-surface-variant px-sm py-[2px] rounded-full font-label-sm text-label-sm">${escapeHtml(themeLabel)}</span>
+          <span class="font-label-sm text-label-sm text-outline" title="${fmtDate(g.createdAt)}">${fmtRelative(g.createdAt)}</span>
         </div>
-        <span class="font-label-sm text-label-sm text-secondary">${fmtDate(g.createdAt)}</span>
       </div>
     </div>`;
 }
@@ -131,13 +155,13 @@ export function failuresBlock(errorCount) {
   const n = errorCount;
   const plural = n > 1 ? 's' : '';
   return `
-    <details class="js-failures group bg-surface-container-low border-l-2 border-l-error border-y border-r border-outline-variant rounded-lg overflow-hidden" data-count="${n}">
-      <summary class="flex justify-between items-center p-md cursor-pointer list-none hover:bg-surface-container-highest transition-colors">
-        <div class="flex items-center gap-sm text-on-surface">
-          <span class="material-symbols-outlined text-[18px]">error_outline</span>
-          <span class="js-failures-count font-headline-md text-headline-md">${n} génération${plural} échouée${plural}</span>
+    <details class="js-failures group bg-surface-container-low border border-outline-variant rounded overflow-hidden" data-count="${n}">
+      <summary class="flex justify-between items-center gap-sm px-md py-sm cursor-pointer list-none hover:bg-surface-container transition-colors">
+        <div class="flex items-center gap-sm text-on-surface-variant">
+          <span class="material-symbols-outlined text-outline text-[15px]">error_outline</span>
+          <span class="js-failures-count font-label-md text-label-md">${n} génération${plural} échouée${plural}</span>
         </div>
-        <span class="material-symbols-outlined text-on-surface transform group-open:rotate-180 transition-transform">expand_more</span>
+        <span class="material-symbols-outlined text-outline transform group-open:rotate-180 transition-transform">expand_more</span>
       </summary>
       <ul class="js-failures-list p-md border-t border-outline-variant flex flex-col"></ul>
     </details>`;

@@ -6,31 +6,35 @@
     <title>AdCraft — Historique</title>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="" />
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet" />
     <link
       href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&display=block"
       rel="stylesheet"
     />
     <link rel="stylesheet" href="/css/app.css" />
   </head>
-  <body class="bg-background text-on-background font-body-base antialiased flex flex-col min-h-screen">
+  <body class="bg-background text-on-surface font-body-base antialiased flex flex-col min-h-screen">
     <!-- TopNavBar -->
-    <header class="bg-surface-container-lowest border-b border-outline-variant sticky top-0 z-50 w-full">
-      <div class="flex justify-between items-center w-full px-lg py-md max-w-container-max mx-auto">
+    <header class="bg-surface-container-lowest border-b border-outline-variant sticky top-0 z-50 w-full h-[60px] flex items-center">
+      <div class="w-full max-w-container-max mx-auto px-lg flex items-center justify-between">
         <div class="flex items-center gap-lg">
-          <span class="font-display-lg text-display-lg font-bold text-on-surface">AdCraft</span>
-          <nav class="hidden md:flex gap-md">
-            <a class="text-primary font-bold border-b-2 border-primary pb-sm font-label-md text-label-md" href="/history.html">Historique</a>
+          <a href="/" class="flex items-center gap-sm">
+            <img src="/img/logo-adcraft.png" alt="AdCraft" class="h-6 w-auto" />
+          </a>
+          <nav class="hidden md:flex items-center gap-xs">
+            <a href="/" class="font-label-md text-label-md text-secondary hover:text-on-surface px-md py-sm rounded transition-colors">Accueil</a>
+            <a href="/app.html" class="font-label-md text-label-md text-secondary hover:text-on-surface px-md py-sm rounded transition-colors">Studio</a>
+            <a href="/history.html" class="font-label-md text-label-md text-on-surface px-md py-sm rounded shadow-[inset_0_-2px_0_#1d4ed8]">Historique</a>
           </nav>
         </div>
         <div class="flex items-center gap-md">
-          <span id="usage-header" class="hidden md:block font-label-md text-label-md text-secondary">—</span>
-          <a href="/app.html" class="bg-primary-container text-on-primary font-label-md text-label-md px-md py-sm rounded hover:bg-primary transition-colors flex items-center gap-xs">
+          <span id="usage-header" class="hidden md:block font-label-sm text-label-sm text-secondary">—</span>
+          <a href="/app.html" class="h-8 px-md rounded bg-primary-container text-on-primary flex items-center gap-xs hover:bg-primary transition-colors">
             <span class="material-symbols-outlined text-[16px]">auto_awesome</span>
-            Générer
+            <span class="font-label-md text-label-md">Générer</span>
           </a>
-          <button id="logout" title="Déconnexion" aria-label="Déconnexion" class="w-8 h-8 rounded-full bg-surface-container border border-outline-variant flex items-center justify-center text-on-surface-variant hover:bg-surface-container-high transition-colors">
-            <span class="material-symbols-outlined text-[18px]">logout</span>
+          <button id="logout" title="Déconnexion" aria-label="Déconnexion" class="w-7 h-7 rounded-full bg-surface-container border border-outline-variant flex items-center justify-center text-on-surface-variant hover:bg-surface-container-high transition-colors">
+            <span class="material-symbols-outlined text-[16px]">logout</span>
           </button>
           <span id="user-email" class="hidden"></span>
         </div>
@@ -40,33 +44,33 @@
     <!-- Contenu -->
     <main class="flex-grow w-full max-w-container-max mx-auto px-lg py-xl flex flex-col gap-lg">
       <!-- En-tête -->
-      <div class="flex justify-between items-end">
-        <div>
-          <h1 class="font-display-lg text-display-lg text-on-surface">Historique des générations</h1>
-          <p class="font-body-base text-body-base text-secondary mt-xs">Consultez et gérez vos visuels générés.</p>
+      <div class="flex justify-between items-end gap-md">
+        <div class="flex flex-col gap-xs">
+          <h1 class="font-display-lg text-display-lg text-on-surface">Historique</h1>
+          <p class="font-body-base text-body-base text-secondary">Consultez et gérez vos visuels générés.</p>
         </div>
       </div>
 
       <!-- Barre d'outils : recherche & filtres -->
-      <div class="flex flex-col md:flex-row gap-md justify-between items-stretch md:items-center bg-surface-container-lowest p-md border border-outline-variant rounded-lg">
-        <div class="relative w-full md:w-96">
-          <span class="material-symbols-outlined absolute left-sm top-1/2 -translate-y-1/2 text-secondary text-[20px]">search</span>
+      <div class="flex flex-col md:flex-row gap-sm justify-between items-stretch md:items-center bg-surface-container-lowest p-sm border border-outline-variant rounded-xl">
+        <div class="relative w-full md:flex-1">
+          <span class="material-symbols-outlined absolute left-md top-1/2 -translate-y-1/2 text-outline text-[18px]">search</span>
           <input id="f-brand" type="text" placeholder="Rechercher une marque…"
-            class="w-full pl-xl pr-sm py-sm bg-surface-container-lowest border border-outline-variant rounded-lg focus:border-primary-container focus:ring-1 focus:ring-primary-container font-body-sm text-body-sm text-on-surface placeholder:text-secondary outline-none transition-colors" />
+            class="w-full h-[34px] pl-xl pr-md bg-surface-container-lowest border border-outline-variant rounded focus:border-primary-container focus:ring-1 focus:ring-primary-container font-body-sm text-body-sm text-on-surface placeholder:text-outline outline-none transition-colors" />
         </div>
         <div class="flex gap-sm w-full md:w-auto items-center flex-wrap">
-          <select id="f-category" class="min-w-[160px] pl-md pr-xl py-sm bg-surface-container-lowest border border-outline-variant rounded-lg text-on-surface font-label-md text-label-md focus:outline-none focus:border-primary-container focus:ring-1 focus:ring-primary-container transition-colors">
+          <select id="f-category" class="min-w-[160px] h-[34px] px-md bg-surface-container-lowest border border-outline-variant rounded text-on-surface-variant font-label-md text-label-md focus:outline-none focus:border-primary-container focus:ring-1 focus:ring-primary-container transition-colors">
             <option value="">Toutes catégories</option>
           </select>
-          <select id="f-theme" class="min-w-[150px] pl-md pr-xl py-sm bg-surface-container-lowest border border-outline-variant rounded-lg text-on-surface font-label-md text-label-md focus:outline-none focus:border-primary-container focus:ring-1 focus:ring-primary-container transition-colors">
+          <select id="f-theme" class="min-w-[140px] h-[34px] px-md bg-surface-container-lowest border border-outline-variant rounded text-on-surface-variant font-label-md text-label-md focus:outline-none focus:border-primary-container focus:ring-1 focus:ring-primary-container transition-colors">
             <option value="">Tous thèmes</option>
           </select>
-          <select id="f-sort" class="min-w-[210px] pl-md pr-xl py-sm bg-surface-container-lowest border border-outline-variant rounded-lg text-on-surface font-label-md text-label-md focus:outline-none focus:border-primary-container focus:ring-1 focus:ring-primary-container transition-colors">
-            <option value="date-desc">Date (récent → ancien)</option>
-            <option value="date-asc">Date (ancien → récent)</option>
+          <select id="f-sort" class="min-w-[150px] h-[34px] px-md bg-surface-container-lowest border border-outline-variant rounded text-on-surface-variant font-label-md text-label-md focus:outline-none focus:border-primary-container focus:ring-1 focus:ring-primary-container transition-colors">
+            <option value="date-desc">Plus récent</option>
+            <option value="date-asc">Plus ancien</option>
             <option value="brand-asc">Marque (A → Z)</option>
           </select>
-          <button id="reset" class="px-md py-sm text-secondary font-label-md text-label-md hover:text-on-surface transition-colors">Réinitialiser</button>
+          <button id="reset" class="px-md h-[34px] text-outline font-label-md text-label-md hover:text-on-surface transition-colors">Réinitialiser</button>
         </div>
       </div>
 
@@ -79,8 +83,8 @@
       </div>
 
       <!-- Pagination : masqué tant qu'il n'y a pas plus de résultats à charger. -->
-      <div id="load-more" class="hidden flex justify-center mt-lg">
-        <button id="load-more-btn" class="px-lg py-sm bg-surface-container-lowest border border-outline-variant rounded-lg text-on-surface font-label-md text-label-md hover:bg-surface-container transition-colors">
+      <div id="load-more" class="hidden flex justify-center pt-sm">
+        <button id="load-more-btn" class="h-9 px-lg bg-surface-container-lowest border border-outline-variant rounded text-on-surface-variant font-label-md text-label-md hover:bg-surface-container transition-colors">
           Charger plus
         </button>
       </div>

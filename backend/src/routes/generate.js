@@ -35,8 +35,8 @@ const N8N_TOKEN = process.env.N8N_TOKEN || '';
 const N8N_TIMEOUT_MS = Number(process.env.N8N_TIMEOUT_MS || 120000);
 
 // Coût par image généré (USD) — à aligner avec le modèle utilisé par n8n.
-// gemini-2.5-flash-image ≈ 0.039 ; gemini-3-pro-image ≈ 0.134.
-const COST_PER_IMAGE_USD = Number(process.env.COST_PER_IMAGE_USD || 0.039);
+// gemini-2.5-flash-image ≈ 0.039 ; gemini-3-pro-image ≈ 0.134 (modèle par défaut).
+const COST_PER_IMAGE_USD = Number(process.env.COST_PER_IMAGE_USD || 0.134);
 const USD_TO_EUR = Number(process.env.USD_TO_EUR || 0.92);
 
 // Champs texte libres partant dans un prompt image : on retire les caractères de
