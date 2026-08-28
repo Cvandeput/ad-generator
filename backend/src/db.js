@@ -57,5 +57,10 @@ function ensureColumn(table, col, def) {
   }
 }
 ensureColumn('generations', 'cost_usd', 'REAL NOT NULL DEFAULT 0');
+ensureColumn('generations', 'description', 'TEXT');
+ensureColumn('generations', 'art_direction', 'TEXT');
+// Source de la scène finale : 'manual' | 'auto' | 'fallback'. Mesure le taux de
+// repli du Directeur Artistique en production (fiabilité réelle du node texte).
+ensureColumn('generations', 'art_direction_source', 'TEXT');
 
 export default db;

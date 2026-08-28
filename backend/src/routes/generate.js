@@ -39,6 +39,20 @@ const N8N_TIMEOUT_MS = Number(process.env.N8N_TIMEOUT_MS || 120000);
 const COST_PER_IMAGE_USD = Number(process.env.COST_PER_IMAGE_USD || 0.039);
 const USD_TO_EUR = Number(process.env.USD_TO_EUR || 0.92);
 
+// Champs texte libres partant dans un prompt image : on retire les caractères de
+// contrôle (réduit la surface d'injection), on collapse les espaces et on tronque
+// plutôt que rejeter. La vraie barrière reste structurelle — chaque champ ne
+// touche qu'un bloc précis du prompt (cf. shared/prompt.mjs) : description → 1re
+// ligne, art_direction → bloc SCÈNE, jamais la fidélité packaging.
+const MAX_DESCRIPTION = 120;
+const MAX_ART_DIRECTION = 200;
+const cleanText = (s, max) =>
+  String(s || '')
+    .replace(/\p{Cc}/gu, ' ')
+    .replace(/\s+/g, ' ')
+    .trim()
+    .slice(0, max);
+
 const EXT_BY_MIME = { 'image/png': 'png', 'image/jpeg': 'jpg', 'image/webp': 'webp' };
 const MIME_BY_EXT = { png: 'image/png', jpg: 'image/jpeg', jpeg: 'image/jpeg', webp: 'image/webp' };
 
@@ -62,7 +76,7 @@ function readInputImages(genId) {
 // Partagé par /generate et /generation/:id/retry. La ligne `pending` (genId)
 // doit déjà exister. Retourne le corps de réponse succès, ou lève une erreur
 // enrichie ({ status, genId }) après avoir marqué la ligne en 'error'.
-async function performGeneration(genId, { userId, brand, category, flavor, theme }, images) {
+async function performGeneration(genId, { userId, brand, category, flavor, theme, description, artDirection }, images) {
   try {
     const controller = new AbortController();
     const timer = setTimeout(() => controller.abort(), N8N_TIMEOUT_MS);
@@ -74,7 +88,7 @@ async function performGeneration(genId, { userId, brand, category, flavor, theme
         'Content-Type': 'application/json',
         ...(N8N_TOKEN ? { 'x-webhook-token': N8N_TOKEN } : {}),
       },
-      body: JSON.stringify({ userId, brand, category, flavor, theme, images }),
+      body: JSON.stringify({ userId, brand, category, flavor, theme, description, artDirection, images }),
     }).finally(() => clearTimeout(timer));
 
     if (!r.ok) throw new Error(`n8n a répondu ${r.status}`);
@@ -84,14 +98,17 @@ async function performGeneration(genId, { userId, brand, category, flavor, theme
     if (!b64) throw new Error("Pas d'image dans la réponse n8n");
     const mimeType = payload.mimeType || 'image/png';
     const promptUsed = payload.prompt || null;
+    // Source renvoyée par n8n ('manual'|'auto'|'fallback'). Repli si absente :
+    // un décor manuel est 'manual' quoi qu'il arrive, sinon indéterminé.
+    const artDirectionSource = payload.artDirectionSource || (artDirection ? 'manual' : null);
 
     const ext = EXT_BY_MIME[mimeType] || 'png';
     const outPath = path.join(OUTPUTS_DIR, `${genId}.${ext}`);
     fs.writeFileSync(outPath, Buffer.from(b64, 'base64'));
 
     db.prepare(
-      `UPDATE generations SET status='done', output_path=?, mime_type=?, prompt_used=?, cost_usd=? WHERE id=?`
-    ).run(outPath, mimeType, promptUsed, COST_PER_IMAGE_USD, genId);
+      `UPDATE generations SET status='done', output_path=?, mime_type=?, prompt_used=?, art_direction_source=?, cost_usd=? WHERE id=?`
+    ).run(outPath, mimeType, promptUsed, artDirectionSource, COST_PER_IMAGE_USD, genId);
 
     return { id: genId, status: 'done', url: `/api/image/${genId}`, costUsd: COST_PER_IMAGE_USD };
   } catch (err) {
@@ -109,6 +126,8 @@ router.post('/generate', requireAuth, generateLimiter, upload.array('images', MA
   const category = String(req.body.category || '').trim();
   const flavor = String(req.body.flavor || '').trim();
   const theme = String(req.body.theme || '').trim();
+  const description = cleanText(req.body.description, MAX_DESCRIPTION);
+  const artDirection = cleanText(req.body.art_direction, MAX_ART_DIRECTION);
   const files = req.files || [];
 
   if (!brand) return res.status(400).json({ error: 'Marque requise' });
@@ -120,10 +139,10 @@ router.post('/generate', requireAuth, generateLimiter, upload.array('images', MA
   // Ligne "pending" créée d'abord : trace même si la génération échoue.
   const gen = db
     .prepare(
-      `INSERT INTO generations (user_id, brand, category, flavor, theme, input_count, status)
-       VALUES (?, ?, ?, ?, ?, ?, 'pending')`
+      `INSERT INTO generations (user_id, brand, category, flavor, theme, description, art_direction, input_count, status)
+       VALUES (?, ?, ?, ?, ?, ?, ?, ?, 'pending')`
     )
-    .run(req.session.userId, brand, category, flavor || null, theme, files.length);
+    .run(req.session.userId, brand, category, flavor || null, theme, description || null, artDirection || null, files.length);
   const genId = gen.lastInsertRowid;
 
   // Persiste les images d'entrée (réutilisées par une éventuelle relance).
@@ -136,7 +155,7 @@ router.post('/generate', requireAuth, generateLimiter, upload.array('images', MA
   });
 
   try {
-    const result = await performGeneration(genId, { userId: req.session.userId, brand, category, flavor, theme }, images);
+    const result = await performGeneration(genId, { userId: req.session.userId, brand, category, flavor, theme, description, artDirection }, images);
     res.json(result);
   } catch (err) {
     res.status(err.status || 502).json({ id: err.genId || genId, status: 'error', error: err.message });
@@ -161,10 +180,10 @@ router.post('/generation/:id/retry', requireAuth, generateLimiter, async (req, r
 
   const gen = db
     .prepare(
-      `INSERT INTO generations (user_id, brand, category, flavor, theme, input_count, status)
-       VALUES (?, ?, ?, ?, ?, ?, 'pending')`
+      `INSERT INTO generations (user_id, brand, category, flavor, theme, description, art_direction, input_count, status)
+       VALUES (?, ?, ?, ?, ?, ?, ?, ?, 'pending')`
     )
-    .run(orig.user_id, orig.brand, orig.category, orig.flavor, orig.theme, images.length);
+    .run(orig.user_id, orig.brand, orig.category, orig.flavor, orig.theme, orig.description || null, orig.art_direction || null, images.length);
   const genId = gen.lastInsertRowid;
 
   // Copie les images d'entrée sous le nouvel id (chaque ligne garde les siennes,
@@ -179,7 +198,7 @@ router.post('/generation/:id/retry', requireAuth, generateLimiter, async (req, r
   try {
     const result = await performGeneration(
       genId,
-      { userId: orig.user_id, brand: orig.brand, category: orig.category, flavor: orig.flavor || '', theme: orig.theme },
+      { userId: orig.user_id, brand: orig.brand, category: orig.category, flavor: orig.flavor || '', theme: orig.theme, description: orig.description || '', artDirection: orig.art_direction || '' },
       images
     );
     res.json(result);
@@ -223,7 +242,7 @@ router.get('/history', requireAuth, (req, res) => {
   const params = status === 'all' ? [uid] : [uid, status];
   const rows = db
     .prepare(
-      `SELECT id, brand, category, flavor, theme, status, error, mime_type, created_at
+      `SELECT id, brand, category, flavor, theme, description, status, error, mime_type, created_at
        FROM generations WHERE user_id = ?${filter} ORDER BY created_at DESC, id DESC LIMIT 200`
     )
     .all(...params);
@@ -240,6 +259,7 @@ router.get('/history', requireAuth, (req, res) => {
       category: r.category,
       flavor: r.flavor,
       theme: r.theme,
+      description: r.description,
       status: r.status,
       error: r.error,
       createdAt: r.created_at,

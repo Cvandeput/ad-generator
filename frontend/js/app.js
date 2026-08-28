@@ -51,6 +51,24 @@ themesEl.querySelectorAll('.theme-btn').forEach((btn) =>
   })
 );
 
+// --- Compteur de description (discret : n'apparaît qu'au-delà de 90/120) ---
+const descInput = document.getElementById('description');
+const descCount = document.getElementById('desc-count');
+descInput.addEventListener('input', () => {
+  const len = descInput.value.length;
+  descCount.textContent = `${len}/120`;
+  descCount.classList.toggle('hidden', len <= 90);
+});
+
+// --- Compteur de direction artistique (n'apparaît qu'au-delà de 160/200) ---
+const artInput = document.getElementById('art-direction');
+const artCount = document.getElementById('art-count');
+artInput.addEventListener('input', () => {
+  const len = artInput.value.length;
+  artCount.textContent = `${len}/200`;
+  artCount.classList.toggle('hidden', len <= 160);
+});
+
 // --- Dropzone ---
 dropzone.addEventListener('click', () => fileInput.click());
 dropzone.addEventListener('dragover', (e) => {
@@ -104,6 +122,8 @@ generateBtn.addEventListener('click', async () => {
   const brand = document.getElementById('brand').value.trim();
   const category = document.getElementById('category').value.trim();
   const flavor = document.getElementById('flavor').value.trim();
+  const description = document.getElementById('description').value.trim();
+  const artDirection = document.getElementById('art-direction').value.trim();
 
   if (files.length === 0) return showError('Ajoutez au moins une image.');
   if (!brand) return showError('Renseignez la marque.');
@@ -114,6 +134,8 @@ generateBtn.addEventListener('click', async () => {
   fd.append('brand', brand);
   fd.append('category', category);
   fd.append('flavor', flavor);
+  fd.append('description', description);
+  fd.append('art_direction', artDirection);
   fd.append('theme', selectedTheme);
   files.forEach((f) => fd.append('images', f));
 

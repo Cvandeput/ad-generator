@@ -93,6 +93,7 @@ export function successCard(g) {
       </div>
       <div class="px-xs flex flex-col gap-xs">
         <span class="font-label-md text-label-md text-on-surface truncate">${escapeHtml(label)}</span>
+        ${g.description ? `<span class="font-body-sm text-body-sm text-secondary truncate">${escapeHtml(g.description)}</span>` : ''}
         <div class="flex">
           <span class="bg-surface-container-low text-secondary px-xs py-[2px] rounded font-label-sm text-label-sm">${escapeHtml(themeLabel)}</span>
         </div>

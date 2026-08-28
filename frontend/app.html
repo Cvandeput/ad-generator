@@ -85,6 +85,15 @@
                 class="w-full border border-outline-variant rounded px-md py-sm font-body-base text-on-surface bg-surface-container-lowest focus:outline-none focus:border-primary-container focus:ring-1 focus:ring-primary-container placeholder:text-secondary transition-colors" />
             </div>
           </div>
+          <div class="flex flex-col gap-sm">
+            <div class="flex justify-between items-baseline">
+              <label class="font-label-md text-label-md text-on-surface" for="description">Description du produit <span class="text-secondary font-body-sm">(optionnel)</span></label>
+              <span id="desc-count" class="font-label-sm text-label-sm text-secondary hidden">0/120</span>
+            </div>
+            <textarea id="description" rows="2" maxlength="120" placeholder="Ex : croissant fourré au Nutella"
+              class="w-full border border-outline-variant rounded px-md py-sm font-body-base text-on-surface bg-surface-container-lowest focus:outline-none focus:border-primary-container focus:ring-1 focus:ring-primary-container placeholder:text-secondary transition-colors resize-none"></textarea>
+            <p class="font-body-sm text-body-sm text-secondary">Précisez la forme réelle du produit si la catégorie ne suffit pas — canette, sachet, pot, coffret…</p>
+          </div>
         </div>
 
         <hr class="border-t border-outline-variant w-full" />
@@ -98,6 +107,24 @@
           <!-- Injecté par renderThemeButtons() (source unique THEMES). -->
           <div id="themes" class="grid grid-cols-2 md:grid-cols-3 gap-md"></div>
         </div>
+
+        <hr class="border-t border-outline-variant w-full" />
+
+        <!-- Direction artistique manuelle (repliée par défaut) : remplace la scène du thème -->
+        <details id="art-direction-details" class="group flex flex-col gap-md">
+          <summary class="flex items-center gap-sm cursor-pointer list-none text-on-surface hover:text-primary-container transition-colors">
+            <span class="material-symbols-outlined text-[18px] transform group-open:rotate-90 transition-transform">chevron_right</span>
+            <span class="font-label-md text-label-md">Précisez le décor souhaité <span class="text-secondary font-body-sm">(optionnel)</span></span>
+          </summary>
+          <div class="flex flex-col gap-sm mt-md">
+            <div class="flex justify-end">
+              <span id="art-count" class="font-label-sm text-label-sm text-secondary hidden">0/200</span>
+            </div>
+            <textarea id="art-direction" rows="3" maxlength="200" placeholder="Ex : sur une botte de paille dans une grange en pierre, lumière rasante du matin"
+              class="w-full border border-outline-variant rounded px-md py-sm font-body-base text-on-surface bg-surface-container-lowest focus:outline-none focus:border-primary-container focus:ring-1 focus:ring-primary-container placeholder:text-secondary transition-colors resize-none"></textarea>
+            <p class="font-body-sm text-body-sm text-secondary">S'il est rempli, ce décor remplace celui du thème. La fidélité au packaging reste garantie.</p>
+          </div>
+        </details>
       </section>
 
       <!-- Panneau droit : toile / aperçu -->

@@ -6,12 +6,21 @@
 // lumière, palette, ambiance tous différents) → vraies variantes.
 //   prompt = lead (produit) + scène du thème + fidélité packaging
 
-export const lead = (brand, category, flavor) =>
-  `Professional advertising photograph of ${brand} ${category}${flavor ? `, ${flavor} flavor` : ''}.`;
+// La description précise la forme réelle du produit (« croissant fourré au
+// Nutella ») quand la catégorie ne suffit pas. Elle n'a sa place que dans la
+// première ligne, celle qui identifie le sujet — jamais dans le décor.
+export const lead = (brand, category, flavor, description) =>
+  `Professional advertising photograph of ${brand} ${category}${description ? ` — ${description}` : ''}${flavor ? `, ${flavor} flavor` : ''}.`;
 
 // Contrainte de fidélité, courte et en fin (ne doit pas dominer la scène).
 export const FIDELITY =
   'Keep the exact product packaging, label, logo and typography from the reference image unchanged and photorealistic.';
+
+// Interdits explicites : Nano Banana répond mieux à des négatifs clairs qu'à des
+// formulations positives seules.
+export const AVOID =
+  'AVOID: altered or invented packaging text, distorted logo, extra products, hands, faces, ' +
+  'watermarks, added slogans, cartoon or illustration style, visible AI artefacts.';
 
 export const PRESETS = {
   classique:
@@ -45,9 +54,12 @@ export const PRESETS = {
     'magical holiday mood.',
 };
 
-export function buildPrompt({ brand, category, flavor, theme }) {
-  const scene = PRESETS[theme] || PRESETS.classique;
-  return `${lead(brand, category, flavor)} ${scene} ${FIDELITY}`;
+// artDirection (décor libre saisi par l'utilisateur) remplace la SCÈNE du thème
+// quand il est fourni — jamais le lead ni la fidélité packaging. C'est le
+// contrôle manuel « à la Sora » : une idée précise prime sur le preset.
+export function buildPrompt({ brand, category, flavor, theme, description, artDirection }) {
+  const scene = artDirection || PRESETS[theme] || PRESETS.classique;
+  return `${lead(brand, category, flavor, description)} ${scene} ${FIDELITY} ${AVOID}`;
 }
 
 // Corps de requête Gemini generateContent (Nano Banana).
@@ -56,11 +68,13 @@ export function buildGeminiBody({
   category,
   flavor,
   theme,
+  description,
+  artDirection,
   images = [],
   imageSize = null,
   aspectRatio = '1:1',
 }) {
-  const parts = [{ text: buildPrompt({ brand, category, flavor, theme }) }];
+  const parts = [{ text: buildPrompt({ brand, category, flavor, theme, description, artDirection }) }];
   for (const img of images) {
     parts.push({ inline_data: { mime_type: img.mimeType || 'image/jpeg', data: img.data } });
   }
