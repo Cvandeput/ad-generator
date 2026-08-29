@@ -75,11 +75,13 @@ module.exports = {
         xs: '4px',
       },
       fontFamily: {
+        // Titres : Space Grotesk (géométrique, du caractère). Corps/labels : Inter (lisible).
         sans: ['Inter', 'sans-serif'],
-        'display-xl': ['Inter', 'sans-serif'],
-        'display-lg': ['Inter', 'sans-serif'],
-        'display-lg-mobile': ['Inter', 'sans-serif'],
-        'headline-md': ['Inter', 'sans-serif'],
+        display: ['"Space Grotesk"', 'sans-serif'],
+        'display-xl': ['"Space Grotesk"', 'sans-serif'],
+        'display-lg': ['"Space Grotesk"', 'sans-serif'],
+        'display-lg-mobile': ['"Space Grotesk"', 'sans-serif'],
+        'headline-md': ['"Space Grotesk"', 'sans-serif'],
         'body-base': ['Inter', 'sans-serif'],
         'body-sm': ['Inter', 'sans-serif'],
         'label-md': ['Inter', 'sans-serif'],

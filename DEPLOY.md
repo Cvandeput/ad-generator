@@ -1,3 +1,9 @@
+> **OBSOLETE — ne pas suivre tel quel sur le VPS de prod.**
+> Ce document decrit l'installation d'origine (nginx en conteneur, certbot dockerise,
+> import du workflow n8n). L'infra reelle a diverge : nginx tourne sur l'hote et le
+> workflow n8n se patche node par node. Voir `JOURNALPROJET.md` et `UPDATE-VPS.md`.
+> Appliquer les etapes 1, 5 et 6 d'ici coupe le site.
+
 # Déploiement sur VPS (Docker Compose + n8n existant + TLS)
 
 Objectif : mettre le site en ligne sur ton VPS, en réutilisant ton **n8n déjà installé**.

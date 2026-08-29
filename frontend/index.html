@@ -7,7 +7,7 @@
     <meta name="description" content="AdCraft compose un décor publicitaire cohérent autour de votre produit, sans jamais retoucher le packaging. Visuel 4:5 prêt à publier en moins de deux minutes." />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="" />
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet" />
     <link
       href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&display=block"
       rel="stylesheet"
@@ -49,8 +49,8 @@
 
           <div class="w-full lg:w-[620px] flex-shrink-0 flex items-stretch gap-md">
             <figure class="flex-1 flex flex-col gap-sm m-0">
-              <div class="aspect-[4/5] rounded-xl overflow-hidden border border-outline-variant bg-gradient-to-br from-surface-container-low to-surface-container flex items-center justify-center">
-                <span class="material-symbols-outlined text-outline text-[32px]">image</span>
+              <div class="aspect-[4/5] rounded-xl overflow-hidden border border-outline-variant bg-surface-container-low">
+                <img src="/img/site/hero-avant.png" alt="Canette Red Bull, photo brute" class="w-full h-full object-cover" />
               </div>
               <figcaption class="font-label-sm text-label-sm font-semibold tracking-[0.08em] uppercase text-outline">Photo brute</figcaption>
             </figure>
@@ -58,8 +58,8 @@
               <span class="material-symbols-outlined text-outline text-[22px]">arrow_forward</span>
             </div>
             <figure class="flex-1 flex flex-col gap-sm m-0">
-              <div class="aspect-[4/5] rounded-xl overflow-hidden border border-outline-variant bg-gradient-to-br from-primary-fixed to-inverse-primary shadow-[0_12px_32px_rgba(26,28,28,0.12)] flex items-center justify-center">
-                <span class="material-symbols-outlined text-primary-container text-[32px]">auto_awesome</span>
+              <div class="aspect-[4/5] rounded-xl overflow-hidden border border-outline-variant shadow-[0_12px_32px_rgba(26,28,28,0.12)]">
+                <img src="/img/site/hero-apres.png" alt="Red Bull mis en scène sur un terrain de basket au coucher du soleil" class="w-full h-full object-cover" />
               </div>
               <figcaption class="font-label-sm text-label-sm font-semibold tracking-[0.08em] uppercase text-primary-container">Visuel généré</figcaption>
             </figure>
@@ -69,7 +69,7 @@
 
       <!-- Fonctionnement -->
       <section id="fonctionnement" class="border-b border-outline-variant">
-        <div class="w-full max-w-container-max mx-auto px-lg py-16 flex flex-col gap-xl">
+        <div class="w-full max-w-container-max mx-auto px-lg py-24 flex flex-col gap-xl">
           <div class="flex flex-col gap-sm">
             <h2 class="font-display-lg text-display-lg text-on-surface">Trois informations suffisent</h2>
             <p class="font-body-base text-body-base text-secondary max-w-[560px]">Pas de brief à rédiger, pas de logiciel de retouche à ouvrir.</p>
@@ -96,39 +96,35 @@
 
       <!-- Galerie -->
       <section id="galerie" class="bg-surface-container-lowest border-b border-outline-variant">
-        <div class="w-full max-w-container-max mx-auto px-lg py-16 flex flex-col gap-lg">
+        <div class="w-full max-w-container-max mx-auto px-lg py-24 flex flex-col gap-xl">
           <div class="flex flex-col gap-sm">
             <h2 class="font-display-lg text-display-lg text-on-surface">Exemples</h2>
             <p class="font-body-base text-body-base text-secondary">Des visuels réellement produits par l'outil, sans retouche.</p>
           </div>
-          <div class="grid grid-cols-2 md:grid-cols-4 gap-lg">
+          <div class="grid grid-cols-2 md:grid-cols-4 gap-lg md:gap-xl">
             <figure class="flex flex-col gap-sm m-0">
-              <div class="aspect-[4/5] rounded-xl border border-dashed border-outline-variant bg-background flex flex-col items-center justify-center gap-sm">
-                <span class="material-symbols-outlined text-outline text-[22px]">image</span>
-                <span class="font-label-sm text-label-sm font-semibold tracking-[0.04em] text-outline">[VISUEL À FOURNIR]</span>
+              <div class="aspect-[4/5] rounded-xl overflow-hidden border border-outline-variant bg-surface-container-low">
+                <img src="/img/site/galerie-1.png" alt="Chips Lay's mises en scène sur un plan de travail" class="w-full h-full object-cover" loading="lazy" />
               </div>
-              <figcaption class="font-label-md text-label-md text-on-surface-variant">Snack · Classique</figcaption>
+              <figcaption class="font-label-md text-label-md text-on-surface-variant">Chips · Classique</figcaption>
             </figure>
             <figure class="flex flex-col gap-sm m-0">
-              <div class="aspect-[4/5] rounded-xl border border-dashed border-outline-variant bg-background flex flex-col items-center justify-center gap-sm">
-                <span class="material-symbols-outlined text-outline text-[22px]">image</span>
-                <span class="font-label-sm text-label-sm font-semibold tracking-[0.04em] text-outline">[VISUEL À FOURNIR]</span>
+              <div class="aspect-[4/5] rounded-xl overflow-hidden border border-outline-variant bg-surface-container-low">
+                <img src="/img/site/histo-2.png" alt="Canette Red Bull mise en scène dans une ambiance nocturne néon" class="w-full h-full object-cover" loading="lazy" />
               </div>
-              <figcaption class="font-label-md text-label-md text-on-surface-variant">Boisson · Été</figcaption>
+              <figcaption class="font-label-md text-label-md text-on-surface-variant">Boisson · Nuit</figcaption>
             </figure>
             <figure class="flex flex-col gap-sm m-0">
-              <div class="aspect-[4/5] rounded-xl border border-dashed border-outline-variant bg-background flex flex-col items-center justify-center gap-sm">
-                <span class="material-symbols-outlined text-outline text-[22px]">image</span>
-                <span class="font-label-sm text-label-sm font-semibold tracking-[0.04em] text-outline">[VISUEL À FOURNIR]</span>
+              <div class="aspect-[4/5] rounded-xl overflow-hidden border border-outline-variant bg-surface-container-low">
+                <img src="/img/site/galerie-3.png" alt="Bouteille de champagne mise en scène dans une salle à manger élégante" class="w-full h-full object-cover" loading="lazy" />
               </div>
-              <figcaption class="font-label-md text-label-md text-outline">Cosmétique · Luxe</figcaption>
+              <figcaption class="font-label-md text-label-md text-on-surface-variant">Alcool · Luxe</figcaption>
             </figure>
             <figure class="flex flex-col gap-sm m-0">
-              <div class="aspect-[4/5] rounded-xl border border-dashed border-outline-variant bg-background flex flex-col items-center justify-center gap-sm">
-                <span class="material-symbols-outlined text-outline text-[22px]">image</span>
-                <span class="font-label-sm text-label-sm font-semibold tracking-[0.04em] text-outline">[VISUEL À FOURNIR]</span>
+              <div class="aspect-[4/5] rounded-xl overflow-hidden border border-outline-variant bg-surface-container-low">
+                <img src="/img/site/galerie-4.png" alt="Ferrero Rocher mis en scène devant un sapin de Noël" class="w-full h-full object-cover" loading="lazy" />
               </div>
-              <figcaption class="font-label-md text-label-md text-outline">Confiserie · Noël</figcaption>
+              <figcaption class="font-label-md text-label-md text-on-surface-variant">Confiserie · Noël</figcaption>
             </figure>
           </div>
         </div>
@@ -136,18 +132,24 @@
 
       <!-- Fidélité -->
       <section class="border-b border-outline-variant">
-        <div class="w-full max-w-container-max mx-auto px-lg py-16 flex flex-col lg:flex-row items-center gap-16">
+        <div class="w-full max-w-container-max mx-auto px-lg py-24 flex flex-col lg:flex-row items-center gap-16">
           <div class="flex-1 flex flex-col gap-md">
             <h2 class="font-display-lg text-display-lg text-on-surface">Le packaging reste le vôtre</h2>
             <p class="font-body-base text-body-base text-on-surface-variant max-w-[520px] leading-[23px]">L'étiquette, le logo, la typographie et les couleurs sont repris de vos photos, sans réinterprétation. Seul le décor autour du produit est composé. C'est la contrainte qui distingue un visuel utilisable d'une image d'illustration.</p>
           </div>
           <div class="w-full lg:w-[560px] flex-shrink-0 flex gap-md">
-            <div class="flex-1 aspect-square rounded-xl overflow-hidden border border-outline-variant bg-gradient-to-br from-surface-container-low to-surface-container flex items-center justify-center">
-              <span class="material-symbols-outlined text-outline text-[28px]">image</span>
-            </div>
-            <div class="flex-1 aspect-square rounded-xl overflow-hidden border border-outline-variant bg-gradient-to-br from-primary-fixed to-inverse-primary flex items-center justify-center">
-              <span class="material-symbols-outlined text-primary-container text-[28px]">auto_awesome</span>
-            </div>
+            <figure class="flex-1 flex flex-col gap-sm m-0">
+              <div class="aspect-square rounded-xl overflow-hidden border border-outline-variant bg-surface-container-low">
+                <img src="/img/site/studio-source-1.jpg" alt="Pot de Nutella, photo brute" class="w-full h-full object-cover" loading="lazy" />
+              </div>
+              <figcaption class="font-label-sm text-label-sm font-semibold tracking-[0.08em] uppercase text-outline">Photo brute</figcaption>
+            </figure>
+            <figure class="flex-1 flex flex-col gap-sm m-0">
+              <div class="aspect-square rounded-xl overflow-hidden border border-outline-variant">
+                <img src="/img/site/studio-apercu.png" alt="Pot de Nutella mis en scène sur une planche en bois avec noisettes" class="w-full h-full object-cover" loading="lazy" />
+              </div>
+              <figcaption class="font-label-sm text-label-sm font-semibold tracking-[0.08em] uppercase text-primary-container">Visuel généré</figcaption>
+            </figure>
           </div>
         </div>
       </section>

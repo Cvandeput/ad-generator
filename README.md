@@ -1,41 +1,68 @@
-# Générateur de Publicités IA
+<p align="center">
+  <img src="frontend/img/logo-adcraft.png" alt="AdCraft" width="210" />
+</p>
+
+<h1 align="center">AdCraft — Générateur de publicités IA</h1>
+
+<p align="center">
+  Vos produits, mis en scène comme en studio. Déposez une photo, choisissez un thème,<br/>
+  obtenez un visuel <strong>4:5</strong> prêt à publier — <strong>sans jamais retoucher le packaging</strong>.
+</p>
+
+<p align="center">
+  <img src="https://img.shields.io/badge/Node.js-18+-339933?style=flat-square&logo=node.js&logoColor=white" alt="Node.js" />
+  <img src="https://img.shields.io/badge/Express-000000?style=flat-square&logo=express&logoColor=white" alt="Express" />
+  <img src="https://img.shields.io/badge/SQLite-003B57?style=flat-square&logo=sqlite&logoColor=white" alt="SQLite" />
+  <img src="https://img.shields.io/badge/Tailwind_CSS-06B6D4?style=flat-square&logo=tailwindcss&logoColor=white" alt="Tailwind CSS" />
+  <img src="https://img.shields.io/badge/n8n-EA4B71?style=flat-square&logo=n8n&logoColor=white" alt="n8n" />
+  <img src="https://img.shields.io/badge/Vertex_AI-4285F4?style=flat-square&logo=googlecloud&logoColor=white" alt="Google Vertex AI" />
+  <img src="https://img.shields.io/badge/Docker-2496ED?style=flat-square&logo=docker&logoColor=white" alt="Docker" />
+  <img src="https://img.shields.io/badge/nginx-009639?style=flat-square&logo=nginx&logoColor=white" alt="nginx" />
+  <img src="https://img.shields.io/badge/License-MIT-3da638?style=flat-square" alt="License MIT" />
+</p>
+
+---
 
 Application web sur invitation pour générer des visuels publicitaires produit. L'utilisateur dépose des photos d'un produit, renseigne **marque / catégorie / goût (optionnel) / description (optionnel)**, choisit un **thème** (ou décrit lui-même le décor), et reçoit une publicité générée par **Gemini image (Nano Banana)** via **Vertex AI**, récupérable dans son **historique** avec téléchargement direct.
 
 Le packaging (étiquette, logo, typo, couleurs) est repris **à l'identique** des photos ; seul le décor autour du produit est composé.
 
-```
-📸 Photos produit + infos (marque/catégorie/goût/description) + thème (ou décor libre)
-        │
-        ▼  (front → backend Express)
-🔀 n8n :
-   1. Directeur Artistique (Gemini texte) invente une scène spécifique au produit (JSON)
-   2. Build Prompt assemble : lead produit + scène + fidélité packaging
-   3. Nano Banana (Vertex AI) génère l'image 4:5
-        │
-        ▼
-🖼️ Image générée → stockée dans le compte → historique + téléchargement
+## Flux de génération
+
+```mermaid
+sequenceDiagram
+    autonumber
+    actor U as Utilisateur
+    participant F as Front (statique)
+    participant B as Backend (Express)
+    participant N as n8n
+    participant V as Vertex AI
+
+    U->>F: Photos + marque / catégorie / goût / thème
+    F->>B: POST /api/generate (multipart)
+    B->>N: Webhook (images base64 + infos) · token partagé
+    Note over N: 1 · Directeur Artistique (Gemini texte)<br/>invente une scène JSON propre au produit
+    Note over N: 2 · Build Prompt<br/>lead produit + scène + fidélité packaging
+    N->>V: 3 · Nano Banana — génère l'image 4:5
+    V-->>N: Image
+    N-->>B: Image générée
+    B->>B: Stocke + ajoute à l'historique
+    B-->>F: Image
+    F-->>U: Aperçu + téléchargement
 ```
 
 ## Architecture
 
-```
-Navigateur (front statique, Tailwind compilé)
-   │ HTTPS
-   ▼
-nginx  →  sert le front, TLS, proxy /api → backend
-   │
-   ▼
-Backend Node/Express + SQLite
-   - Auth (login only, sessions, bcrypt) — comptes pré-créés via SEED_USERS
-   - Historique par compte, stockage images (data/)
-   - Proxy vers n8n (ne voit jamais les identifiants Google)
-   │ POST webhook (images base64 + brand/category/flavor/theme/description/artDirection)
-   ▼
-n8n  →  Directeur Artistique + Build Prompt + Nano Banana (Vertex AI) + renvoi image
+```mermaid
+flowchart LR
+    U["🧑 Navigateur"] -->|HTTPS| NG["🌐 nginx"]
+    NG --> BE["⚙️ Backend Express"]
+    BE --- DB[("🗄️ SQLite")]
+    BE <-->|webhook| N8N["🔀 n8n<br/>DA → Prompt → Nano Banana"]
+    N8N -.->|Vertex AI| GCP["☁️ Gemini image"]
 ```
 
-Le flux est **synchrone** : le backend attend la réponse de n8n (timeout ~120 s), écrit l'image et l'ajoute à l'historique. La priorité de décor dans **Build Prompt** est : décor manuel saisi > scène IA (Directeur Artistique) > repli sur le preset du thème.
+Le flux est **synchrone** : le backend attend la réponse de n8n (timeout ~120 s), écrit l'image et l'ajoute à l'historique. Priorité de décor dans **Build Prompt** : décor manuel saisi &gt; scène IA (Directeur Artistique) &gt; repli sur le preset du thème.
 
 ## Composants
 
@@ -158,12 +185,11 @@ La logique de prompt (presets, fidélité, interdits) vit dans **`shared/prompt.
 
 ```
 backend/         Express + SQLite (auth, historique, proxy n8n)
-frontend/        index.html, login.html, app.html, history.html, css/, js/, img/
+frontend/        index.html, login.html, app.html, history.html, css/, js/, img/ (dont img/site = exemples avant/après)
 shared/          prompt.mjs (source unique de la logique de prompt)
 tools/           build-n8n.mjs (régénère le workflow), test-gemini.mjs
 n8n/             generateur-publicite.json (workflow)
 nginx/           default.conf (proxy + TLS)
-docs/images/     exemples avant/après
 docker-compose.yml, .env.example
 ```
 

@@ -16,7 +16,13 @@ services:
     extra_hosts:
       - "host.docker.internal:host-gateway"
 
+  # NE DEMARRE PAS SUR LE VPS DE PROD : nginx y tourne sur l'hote (vhosts dans
+  # /etc/nginx/sites-available/). Ce service entrerait en conflit sur 80/443 et
+  # couperait le site. Le `profiles:` le neutralise : `docker compose up -d` ne
+  # le demarre plus. Pour un environnement sans nginx hote :
+  #   docker compose --profile with-nginx up -d
   nginx:
+    profiles: ["with-nginx"]
     image: nginx:stable
     restart: unless-stopped
     ports:
