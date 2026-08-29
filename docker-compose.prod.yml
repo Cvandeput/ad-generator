@@ -1,0 +1,25 @@
+# Surcouche de PRODUCTION (VPS devwork). N'est PAS chargee automatiquement :
+# sur le VPS, docker-compose.override.yml est un lien symbolique vers ce fichier
+#   ln -s docker-compose.prod.yml docker-compose.override.yml
+# de sorte que le contenu reel soit versionne ici et pas seulement sur le serveur.
+#
+# Ce qu'elle fait, et pourquoi la prod casse sans elle :
+#  - publie le backend sur 127.0.0.1:3000 : le nginx de l'HOTE y proxifie /api/.
+#    Le compose de base n'expose le port qu'entre conteneurs (`expose:`).
+#  - raccorde le backend au reseau du conteneur n8n (n8n_default, externe),
+#    ce qui rend n8n joignable par son nom d'hote depuis le backend.
+#
+# A ne pas utiliser en local : le reseau externe n8n_default n'existe pas ailleurs.
+
+services:
+  backend:
+    ports:
+      - "127.0.0.1:3000:3000"
+    networks:
+      - default
+      - n8n
+
+networks:
+  n8n:
+    external: true
+    name: n8n_default

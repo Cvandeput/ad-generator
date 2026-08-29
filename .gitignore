@@ -15,3 +15,7 @@ service-account*.json
 sa-key.json
 BACKLOG.md
 UPDATE-VPS.md
+# Surcouche locale : sur le VPS c'est un lien vers docker-compose.prod.yml (versionne)
+docker-compose.override.yml
+keytest.py
+/k.json
