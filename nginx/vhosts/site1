@@ -1,0 +1,39 @@
+# devworks.be — portfolio statique + formulaire de contact PHP.
+# Reconstruit le 13/09/2026 après la perte des vhosts.
+server {
+    server_name devworks.be www.devworks.be;
+    charset utf-8;
+
+    root /var/www/site1;
+    index index.html;
+
+    add_header X-Frame-Options "SAMEORIGIN" always;
+    add_header X-Content-Type-Options "nosniff" always;
+    add_header Referrer-Policy "strict-origin-when-cross-origin" always;
+
+    location / {
+        try_files $uri $uri/ =404;
+    }
+
+    # send-email.php : seuls les .php de la racine sont exécutés.
+    location ~ \.php$ {
+        include snippets/fastcgi-php.conf;
+        fastcgi_pass unix:/run/php/php8.1-fpm.sock;
+    }
+
+    location ~ /\. { return 404; }
+
+    listen [::]:443 ssl;
+    listen 443 ssl http2;
+    ssl_certificate /etc/letsencrypt/live/devworks.be/fullchain.pem; # managed by Certbot
+    ssl_certificate_key /etc/letsencrypt/live/devworks.be/privkey.pem; # managed by Certbot
+    include /etc/letsencrypt/options-ssl-nginx.conf; # managed by Certbot
+    ssl_dhparam /etc/letsencrypt/ssl-dhparams.pem; # managed by Certbot
+}
+
+server {
+    listen 80;
+    listen [::]:80;
+    server_name devworks.be www.devworks.be;
+    return 301 https://devworks.be$request_uri;
+}

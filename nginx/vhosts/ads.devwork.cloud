@@ -1,0 +1,49 @@
+# AdCraft — front statique + /api/ vers le backend conteneurisé (127.0.0.1:3000).
+# Reconstruit le 13/09/2026 après la perte des vhosts.
+server {
+    server_name ads.devwork.cloud;
+    charset utf-8;
+
+    client_max_body_size 25m;
+
+    root /opt/ad-generator/frontend;
+    index index.html;
+
+    include snippets/adcraft-security.conf;
+
+    location /api/ {
+        proxy_pass http://127.0.0.1:3000;
+        proxy_http_version 1.1;
+        proxy_set_header Host              $host;
+        proxy_set_header X-Real-IP         $remote_addr;
+        proxy_set_header X-Forwarded-For   $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+        proxy_read_timeout 180s;
+        proxy_send_timeout 180s;
+        # Une réponse d'API n'est jamais rejouable : sessions, quotas, images.
+        add_header Cache-Control "no-store" always;
+    }
+
+    location / {
+        try_files $uri $uri/ =404;
+    }
+
+    listen [::]:443 ssl ipv6only=on; # managed by Certbot
+    listen 443 ssl http2; # managed by Certbot
+    ssl_certificate /etc/letsencrypt/live/ads.devwork.cloud/fullchain.pem; # managed by Certbot
+    ssl_certificate_key /etc/letsencrypt/live/ads.devwork.cloud/privkey.pem; # managed by Certbot
+    include /etc/letsencrypt/options-ssl-nginx.conf; # managed by Certbot
+    ssl_dhparam /etc/letsencrypt/ssl-dhparams.pem; # managed by Certbot
+}
+
+server {
+    if ($host = ads.devwork.cloud) {
+        return 301 https://$host$request_uri;
+    } # managed by Certbot
+
+    listen 80;
+    listen [::]:80;
+    server_name ads.devwork.cloud;
+    charset utf-8;
+    return 404; # managed by Certbot
+}

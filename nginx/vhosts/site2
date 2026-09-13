@@ -1,0 +1,25 @@
+# devwork.cloud — redirige vers AdCraft (comportement attendu).
+# Le contenu statique de /var/www/site2 reste sur le disque : pour le servir de
+# nouveau, remplacer le `return 301` par `root /var/www/site2; index index.html;`
+# et une location / avec try_files.
+# Reconstruit le 13/09/2026 après la perte des vhosts.
+server {
+    server_name devwork.cloud www.devwork.cloud;
+    charset utf-8;
+
+    return 301 https://ads.devwork.cloud$request_uri;
+
+    listen [::]:443 ssl;
+    listen 443 ssl http2;
+    ssl_certificate /etc/letsencrypt/live/devwork.cloud/fullchain.pem; # managed by Certbot
+    ssl_certificate_key /etc/letsencrypt/live/devwork.cloud/privkey.pem; # managed by Certbot
+    include /etc/letsencrypt/options-ssl-nginx.conf; # managed by Certbot
+    ssl_dhparam /etc/letsencrypt/ssl-dhparams.pem; # managed by Certbot
+}
+
+server {
+    listen 80;
+    listen [::]:80;
+    server_name devwork.cloud www.devwork.cloud;
+    return 301 https://ads.devwork.cloud$request_uri;
+}
