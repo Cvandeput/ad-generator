@@ -1,0 +1,13 @@
+User-agent: *
+Allow: /$
+Allow: /legal.html
+Allow: /img/
+Allow: /css/
+Allow: /js/
+Disallow: /app.html
+Disallow: /history.html
+Disallow: /login.html
+Disallow: /register.html
+Disallow: /api/
+
+Sitemap: https://ads.devwork.cloud/sitemap.xml

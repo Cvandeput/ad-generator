@@ -1,8 +1,9 @@
 // Page historique : filtres (recherche marque, catégorie, thème, tri) + échecs.
 // N'affiche que les réussites ; les échecs sont signalés par le bandeau repliable.
-import { api, requireUser } from './api.js';
-import { successCard, failuresBlock, THEME_LABELS, usageLabel } from './components.js';
+import { api } from './api.js';
+import { successCard, failuresBlock, THEME_LABELS, wireImageFallbacks } from './components.js';
 import { wireGridDeletes, wireFailures } from './ui.js';
+import { mountChrome, refreshUsage } from './nav.js';
 
 const PAGE = 12; // multiple des colonnes de la grille (2/3/4) → pas de trous
 
@@ -18,19 +19,10 @@ const fSort = document.getElementById('f-sort');
 let all = [];
 let shown = PAGE; // nombre de cartes affichées (pagination "Charger plus")
 
-// --- Auth guard ---
-requireUser()
-  .then((user) => {
-    document.getElementById('user-email').textContent = user.email;
-    document.getElementById('logout').title = `Déconnexion (${user.email})`;
-    loadUsage();
-    load();
-  })
-  .catch(() => {}); // 401 → redirigé par api.js
-
-document.getElementById('logout').addEventListener('click', async () => {
-  await api.logout().catch(() => {});
-  window.location.href = '/login.html';
+// --- Chrome commun + garde d'authentification ---
+wireImageFallbacks();
+mountChrome({ requireAuth: true }).then((user) => {
+  if (user) load();
 });
 
 async function load() {
@@ -150,10 +142,6 @@ document.getElementById('reset').addEventListener('click', () => {
   rerenderFromFilters();
 });
 
-async function loadUsage() {
-  try {
-    document.getElementById('usage-header').textContent = usageLabel(await api.usage());
-  } catch {
-    /* silencieux */
-  }
+function loadUsage() {
+  return refreshUsage();
 }

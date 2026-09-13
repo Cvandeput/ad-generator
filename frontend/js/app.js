@@ -1,6 +1,7 @@
 // Dashboard studio : upload multi-images, contexte produit, thème, génération.
-import { api, requireUser } from './api.js';
-import { renderThemeButtons, escapeHtml, IMG_FALLBACK_ATTRS, brokenThumb, usageLabel } from './components.js';
+import { api } from './api.js';
+import { renderThemeButtons, escapeHtml, IMG_FALLBACK_ATTRS, brokenThumb, wireImageFallbacks } from './components.js';
+import { mountChrome, refreshUsage } from './nav.js';
 
 const MAX_IMAGES = 14;
 const ALLOWED = ['image/jpeg', 'image/png', 'image/webp'];
@@ -17,18 +18,10 @@ const resultBody = document.getElementById('result-body');
 let files = []; // File[]
 let selectedTheme = null;
 
-// --- Garde d'authentification ---
-requireUser()
-  .then((user) => {
-    document.getElementById('user-email').textContent = user.email;
-    document.getElementById('logout').title = `Déconnexion (${user.email})`;
-    loadUsage();
-  })
-  .catch(() => {}); // 401 → redirigé par api.js
-
-document.getElementById('logout').addEventListener('click', async () => {
-  await api.logout().catch(() => {});
-  window.location.href = '/login.html';
+// --- Chrome commun (nav, footer, cookies, CGU) + garde d'authentification ---
+wireImageFallbacks();
+mountChrome({ requireAuth: true }).then((user) => {
+  if (user) loadUsage();
 });
 
 // --- Thèmes (injectés depuis la source unique) ---
@@ -133,6 +126,7 @@ generateBtn.addEventListener('click', async () => {
   const flavor = document.getElementById('flavor').value.trim();
   const description = document.getElementById('description').value.trim();
   const artDirection = document.getElementById('art-direction').value.trim();
+  const productCount = document.getElementById('product-count').value.trim();
 
   if (files.length === 0) return showError('Ajoutez au moins une image.');
   if (!brand) return showError('Renseignez la marque.');
@@ -146,6 +140,7 @@ generateBtn.addEventListener('click', async () => {
   fd.append('description', description);
   fd.append('art_direction', artDirection);
   fd.append('theme', selectedTheme);
+  if (productCount) fd.append('product_count', productCount);
   files.forEach((f) => fd.append('images', f));
 
   setLoading(true);
@@ -154,12 +149,14 @@ generateBtn.addEventListener('click', async () => {
   try {
     const data = await api.generate(fd, { signal: abortController.signal });
     progress.finish();
-    showResult(data.url);
+    showResult(data);
     loadUsage();
   } catch (err) {
     progress.stop();
     // Annulation utilisateur : retour à l'état vide, pas un message d'erreur.
     if (abortController.signal.aborted) showEmpty();
+    else if (err.status === 403 && err.data?.code === 'EMAIL_NOT_VERIFIED') showUnverified(err);
+    else if (err.status === 402) showQuota(err);
     else showError(err.message || 'Échec de la génération');
   } finally {
     abortController = null;
@@ -256,7 +253,9 @@ function startProgress(onCancel) {
   };
 }
 
-function showResult(url) {
+function showResult(data) {
+  const url = data.url;
+  const cost = typeof data.costEur === 'number' ? `${data.costEur.toFixed(3).replace('.', ',')} €` : '';
   resultBody.innerHTML = `
     <div class="flex flex-col items-center gap-md">
       <div class="relative w-full max-w-[420px] aspect-[4/5] bg-surface-container-low rounded overflow-hidden shadow-[0_1px_2px_rgba(26,28,28,0.06),0_12px_32px_rgba(26,28,28,0.10)]">
@@ -264,7 +263,7 @@ function showResult(url) {
         ${brokenThumb()}
         <div class="absolute top-sm left-sm flex items-center gap-xs bg-surface-container-lowest border border-outline-variant rounded-full pl-sm pr-md py-xs">
           <span class="w-1.5 h-1.5 rounded-full bg-primary-container"></span>
-          <span class="font-label-sm text-label-sm font-semibold text-on-surface-variant">Décor composé par l'IA</span>
+          <span class="font-label-sm text-label-sm font-semibold text-on-surface-variant">Décor composé par l'IA${cost ? ` · ${cost}` : ''}</span>
         </div>
       </div>
       <div class="flex items-center gap-sm">
@@ -295,6 +294,50 @@ function showEmpty() {
     </div>`;
 }
 
+// Adresse non confirmée : on propose le renvoi sur place plutôt qu'un message sec.
+function showUnverified(err) {
+  resultBody.innerHTML = `
+    <div class="flex flex-col items-center gap-md max-w-sm">
+      <div class="w-16 h-16 rounded-full bg-error-container flex items-center justify-center">
+        <span class="material-symbols-outlined text-[32px] text-on-error-container">mark_email_unread</span>
+      </div>
+      <div class="flex flex-col gap-xs">
+        <span class="font-headline-md text-headline-md text-on-surface">Confirmez votre adresse</span>
+        <span class="font-body-sm text-body-sm text-secondary">${escapeHtml(err.message)}</span>
+      </div>
+      <button type="button" id="js-resend" class="h-9 px-lg rounded bg-primary-container text-on-primary flex items-center font-label-md text-label-md hover:bg-primary transition-colors">Renvoyer l'e-mail</button>
+    </div>`;
+  document.getElementById('js-resend')?.addEventListener('click', async (e) => {
+    const btn = e.currentTarget;
+    btn.disabled = true;
+    btn.textContent = 'Envoi…';
+    try {
+      await api.resendVerification();
+      btn.textContent = 'E-mail envoyé';
+    } catch {
+      btn.disabled = false;
+      btn.textContent = "Renvoyer l'e-mail";
+    }
+  });
+}
+
+// Quota d'abonnement épuisé : ce n'est pas une panne, on oriente vers les formules.
+function showQuota(err) {
+  const d = err.data || {};
+  resultBody.innerHTML = `
+    <div class="flex flex-col items-center gap-md max-w-sm">
+      <div class="w-16 h-16 rounded-full bg-surface-container-high flex items-center justify-center">
+        <span class="material-symbols-outlined text-[32px] text-secondary">lock_clock</span>
+      </div>
+      <div class="flex flex-col gap-xs">
+        <span class="font-headline-md text-headline-md text-on-surface">Quota atteint</span>
+        <span class="font-body-sm text-body-sm text-secondary">${escapeHtml(err.message)}</span>
+      </div>
+      <a href="/tarifs.html" class="h-9 px-lg rounded bg-primary-container text-on-primary flex items-center font-label-md text-label-md hover:bg-primary transition-colors">Voir les formules</a>
+    </div>`;
+  if (d.quota) loadUsage();
+}
+
 function showError(msg) {
   resultBody.innerHTML = `
     <div class="flex flex-col items-center gap-md max-w-sm">
@@ -308,10 +351,12 @@ function showError(msg) {
     </div>`;
 }
 
+// Coût unitaire réel (grille tarifaire du modèle configuré) + conso du mois.
 async function loadUsage() {
-  try {
-    document.getElementById('usage-header').textContent = usageLabel(await api.usage());
-  } catch {
-    /* silencieux */
-  }
+  const u = await refreshUsage();
+  const el = document.getElementById('unit-cost');
+  if (!u || !el) return;
+  const eur = u.unit.eur.toFixed(3).replace('.', ',');
+  const size = u.unit.imageSize ? ` ${u.unit.imageSize}` : '';
+  el.textContent = `≈ ${eur} € par visuel (${u.unit.model}${size}) · ${u.quota.perHour}/h, ${u.quota.perDay}/jour · 30 à 120 s`;
 }

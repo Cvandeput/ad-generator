@@ -52,9 +52,9 @@ db.exec(`
 // Migration : ajoute une colonne si absente (bases créées avant l'ajout).
 function ensureColumn(table, col, def) {
   const cols = db.prepare(`PRAGMA table_info(${table})`).all();
-  if (!cols.some((c) => c.name === col)) {
-    db.exec(`ALTER TABLE ${table} ADD COLUMN ${col} ${def}`);
-  }
+  if (cols.some((c) => c.name === col)) return false;
+  db.exec(`ALTER TABLE ${table} ADD COLUMN ${col} ${def}`);
+  return true; // colonne créée à l'instant
 }
 ensureColumn('generations', 'cost_usd', 'REAL NOT NULL DEFAULT 0');
 ensureColumn('generations', 'description', 'TEXT');
@@ -62,5 +62,41 @@ ensureColumn('generations', 'art_direction', 'TEXT');
 // Source de la scène finale : 'manual' | 'auto' | 'fallback'. Mesure le taux de
 // repli du Directeur Artistique en production (fiabilité réelle du node texte).
 ensureColumn('generations', 'art_direction_source', 'TEXT');
+// Modèle/taille réellement utilisés (renvoyés par n8n) : le coût est calculé
+// depuis ces valeurs, plus depuis une variable d'env qui dérive.
+ensureColumn('generations', 'model', 'TEXT');
+ensureColumn('generations', 'image_size', 'TEXT');
+// Nombre de produits attendus (saisi par l'utilisateur, optionnel).
+ensureColumn('generations', 'product_count', 'INTEGER');
+
+// Acceptation des CGU / mentions légales (version + date) et suivi sécurité.
+ensureColumn('users', 'terms_version', 'TEXT');
+ensureColumn('users', 'terms_accepted_at', 'TEXT');
+ensureColumn('users', 'password_changed_at', 'TEXT');
+ensureColumn('users', 'last_login_at', 'TEXT');
+ensureColumn('users', 'failed_logins', 'INTEGER NOT NULL DEFAULT 0');
+ensureColumn('users', 'locked_until', 'TEXT');
+// Vérification d'e-mail : tant qu'elle n'est pas faite, le compte existe mais
+// n'a aucune génération offerte (anti-création de comptes en masse).
+if (ensureColumn('users', 'email_verified', 'INTEGER NOT NULL DEFAULT 0')) {
+  // Les comptes qui existaient avant cette fonctionnalité sont considérés comme
+  // vérifiés : on ne coupe pas l'accès à des utilisateurs déjà en place.
+  const n = db.prepare("UPDATE users SET email_verified = 1").run().changes;
+  if (n) console.log(`✉️  ${n} compte(s) existant(s) marqué(s) comme vérifiés (antériorité).`);
+}
+ensureColumn('users', 'email_verified_at', 'TEXT');
+
+// Jetons à usage unique (vérification d'e-mail, réinitialisation de mot de
+// passe plus tard). Seul le SHA-256 du jeton est stocké.
+db.exec(`
+  CREATE TABLE IF NOT EXISTS auth_tokens (
+    token_hash TEXT PRIMARY KEY,
+    user_id    INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+    purpose    TEXT NOT NULL,
+    expires_at TEXT NOT NULL,
+    created_at TEXT NOT NULL DEFAULT (datetime('now'))
+  );
+  CREATE INDEX IF NOT EXISTS idx_auth_tokens_user ON auth_tokens(user_id, purpose);
+`);
 
 export default db;

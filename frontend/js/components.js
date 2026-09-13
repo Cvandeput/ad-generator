@@ -66,10 +66,36 @@ export function usageLabel(u) {
 
 // Vignette cassée (404, image corrompue) OU sortie dégénérée 1×1 (n8n/Gemini) :
 // bascule sur un placeholder explicite plutôt qu'un rectangle noir muet.
-// À placer juste APRÈS le <img> ciblé (le handler vise nextElementSibling).
-export const IMG_FALLBACK_ATTRS =
-  `onerror="this.classList.add('hidden');this.nextElementSibling.classList.remove('hidden')" ` +
-  `onload="if(this.naturalWidth<=1||this.naturalHeight<=1){this.classList.add('hidden');this.nextElementSibling.classList.remove('hidden')}"`;
+// Sans handler inline (interdit par la CSP) : un écouteur global en phase de
+// capture (les événements error/load des <img> ne remontent pas).
+// À placer juste APRÈS le <img data-fallback> ciblé.
+export const IMG_FALLBACK_ATTRS = 'data-fallback="1"';
+
+function swapToFallback(img) {
+  img.classList.add('hidden');
+  img.nextElementSibling?.classList.remove('hidden');
+}
+let fallbackWired = false;
+export function wireImageFallbacks() {
+  if (fallbackWired) return;
+  fallbackWired = true;
+  document.addEventListener(
+    'error',
+    (e) => {
+      const img = e.target;
+      if (img instanceof HTMLImageElement && img.dataset.fallback) swapToFallback(img);
+    },
+    true
+  );
+  document.addEventListener(
+    'load',
+    (e) => {
+      const img = e.target;
+      if (img instanceof HTMLImageElement && img.dataset.fallback && (img.naturalWidth <= 1 || img.naturalHeight <= 1)) swapToFallback(img);
+    },
+    true
+  );
+}
 
 export function brokenThumb() {
   return `<div class="js-broken hidden absolute inset-0 flex-col items-center justify-center gap-xs bg-surface-container-low text-secondary text-center p-sm flex">

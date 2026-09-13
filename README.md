@@ -72,22 +72,20 @@ Le flux est **synchrone** : le backend attend la réponse de n8n (timeout ~120 s
 | Backend | Node/Express + SQLite (better-sqlite3) — `backend/` |
 | Logique de prompt | `shared/prompt.mjs` (source unique) → `tools/build-n8n.mjs` régénère le workflow |
 | Orchestration | n8n — `n8n/generateur-publicite.json` |
-| Génération image | Gemini image via **Vertex AI** — `gemini-3-pro-image` (par défaut) |
+| Génération image | Gemini image via **Vertex AI** — `gemini-3.1-flash-image` 2K (défaut), `gemini-3-pro-image` en option |
 | Reverse proxy / TLS | nginx + Let's Encrypt — `nginx/` |
 
 ## Modèle & coût
 
-Modèle image piloté par la variable d'environnement n8n **`GEMINI_MODEL`** (défaut `gemini-3-pro-image`) :
-meilleur suivi d'instructions, fidélité du packaging et rendu du **texte d'emballage**, jusqu'à 14 images de référence.
+Modèle image piloté par la variable d'environnement n8n **`GEMINI_MODEL`** et la résolution par **`GEMINI_IMAGE_SIZE`** (recommandé `2K`). Le coût de chaque génération est calculé par le backend à partir du **modèle réellement renvoyé par n8n** (grille `backend/src/pricing.js`) ; le studio affiche le prix unitaire courant (`/api/usage` → `unit`).
 
-| Résolution (`GEMINI_IMAGE_SIZE`) | Prix / image |
-|---|---|
-| 1K / 2K | ~$0.134 |
-| 4K | ~$0.24 |
+| Modèle | 1K | 2K | 4K |
+|---|---|---|---|
+| `gemini-3.1-flash-image` (défaut, Nano Banana 2) | $0.067 | **$0.101** | $0.151 |
+| `gemini-3-pro-image` (Nano Banana Pro) | $0.134 | $0.134 | $0.24 |
+| `gemini-2.5-flash-image` | $0.039 | — | — |
 
-La résolution est réglée par **`GEMINI_IMAGE_SIZE`** (recommandé `2K` ; laisser vide pour `gemini-2.5-flash-image` qui ne la supporte pas). Le coût suivi côté app est `COST_PER_IMAGE_USD` (défaut `0.134`). À faible volume (~8-15 images/mois), ça reste sous ~1-2 €/mois.
-
-> Alternative moins chère : `GEMINI_MODEL=gemini-2.5-flash-image` (~$0.039/image), sans `GEMINI_IMAGE_SIZE`.
+> **`gemini-2.5-flash-image` est retiré par Google le 2 octobre 2026.** Détails, comparaison avec GPT Image 2.5 et correction de l'historique : `docs/MODELES.md`.
 
 ## Prérequis
 
@@ -153,33 +151,45 @@ Ouvrir `http://localhost:3000` → page de connexion. Après toute modif de `sha
 
 Exemple : `Red Bull` · `boisson énergisante` · `pêche` · thème *Été*.
 
-## Thèmes / presets
+## Thèmes / prompts
 
-La logique de prompt (presets, fidélité, interdits) vit dans **`shared/prompt.mjs`** (source unique). Le workflow n8n en est la copie générée par `tools/build-n8n.mjs`. Pour ajouter/ajuster un thème : éditer `PRESETS`/`THEMES` dans `shared/prompt.mjs` + `frontend/js/components.js` (`THEMES`) + la liste blanche dans `backend/src/routes/generate.js`, puis régénérer le workflow.
+La logique de prompt (briefs de thème pour le Directeur Artistique, presets de repli, fidélité, interdits, inventaire multi-produits) vit dans **`shared/prompt.mjs`** (source unique, importée par le backend). Le workflow n8n en est la copie générée par `tools/build-n8n.mjs`. Pour ajouter/ajuster un thème : éditer `THEME_BRIEFS`/`PRESETS`/`THEMES` dans `shared/prompt.mjs` + `frontend/js/components.js` (`THEMES`), puis régénérer le workflow. Le Directeur Artistique **voit les photos** : il dresse l'inventaire des produits (plusieurs photos = plusieurs produits, ou plusieurs produits sur une photo) et choisit un décor dans le monde du thème. Revue complète : `docs/PROMPTS-REVIEW.md`.
 
 ## API backend
 
 | Méthode | Route | Description |
 |---|---|---|
-| POST | `/api/auth/login` | Connexion |
+| GET | `/api/auth/config` | Mode d'inscription, version des CGU, vérification d'e-mail active (public) |
+| POST | `/api/auth/verify-email` | Confirme l'adresse depuis le jeton reçu par e-mail (usage unique) |
+| POST | `/api/auth/resend-verification` | Renvoie le lien (3/h par IP, réponse neutre) |
+| POST | `/api/auth/register` | Inscription — selon `REGISTER_MODE` (`open` par défaut, `invite` → `inviteCode`, `closed` → 404) ; `acceptTerms` obligatoire. Le compte démarre sur la formule gratuite |
+| POST | `/api/auth/login` | Connexion (verrouillage 15 min après 8 échecs) |
 | POST | `/api/auth/logout` | Déconnexion |
-| GET | `/api/auth/me` | Utilisateur courant |
-| POST | `/api/generate` | Générer (multipart : `images[]`, `brand`, `category`, `flavor`, `theme`, `description`, `art_direction`) |
+| POST | `/api/auth/logout-all` | Révoque toutes les sessions du compte |
+| POST | `/api/auth/password` | Changement de mot de passe (`currentPassword`, `newPassword`) |
+| POST | `/api/auth/accept-terms` | (Ré)acceptation des mentions légales |
+| GET | `/api/auth/me` | Utilisateur courant (`termsOutdated` si une nouvelle version des CGU doit être acceptée) |
+| POST | `/api/generate` | Générer (multipart : `images[]`, `brand`, `category`, `flavor`, `theme`, `description`, `art_direction`, `product_count`) |
 | POST | `/api/generation/:id/retry` | Relancer une génération échouée |
 | DELETE | `/api/generation/:id` | Supprimer une génération |
 | GET | `/api/history` | Historique du compte (`?status=done\|error\|all`) |
-| GET | `/api/usage` | Consommation (mois courant / total) |
+| GET | `/api/usage` | Consommation (mois courant / total), prix unitaire courant, quotas |
 | GET | `/api/image/:id` | Image générée (`?download=1` pour forcer le téléchargement) |
 
-> Un endpoint `/api/auth/register` existe encore côté backend mais n'est plus exposé dans l'UI (accès sur invitation).
+Toutes les mutations exigent un en-tête `Origin`/`Referer` de même origine (ou listé dans `APP_ORIGINS`).
 
 ## Sécurité
 
-- Identifiants Google (service account) **uniquement** dans n8n (credential), jamais dans le repo ni le front. `sa-key.json` est gitignoré.
-- Mots de passe hachés (bcrypt), cookie de session `httpOnly` + `secure` (prod) + `sameSite`.
-- Rate-limit sur l'auth et la génération, en-têtes helmet + nginx.
-- Webhook n8n protégé par token partagé (`N8N_TOKEN` / `WEBHOOK_TOKEN`).
-- `.env` et `backend/data/` sont gitignorés.
+Rapport de test d'intrusion et état des corrections : **`docs/PENTEST-REPORT.md`**.
+
+- Le backend refuse de démarrer en production si `SESSION_SECRET` / `N8N_TOKEN` manquent ou gardent une valeur d'exemple.
+- Inscription publique (`REGISTER_MODE=open`) avec **vérification d'e-mail obligatoire** avant la première génération (jeton à usage unique, 24 h, stocké en SHA-256) ; un compte confirmé a `FREE_PLAN_QUOTA` générations à vie. Mot de passe ≥ 12 caractères et 3 familles, acceptation des CGU horodatée, verrouillage de compte, journal d'audit JSON.
+- Session : cookie `__Host-sid` (HttpOnly, Secure, SameSite=Lax), identifiant régénéré à la connexion, glissante 24 h / absolue 7 jours, révocation serveur (`logout-all`, changement de mot de passe).
+- Anti-CSRF par vérification d'origine, CSP stricte (helmet + `nginx/snippets/adcraft-security.conf`), aucun handler inline.
+- Uploads vérifiés par signature binaire, champs bornés, catégories/thèmes sur liste blanche, quotas de génération **par compte**.
+- Conteneur non-root, système de fichiers en lecture seule, `npm ci`, healthcheck.
+- Identifiants Google (service account) **uniquement** dans n8n (credential). `.env`, `sa-key.json` et `backend/data/` sont gitignorés.
+- Migration prévue vers un BaaS auto-hébergé (PocketBase) : `docs/MIGRATION-BAAS.md`.
 
 ## Structure
 

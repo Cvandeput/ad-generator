@@ -1,15 +1,36 @@
 services:
   backend:
-    build: ./backend
+    build:
+      context: .                 # racine : le backend embarque shared/prompt.mjs
+      dockerfile: backend/Dockerfile
     restart: unless-stopped
     env_file: .env
     environment:
       - NODE_ENV=production
       - DATA_DIR=/app/data
     volumes:
+      # Appartient à l'uid 1000 (USER node du Dockerfile) : chown -R 1000:1000 backend/data
       - ./backend/data:/app/data
     expose:
       - "3000"
+    # Le conteneur tourne sans privilèges et sans système de fichiers inscriptible
+    # hors /app/data et /tmp.
+    read_only: true
+    tmpfs:
+      - /tmp
+    security_opt:
+      - no-new-privileges:true
+    cap_drop:
+      - ALL
+    deploy:
+      resources:
+        limits:
+          memory: 512m
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "3"
     # Permet au conteneur backend d'atteindre le n8n existant du VPS
     # (qu'il tourne en systemd sur l'hôte ou dans un autre conteneur exposant 5678).
     # Dans .env : N8N_WEBHOOK_URL=http://host.docker.internal:5678/webhook/generate-ads
@@ -30,6 +51,7 @@ services:
       - "443:443"
     volumes:
       - ./nginx/default.conf:/etc/nginx/conf.d/default.conf:ro
+      - ./nginx/snippets/adcraft-security.conf:/etc/nginx/snippets/adcraft-security.conf:ro
       - ./frontend:/usr/share/nginx/html:ro
       - ./certbot/www:/var/www/certbot
       - ./certbot/conf:/etc/letsencrypt

@@ -5,45 +5,46 @@ import fs from 'node:fs';
 import path from 'node:path';
 import requireAuth from '../middleware/requireAuth.js';
 import db, { OUTPUTS_DIR, UPLOADS_DIR } from '../db.js';
+import { config } from '../config.js';
+import { costForModel } from '../pricing.js';
+import { THEMES, CATEGORIES, MAX_PRODUCTS } from '../../../shared/prompt.mjs';
 
 const router = Router();
 
-// Thèmes autorisés (le texte réel du preset vit dans le workflow n8n).
-const THEMES = ['classique', 'ete', 'extravagant', 'sport', 'fete', 'luxe', 'noel'];
 const MAX_IMAGES = 14; // limite Nano Banana Pro (multi-références)
 const ALLOWED_MIME = ['image/jpeg', 'image/png', 'image/webp'];
 
 // Images gardées en mémoire puis persistées après création de la génération.
 const upload = multer({
   storage: multer.memoryStorage(),
-  limits: { fileSize: 10 * 1024 * 1024, files: MAX_IMAGES },
-  fileFilter: (_req, file, cb) => {
-    cb(null, ALLOWED_MIME.includes(file.mimetype));
-  },
+  limits: { fileSize: 10 * 1024 * 1024, files: MAX_IMAGES, fields: 12, fieldSize: 4096, parts: 40 },
+  fileFilter: (_req, file, cb) => cb(null, ALLOWED_MIME.includes(file.mimetype)),
 });
 
-const generateLimiter = rateLimit({
+// Quota PAR COMPTE (c'est le compte qui coûte, pas l'IP) : horaire et journalier.
+const perUser = (req) => `u:${req.session?.userId ?? req.ip}`;
+const hourly = rateLimit({
   windowMs: 60 * 60 * 1000,
-  max: 30,
+  max: config.genPerHour,
+  keyGenerator: perUser,
   standardHeaders: true,
   legacyHeaders: false,
-  message: { error: 'Limite de générations atteinte, réessayez plus tard' },
+  message: { error: `Quota horaire atteint (${config.genPerHour} générations/heure)` },
+});
+const daily = rateLimit({
+  windowMs: 24 * 60 * 60 * 1000,
+  max: config.genPerDay,
+  keyGenerator: perUser,
+  standardHeaders: true,
+  legacyHeaders: false,
+  message: { error: `Quota journalier atteint (${config.genPerDay} générations/jour)` },
 });
 
-const N8N_WEBHOOK_URL = process.env.N8N_WEBHOOK_URL;
-const N8N_TOKEN = process.env.N8N_TOKEN || '';
-const N8N_TIMEOUT_MS = Number(process.env.N8N_TIMEOUT_MS || 120000);
-
-// Coût par image généré (USD) — à aligner avec le modèle utilisé par n8n.
-// gemini-2.5-flash-image ≈ 0.039 ; gemini-3-pro-image ≈ 0.134 (modèle par défaut).
-const COST_PER_IMAGE_USD = Number(process.env.COST_PER_IMAGE_USD || 0.134);
-const USD_TO_EUR = Number(process.env.USD_TO_EUR || 0.92);
-
 // Champs texte libres partant dans un prompt image : on retire les caractères de
-// contrôle (réduit la surface d'injection), on collapse les espaces et on tronque
-// plutôt que rejeter. La vraie barrière reste structurelle — chaque champ ne
-// touche qu'un bloc précis du prompt (cf. shared/prompt.mjs) : description → 1re
-// ligne, art_direction → bloc SCÈNE, jamais la fidélité packaging.
+// contrôle (réduit la surface d'injection), on collapse les espaces et on tronque.
+// Chaque champ ne touche qu'un bloc précis du prompt (cf. shared/prompt.mjs).
+const MAX_BRAND = 60;
+const MAX_FLAVOR = 60;
 const MAX_DESCRIPTION = 120;
 const MAX_ART_DIRECTION = 200;
 const cleanText = (s, max) =>
@@ -55,6 +56,25 @@ const cleanText = (s, max) =>
 
 const EXT_BY_MIME = { 'image/png': 'png', 'image/jpeg': 'jpg', 'image/webp': 'webp' };
 const MIME_BY_EXT = { png: 'image/png', jpg: 'image/jpeg', jpeg: 'image/jpeg', webp: 'image/webp' };
+
+// Type réel par signature (le Content-Type du multipart est déclaré par le
+// client, donc contrôlé par l'attaquant). Retourne null si ce n'est pas une image.
+function sniffImage(buf) {
+  if (buf.length < 12) return null;
+  if (buf[0] === 0x89 && buf[1] === 0x50 && buf[2] === 0x4e && buf[3] === 0x47 && buf[4] === 0x0d && buf[5] === 0x0a && buf[6] === 0x1a && buf[7] === 0x0a) return 'image/png';
+  if (buf[0] === 0xff && buf[1] === 0xd8 && buf[2] === 0xff) return 'image/jpeg';
+  if (buf.toString('ascii', 0, 4) === 'RIFF' && buf.toString('ascii', 8, 12) === 'WEBP') return 'image/webp';
+  return null;
+}
+
+// Coût USD d'une génération : modèle/taille renvoyés par n8n, sinon config.
+function unitCost(model, imageSize) {
+  if (config.costOverrideUsd != null) return { usd: config.costOverrideUsd, model: model || config.geminiModel, imageSize: imageSize || config.geminiImageSize || null };
+  const m = model || config.geminiModel;
+  const s = imageSize || config.geminiImageSize || null;
+  const usd = costForModel(m, s);
+  return { usd: usd ?? 0, model: m, imageSize: s, unknown: usd == null };
+}
 
 // Relit les images d'entrée d'une génération depuis le disque (pour la relance).
 function readInputImages(genId) {
@@ -73,22 +93,16 @@ function readInputImages(genId) {
 }
 
 // Cœur de la génération : appelle n8n, stocke le résultat, met à jour la ligne.
-// Partagé par /generate et /generation/:id/retry. La ligne `pending` (genId)
-// doit déjà exister. Retourne le corps de réponse succès, ou lève une erreur
-// enrichie ({ status, genId }) après avoir marqué la ligne en 'error'.
-async function performGeneration(genId, { userId, brand, category, flavor, theme, description, artDirection }, images) {
+async function performGeneration(genId, params, images) {
   try {
     const controller = new AbortController();
-    const timer = setTimeout(() => controller.abort(), N8N_TIMEOUT_MS);
+    const timer = setTimeout(() => controller.abort(), config.n8nTimeoutMs);
 
-    const r = await fetch(N8N_WEBHOOK_URL, {
+    const r = await fetch(config.n8nWebhookUrl, {
       method: 'POST',
       signal: controller.signal,
-      headers: {
-        'Content-Type': 'application/json',
-        ...(N8N_TOKEN ? { 'x-webhook-token': N8N_TOKEN } : {}),
-      },
-      body: JSON.stringify({ userId, brand, category, flavor, theme, description, artDirection, images }),
+      headers: { 'Content-Type': 'application/json', 'x-webhook-token': config.n8nToken },
+      body: JSON.stringify({ ...params, images }),
     }).finally(() => clearTimeout(timer));
 
     if (!r.ok) throw new Error(`n8n a répondu ${r.status}`);
@@ -96,21 +110,23 @@ async function performGeneration(genId, { userId, brand, category, flavor, theme
     const payload = await r.json();
     const b64 = payload.image || payload.data;
     if (!b64) throw new Error("Pas d'image dans la réponse n8n");
-    const mimeType = payload.mimeType || 'image/png';
+    const buf = Buffer.from(b64, 'base64');
+    const mimeType = sniffImage(buf) || payload.mimeType || 'image/png';
     const promptUsed = payload.prompt || null;
-    // Source renvoyée par n8n ('manual'|'auto'|'fallback'). Repli si absente :
-    // un décor manuel est 'manual' quoi qu'il arrive, sinon indéterminé.
-    const artDirectionSource = payload.artDirectionSource || (artDirection ? 'manual' : null);
+    const artDirectionSource = payload.artDirectionSource || (params.artDirection ? 'manual' : null);
+    const cost = unitCost(payload.model, payload.imageSize);
+    if (cost.unknown) console.warn(`[cost] modèle inconnu de la grille : ${cost.model} → coût 0 enregistré`);
 
     const ext = EXT_BY_MIME[mimeType] || 'png';
     const outPath = path.join(OUTPUTS_DIR, `${genId}.${ext}`);
-    fs.writeFileSync(outPath, Buffer.from(b64, 'base64'));
+    fs.writeFileSync(outPath, buf);
 
     db.prepare(
-      `UPDATE generations SET status='done', output_path=?, mime_type=?, prompt_used=?, art_direction_source=?, cost_usd=? WHERE id=?`
-    ).run(outPath, mimeType, promptUsed, artDirectionSource, COST_PER_IMAGE_USD, genId);
+      `UPDATE generations SET status='done', output_path=?, mime_type=?, prompt_used=?, art_direction_source=?,
+       cost_usd=?, model=?, image_size=? WHERE id=?`
+    ).run(outPath, mimeType, promptUsed, artDirectionSource, cost.usd, cost.model, cost.imageSize, genId);
 
-    return { id: genId, status: 'done', url: `/api/image/${genId}`, costUsd: COST_PER_IMAGE_USD };
+    return { id: genId, status: 'done', url: `/api/image/${genId}`, costUsd: cost.usd, costEur: cost.usd * config.usdToEur, model: cost.model };
   } catch (err) {
     const message = err.name === 'AbortError' ? 'Délai dépassé (n8n/Gemini)' : err.message;
     db.prepare(`UPDATE generations SET status='error', error=? WHERE id=?`).run(message, genId);
@@ -121,41 +137,52 @@ async function performGeneration(genId, { userId, brand, category, flavor, theme
   }
 }
 
-router.post('/generate', requireAuth, generateLimiter, upload.array('images', MAX_IMAGES), async (req, res) => {
-  const brand = String(req.body.brand || '').trim();
-  const category = String(req.body.category || '').trim();
-  const flavor = String(req.body.flavor || '').trim();
+function insertPending(p) {
+  return db
+    .prepare(
+      `INSERT INTO generations (user_id, brand, category, flavor, theme, description, art_direction, product_count, input_count, status)
+       VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, 'pending')`
+    )
+    .run(p.userId, p.brand, p.category, p.flavor || null, p.theme, p.description || null, p.artDirection || null, p.productCount || null, p.inputCount).lastInsertRowid;
+}
+
+router.post('/generate', requireAuth, hourly, daily, upload.array('images', MAX_IMAGES), async (req, res) => {
+  const brand = cleanText(req.body.brand, MAX_BRAND);
+  const category = cleanText(req.body.category, 40).toLowerCase();
+  const flavor = cleanText(req.body.flavor, MAX_FLAVOR);
   const theme = String(req.body.theme || '').trim();
   const description = cleanText(req.body.description, MAX_DESCRIPTION);
   const artDirection = cleanText(req.body.art_direction, MAX_ART_DIRECTION);
+  const rawCount = String(req.body.product_count || '').trim();
+  const productCount = rawCount ? Number(rawCount) : null;
   const files = req.files || [];
 
   if (!brand) return res.status(400).json({ error: 'Marque requise' });
-  if (!category) return res.status(400).json({ error: 'Catégorie requise' });
+  if (!CATEGORIES.includes(category)) return res.status(400).json({ error: 'Catégorie invalide' });
   if (!THEMES.includes(theme)) return res.status(400).json({ error: 'Thème invalide' });
+  if (productCount != null && (!Number.isInteger(productCount) || productCount < 1 || productCount > MAX_PRODUCTS)) {
+    return res.status(400).json({ error: `Nombre de produits : entier entre 1 et ${MAX_PRODUCTS}` });
+  }
   if (files.length === 0) return res.status(400).json({ error: 'Au moins une image requise' });
-  if (!N8N_WEBHOOK_URL) return res.status(500).json({ error: 'N8N_WEBHOOK_URL non configuré' });
+  if (!config.n8nWebhookUrl) return res.status(500).json({ error: 'N8N_WEBHOOK_URL non configuré' });
 
-  // Ligne "pending" créée d'abord : trace même si la génération échoue.
-  const gen = db
-    .prepare(
-      `INSERT INTO generations (user_id, brand, category, flavor, theme, description, art_direction, input_count, status)
-       VALUES (?, ?, ?, ?, ?, ?, ?, ?, 'pending')`
-    )
-    .run(req.session.userId, brand, category, flavor || null, theme, description || null, artDirection || null, files.length);
-  const genId = gen.lastInsertRowid;
+  // Type réel de chaque fichier (signature), indépendamment du Content-Type déclaré.
+  const sniffed = files.map((f) => sniffImage(f.buffer));
+  if (sniffed.some((m) => !m)) return res.status(400).json({ error: 'Un des fichiers n’est pas une image JPEG/PNG/WebP valide' });
+
+  const genId = insertPending({ userId: req.session.userId, brand, category, flavor, theme, description, artDirection, productCount, inputCount: files.length });
 
   // Persiste les images d'entrée (réutilisées par une éventuelle relance).
   const inputDir = path.join(UPLOADS_DIR, String(genId));
   fs.mkdirSync(inputDir, { recursive: true });
   const images = files.map((f, i) => {
-    const ext = EXT_BY_MIME[f.mimetype] || 'bin';
-    fs.writeFileSync(path.join(inputDir, `input_${i + 1}.${ext}`), f.buffer);
-    return { mimeType: f.mimetype, data: f.buffer.toString('base64') };
+    const mime = sniffed[i];
+    fs.writeFileSync(path.join(inputDir, `input_${String(i + 1).padStart(2, '0')}.${EXT_BY_MIME[mime]}`), f.buffer);
+    return { mimeType: mime, data: f.buffer.toString('base64') };
   });
 
   try {
-    const result = await performGeneration(genId, { userId: req.session.userId, brand, category, flavor, theme, description, artDirection }, images);
+    const result = await performGeneration(genId, { userId: req.session.userId, brand, category, flavor, theme, description, artDirection, productCount }, images);
     res.json(result);
   } catch (err) {
     res.status(err.status || 502).json({ id: err.genId || genId, status: 'error', error: err.message });
@@ -164,44 +191,34 @@ router.post('/generate', requireAuth, generateLimiter, upload.array('images', MA
 
 // Relance une génération échouée à partir des images déjà stockées et des mêmes
 // paramètres. Crée une NOUVELLE ligne : l'historique reste un journal.
-router.post('/generation/:id/retry', requireAuth, generateLimiter, async (req, res) => {
+router.post('/generation/:id/retry', requireAuth, hourly, daily, async (req, res) => {
   const orig = db.prepare('SELECT * FROM generations WHERE id = ?').get(Number(req.params.id));
-  // 404 (et non 403) : on ne relance qu'une ligne qu'on possède ; pas de fuite
-  // sur l'existence d'un id d'un autre compte.
-  if (!orig || orig.user_id !== req.session.userId) {
-    return res.status(404).json({ error: 'Introuvable' });
-  }
-  if (!N8N_WEBHOOK_URL) return res.status(500).json({ error: 'N8N_WEBHOOK_URL non configuré' });
+  // 404 (et non 403) : pas de fuite sur l'existence d'un id d'un autre compte.
+  if (!orig || orig.user_id !== req.session.userId) return res.status(404).json({ error: 'Introuvable' });
+  if (!config.n8nWebhookUrl) return res.status(500).json({ error: 'N8N_WEBHOOK_URL non configuré' });
 
   const images = readInputImages(orig.id);
-  if (images.length === 0) {
-    return res.status(400).json({ error: "Images d'entrée introuvables, relance impossible" });
-  }
+  if (images.length === 0) return res.status(400).json({ error: "Images d'entrée introuvables, relance impossible" });
 
-  const gen = db
-    .prepare(
-      `INSERT INTO generations (user_id, brand, category, flavor, theme, description, art_direction, input_count, status)
-       VALUES (?, ?, ?, ?, ?, ?, ?, ?, 'pending')`
-    )
-    .run(orig.user_id, orig.brand, orig.category, orig.flavor, orig.theme, orig.description || null, orig.art_direction || null, images.length);
-  const genId = gen.lastInsertRowid;
+  const params = {
+    userId: orig.user_id,
+    brand: orig.brand,
+    category: orig.category,
+    flavor: orig.flavor || '',
+    theme: orig.theme,
+    description: orig.description || '',
+    artDirection: orig.art_direction || '',
+    productCount: orig.product_count || null,
+  };
+  const genId = insertPending({ ...params, inputCount: images.length });
 
-  // Copie les images d'entrée sous le nouvel id (chaque ligne garde les siennes,
-  // relançable à son tour même si l'originale est supprimée plus tard).
   const srcDir = path.join(UPLOADS_DIR, String(orig.id));
   const dstDir = path.join(UPLOADS_DIR, String(genId));
   fs.mkdirSync(dstDir, { recursive: true });
-  for (const name of fs.readdirSync(srcDir)) {
-    fs.copyFileSync(path.join(srcDir, name), path.join(dstDir, name));
-  }
+  for (const name of fs.readdirSync(srcDir)) fs.copyFileSync(path.join(srcDir, name), path.join(dstDir, name));
 
   try {
-    const result = await performGeneration(
-      genId,
-      { userId: orig.user_id, brand: orig.brand, category: orig.category, flavor: orig.flavor || '', theme: orig.theme, description: orig.description || '', artDirection: orig.art_direction || '' },
-      images
-    );
-    res.json(result);
+    res.json(await performGeneration(genId, params, images));
   } catch (err) {
     res.status(err.status || 502).json({ id: err.genId || genId, status: 'error', error: err.message });
   }
@@ -210,13 +227,11 @@ router.post('/generation/:id/retry', requireAuth, generateLimiter, async (req, r
 // Suppression définitive : fichier de sortie + images d'entrée + ligne.
 router.delete('/generation/:id', requireAuth, (req, res) => {
   const id = Number(req.params.id);
+  if (!Number.isInteger(id) || id < 1) return res.status(404).json({ error: 'Introuvable' });
   const row = db.prepare('SELECT id, user_id, output_path FROM generations WHERE id = ?').get(id);
-  // 403 identique que la ligne existe ou non : pas de divulgation d'existence.
-  if (!row || row.user_id !== req.session.userId) {
-    return res.status(403).json({ error: 'Interdit' });
-  }
+  // Même réponse que la ligne existe ou non : pas de divulgation d'existence.
+  if (!row || row.user_id !== req.session.userId) return res.status(404).json({ error: 'Introuvable' });
 
-  // Fichier déjà absent → on n'échoue pas, on supprime la ligne quand même.
   if (row.output_path) {
     try {
       fs.unlinkSync(row.output_path);
@@ -224,15 +239,12 @@ router.delete('/generation/:id', requireAuth, (req, res) => {
       if (err.code !== 'ENOENT') throw err;
     }
   }
-  // Images d'entrée associées (évite les orphelins dans uploads/).
   fs.rmSync(path.join(UPLOADS_DIR, String(id)), { recursive: true, force: true });
-
   db.prepare('DELETE FROM generations WHERE id = ?').run(id);
   res.json({ ok: true, id });
 });
 
-// Historique. ?status=done|error|all (défaut done). La grille ne charge que les
-// réussites ; `counts` permet au front de signaler les échecs sans les charger.
+// Historique. ?status=done|error|all (défaut done).
 router.get('/history', requireAuth, (req, res) => {
   const uid = req.session.userId;
   let status = String(req.query.status || 'done').toLowerCase();
@@ -242,7 +254,7 @@ router.get('/history', requireAuth, (req, res) => {
   const params = status === 'all' ? [uid] : [uid, status];
   const rows = db
     .prepare(
-      `SELECT id, brand, category, flavor, theme, description, status, error, mime_type, created_at
+      `SELECT id, brand, category, flavor, theme, description, status, error, mime_type, cost_usd, model, created_at
        FROM generations WHERE user_id = ?${filter} ORDER BY created_at DESC, id DESC LIMIT 200`
     )
     .all(...params);
@@ -262,6 +274,8 @@ router.get('/history', requireAuth, (req, res) => {
       description: r.description,
       status: r.status,
       error: r.error,
+      costEur: r.cost_usd * config.usdToEur,
+      model: r.model,
       createdAt: r.created_at,
       url: r.status === 'done' ? `/api/image/${r.id}` : null,
     })),
@@ -269,7 +283,7 @@ router.get('/history', requireAuth, (req, res) => {
   });
 });
 
-// Suivi de consommation : ce mois, tout-temps, et 6 derniers mois.
+// Suivi de consommation : ce mois, tout-temps, 6 derniers mois + prix unitaire courant.
 router.get('/usage', requireAuth, (req, res) => {
   const uid = req.session.userId;
   const month = new Date().toISOString().slice(0, 7); // YYYY-MM (UTC)
@@ -289,10 +303,13 @@ router.get('/usage', requireAuth, (req, res) => {
     )
     .all(uid);
 
-  const withEur = (r) => ({ count: r.n, usd: r.usd, eur: r.usd * USD_TO_EUR });
+  const withEur = (r) => ({ count: r.n, usd: r.usd, eur: r.usd * config.usdToEur });
+  const unit = unitCost();
   res.json({
     month,
-    rate: USD_TO_EUR,
+    rate: config.usdToEur,
+    unit: { usd: unit.usd, eur: unit.usd * config.usdToEur, model: unit.model, imageSize: unit.imageSize },
+    quota: { perHour: config.genPerHour, perDay: config.genPerDay },
     currentMonth: withEur(cur),
     allTime: withEur(all),
     months: months.map((r) => ({ month: r.m, ...withEur(r) })),
@@ -301,10 +318,10 @@ router.get('/usage', requireAuth, (req, res) => {
 
 // Sert l'image générée. Vérifie l'appartenance au compte.
 router.get('/image/:id', requireAuth, (req, res) => {
-  const row = db.prepare('SELECT * FROM generations WHERE id = ?').get(req.params.id);
-  if (!row || row.user_id !== req.session.userId) {
-    return res.status(404).json({ error: 'Introuvable' });
-  }
+  const id = Number(req.params.id);
+  if (!Number.isInteger(id) || id < 1) return res.status(404).json({ error: 'Introuvable' });
+  const row = db.prepare('SELECT * FROM generations WHERE id = ?').get(id);
+  if (!row || row.user_id !== req.session.userId) return res.status(404).json({ error: 'Introuvable' });
   if (row.status !== 'done' || !row.output_path || !fs.existsSync(row.output_path)) {
     return res.status(404).json({ error: 'Image non disponible' });
   }
@@ -312,9 +329,9 @@ router.get('/image/:id', requireAuth, (req, res) => {
   const ext = EXT_BY_MIME[row.mime_type] || 'png';
   const filename = `${row.brand}-${row.theme}-${row.id}.${ext}`.replace(/[^a-zA-Z0-9.\-]/g, '_');
   res.type(row.mime_type || 'image/png');
-  if (req.query.download) {
-    res.setHeader('Content-Disposition', `attachment; filename="${filename}"`);
-  }
+  res.setHeader('Cache-Control', 'private, max-age=3600');
+  res.setHeader('X-Content-Type-Options', 'nosniff');
+  if (req.query.download) res.setHeader('Content-Disposition', `attachment; filename="${filename}"`);
   res.sendFile(path.resolve(row.output_path));
 });
 

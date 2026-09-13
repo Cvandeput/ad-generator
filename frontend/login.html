@@ -4,6 +4,14 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Connexion — AdCraft</title>
+    <meta name="description" content="Connexion à votre studio AdCraft." />
+    <meta name="robots" content="noindex, nofollow" />
+    <link rel="icon" href="/img/icons/favicon.ico" sizes="48x48" />
+    <link rel="icon" type="image/png" sizes="32x32" href="/img/icons/favicon-32.png" />
+    <link rel="icon" type="image/png" sizes="16x16" href="/img/icons/favicon-16.png" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/img/icons/apple-touch-icon.png" />
+    <link rel="manifest" href="/site.webmanifest" />
+    <meta name="theme-color" content="#1d4ed8" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="" />
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet" />
@@ -24,7 +32,7 @@
         <div class="flex items-stretch gap-lg">
           <div class="flex-1 flex flex-col gap-sm">
             <div class="aspect-[4/5] rounded-xl overflow-hidden border border-outline-variant bg-surface-container-lowest">
-              <img src="/img/site/connexion-avant.jpg" alt="Bouteille San Pellegrino, photo brute" class="w-full h-full object-cover" />
+              <img src="/img/site/connexion-avant.webp" width="474" height="474" alt="Bouteille San Pellegrino, photo brute" class="w-full h-full object-cover" />
             </div>
             <span class="font-label-sm text-label-sm font-semibold tracking-[0.08em] uppercase text-outline">Photo brute</span>
           </div>
@@ -33,7 +41,7 @@
           </div>
           <div class="flex-1 flex flex-col gap-sm">
             <div class="aspect-[4/5] rounded-xl overflow-hidden border border-outline-variant shadow-[0_8px_24px_rgba(26,28,28,0.10)]">
-              <img src="/img/site/connexion-apres.png" alt="San Pellegrino mis en scène sur une terrasse méditerranéenne fleurie" class="w-full h-full object-cover" />
+              <img src="/img/site/connexion-apres.webp" width="896" height="1152" alt="San Pellegrino mis en scène sur une terrasse méditerranéenne fleurie" class="w-full h-full object-cover" />
             </div>
             <span class="font-label-sm text-label-sm font-semibold tracking-[0.08em] uppercase text-primary-container">Visuel généré</span>
           </div>
@@ -45,7 +53,11 @@
         </div>
       </div>
 
-      <span class="font-label-sm text-label-sm text-outline">© 2026 AdCraft</span>
+      <div class="flex flex-wrap gap-md">
+        <span class="font-label-sm text-label-sm text-outline">© 2026 AdCraft</span>
+        <a href="/legal.html#mentions" class="font-label-sm text-label-sm text-secondary hover:text-on-surface">Mentions légales</a>
+        <a href="/legal.html#confidentialite" class="font-label-sm text-label-sm text-secondary hover:text-on-surface">Confidentialité</a>
+      </div>
     </div>
 
     <!-- Volet droit : formulaire -->
@@ -90,10 +102,11 @@
             </button>
           </form>
 
-          <div class="flex items-start gap-sm p-md bg-surface-container-low border border-outline-variant rounded-lg">
+          <div id="register-hint" class="flex items-start gap-sm p-md bg-surface-container-low border border-outline-variant rounded-lg">
             <span class="material-symbols-outlined text-outline text-[18px]">info</span>
             <span class="font-body-sm text-body-sm text-on-surface-variant">L'accès se fait sur invitation. Contactez l'administrateur pour obtenir un compte.</span>
           </div>
+          <p class="font-body-sm text-body-sm text-secondary lg:hidden text-center"><a href="/legal.html#mentions" class="underline">Mentions légales</a> · <a href="/legal.html#confidentialite" class="underline">Confidentialité</a></p>
         </main>
       </div>
     </div>

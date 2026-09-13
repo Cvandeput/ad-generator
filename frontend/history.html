@@ -3,7 +3,15 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>AdCraft — Historique</title>
+    <title>Historique — AdCraft</title>
+    <meta name="description" content="Vos visuels publicitaires générés avec AdCraft : consultation, téléchargement, suppression." />
+    <meta name="robots" content="noindex, nofollow" />
+    <link rel="icon" href="/img/icons/favicon.ico" sizes="48x48" />
+    <link rel="icon" type="image/png" sizes="32x32" href="/img/icons/favicon-32.png" />
+    <link rel="icon" type="image/png" sizes="16x16" href="/img/icons/favicon-16.png" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/img/icons/apple-touch-icon.png" />
+    <link rel="manifest" href="/site.webmanifest" />
+    <meta name="theme-color" content="#1d4ed8" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="" />
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet" />
@@ -14,32 +22,8 @@
     <link rel="stylesheet" href="/css/app.css" />
   </head>
   <body class="bg-background text-on-surface font-body-base antialiased flex flex-col min-h-screen">
-    <!-- TopNavBar -->
-    <header class="bg-surface-container-lowest border-b border-outline-variant sticky top-0 z-50 w-full h-[60px] flex items-center">
-      <div class="w-full max-w-container-max mx-auto px-lg flex items-center justify-between">
-        <div class="flex items-center gap-lg">
-          <a href="/" class="flex items-center gap-sm">
-            <img src="/img/logo-adcraft.png" alt="AdCraft" class="h-6 w-auto" />
-          </a>
-          <nav class="hidden md:flex items-center gap-xs">
-            <a href="/" class="font-label-md text-label-md text-secondary hover:text-on-surface px-md py-sm rounded transition-colors">Accueil</a>
-            <a href="/app.html" class="font-label-md text-label-md text-secondary hover:text-on-surface px-md py-sm rounded transition-colors">Studio</a>
-            <a href="/history.html" class="font-label-md text-label-md text-on-surface px-md py-sm rounded shadow-[inset_0_-2px_0_#1d4ed8]">Historique</a>
-          </nav>
-        </div>
-        <div class="flex items-center gap-md">
-          <span id="usage-header" class="hidden md:block font-label-sm text-label-sm text-secondary">—</span>
-          <a href="/app.html" class="h-8 px-md rounded bg-primary-container text-on-primary flex items-center gap-xs hover:bg-primary transition-colors">
-            <span class="material-symbols-outlined text-[16px]">auto_awesome</span>
-            <span class="font-label-md text-label-md">Générer</span>
-          </a>
-          <button id="logout" title="Déconnexion" aria-label="Déconnexion" class="w-7 h-7 rounded-full bg-surface-container border border-outline-variant flex items-center justify-center text-on-surface-variant hover:bg-surface-container-high transition-colors">
-            <span class="material-symbols-outlined text-[16px]">logout</span>
-          </button>
-          <span id="user-email" class="hidden"></span>
-        </div>
-      </div>
-    </header>
+    <!-- TopNavBar (rendue par js/nav.js) -->
+    <header id="site-header" data-page="history" class="bg-surface-container-lowest border-b border-outline-variant sticky top-0 z-50 w-full"></header>
 
     <!-- Contenu -->
     <main class="flex-grow w-full max-w-container-max mx-auto px-lg py-xl flex flex-col gap-lg">
@@ -89,6 +73,8 @@
         </button>
       </div>
     </main>
+
+    <footer id="site-footer" class="bg-surface"></footer>
 
     <script type="module" src="/js/history.js"></script>
   </body>
