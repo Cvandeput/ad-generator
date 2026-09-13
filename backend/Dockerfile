@@ -1,13 +1,21 @@
 # Contexte de build = RACINE du dépôt (docker-compose : context: .), car le
 # backend importe shared/prompt.mjs (source unique thèmes/catégories).
-# bookworm-slim (glibc) → prebuilds better-sqlite3 dispo, pas de compilation.
-FROM node:24-bookworm-slim
-
+#
+# Build en deux étapes : better-sqlite3 épinglé dans package-lock.json n'a pas
+# de prebuild pour Node 24 → node-gyp compile. Les outils de compilation
+# (python3/make/g++) restent dans l'étage "deps" et n'entrent pas dans l'image
+# finale.
+FROM node:24-bookworm-slim AS deps
+RUN apt-get update && apt-get install -y --no-install-recommends python3 make g++ \
+ && rm -rf /var/lib/apt/lists/*
 WORKDIR /app
-
 COPY backend/package.json backend/package-lock.json ./
 RUN npm ci --omit=dev && npm cache clean --force
 
+FROM node:24-bookworm-slim
+WORKDIR /app
+COPY --from=deps /app/node_modules ./node_modules
+COPY backend/package.json ./
 COPY backend/src ./src
 COPY backend/tools ./tools
 # Résolu depuis src/routes/../../../shared → /shared
