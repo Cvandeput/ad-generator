@@ -51,18 +51,45 @@ Prototype complet et testé, **désactivé par défaut** (`BILLING_ENABLED=false
 ### Inscription et vérification d'e-mail
 Inscription **ouverte** (`REGISTER_MODE=open`), compte créé sur la formule gratuite, puis redirection vers `/tarifs.html?bienvenue=1` pour choisir un abonnement (ou continuer en gratuit). **Vérification d'e-mail obligatoire** avant la première génération : jeton à usage unique stocké en SHA-256, 24 h, renvoi limité à 3/h par IP, page `/verify.html`, bandeau de rappel. Sans elle, un robot créerait des comptes en série pour cumuler les quotas gratuits.
 
+### Déploiement (fait le 13/09 au soir)
+Le VPS tourne la version de cette session. Ont été exécutés : rotation de `SESSION_SECRET` et `N8N_TOKEN` (le nouveau jeton est aussi posé dans le compose n8n, `/opt/n8n-compose/docker-compose.yml`), `chown 1000:1000 backend/data`, `git pull`, reconstruction de l'image backend, installation du snippet nginx.
+
+Deux incidents, tous deux de mon fait, résolus et à connaître : le `Dockerfile` faisait `npm ci` sur un lock qui épingle `better-sqlite3@13.0.3`, sans prebuild pour Node 24 → compilation `node-gyp` impossible faute de Python dans l'image. Corrigé par un **build en deux étapes** (les outils de compilation restent dans l'étage `deps`). Et un `cap_drop: ALL` ajouté au compose avait retiré `CAP_DAC_OVERRIDE` à root, d'où un `SQLITE_READONLY` en boucle tant que l'image tournait encore en root ; réglé par l'image non-root définitive (uid 1000).
+
+nginx : `include snippets/adcraft-security.conf;` ajouté au vhost, `add_header Cache-Control "no-store"` sur `/api/`, `listen 443 ssl http2` (nginx 1.18 ne connaît pas la directive `http2 on;`). Vérifié : CSP/HSTS/X-Frame/Referrer/Permissions-Policy présents, `/package.json` et `/tailwind.config.js` en 404, toutes les pages et tous les assets en 200. Sauvegarde du vhost dans `/root/vhost-adcraft.bak`.
+
 ## 4. Ce qui reste à faire, par ordre de priorité
 
 ### Urgent
 1. **Révoquer la clé Gemini** `AIza…` présente dans le `.env` local (AI Studio → API keys) : elle a circulé. Elle ne sert qu'à `tools/test-gemini.mjs`, jamais à la production.
 2. **Changer le mot de passe** du compte `SEED_USERS` (il était en clair dans `.env`) et le remplacer par un hash `b64:` (voir `.env.example`).
-3. **Basculer n8n sur `gemini-3.1-flash-image`** avant le 2 octobre, sinon plus aucune génération.
+3. **Vérifier le workflow n8n réimporté** : `n8n/generateur-publicite.json` a été importé dans le workflow existant (même path `generate-ads`, pas de second workflow pour éviter le conflit d'activation), credentials Google resélectionnées à la main — l'import ne les transporte pas. Confirmer que `GEMINI_MODEL=gemini-3.1-flash-image` est bien dans l'environnement du conteneur n8n : `gemini-2.5-flash-image` est retiré le 2 octobre, après quoi plus rien ne génère.
+
+   L'UI n8n n'est pas exposée : tunnel `ssh -N -L 5678:172.17.0.1:5678 root@<vps>` puis `http://localhost:5678`.
 
 ### Avant d'ouvrir le site au public
 4. Compléter `frontend/legal.html` : identité de l'éditeur, adresse, numéro BCE, hébergeur, e-mail de contact (zones surlignées en rouge dans la page).
 5. Rédiger les **CGV** (prix, reconduction tacite, droit de rétractation de 14 jours et sa renonciation pour un service numérique exécuté immédiatement, remboursement, résiliation).
 6. **Statut d'indépendant + TVA** : encaisser des abonnements est une activité commerciale (numéro BCE, statut étudiant-indépendant). Un abonnement SaaS vendu à un particulier d'un autre pays de l'UE est taxable chez lui au-delà de 10 000 €/an cumulés (OSS) ; en dessous, TVA belge. À trancher avec un comptable **avant** d'afficher les prix : HT ou TTC change la marge de 21 %.
 7. **SPF, DKIM, DMARC** sur le domaine expéditeur, sinon les e-mails de confirmation partent en indésirables et les inscriptions échouent silencieusement.
+
+
+### RGPD — rien n'est en place, ni technique ni documentaire
+Le RGPD n'est pas une fonctionnalité de la base : c'est un cadre à implémenter. Données personnelles réellement traitées aujourd'hui : e-mail et hash du mot de passe (`users`), historique des générations avec prompts et coûts (`generations`), **les photos déposées, écrites sur disque** (`backend/data/uploads/**/input_XX.*`), les visuels produits, les jetons d'authentification, les sessions, les IP dans les journaux nginx et le rate-limiting, et l'identifiant client Stripe dès que la facturation sera active. Une photo de produit peut contenir un visage ou une plaque : c'est de la donnée personnelle même si ce n'est pas celle du client.
+
+À coder (une demi-journée) :
+
+- ~~Purge des fichiers d'entrée~~ — **fait** : `DELETE /api/generation/:id` effaçait déjà le dossier d'entrée ; la logique est désormais centralisée dans `backend/src/storage.js` (`purgeGenerationFiles`), réutilisée par la console d'administration.
+- **Suppression de compte par l'utilisateur lui-même** (`DELETE /api/account`) — n'existe pas. Un admin peut supprimer un compte depuis la console (lignes + fichiers + sessions), mais l'article 17 suppose que l'utilisateur puisse le faire sans passer par toi, ou au minimum qu'un moyen de contact soit publié. Ajouter aussi la résiliation Stripe dans la foulée.
+- **Export des données** (`GET /api/account/export`, art. 20) — JSON des lignes + archive des images.
+- **Rétention** — aucune purge n'existe. Fixer une durée, l'écrire dans la politique de confidentialité, et l'appliquer par un job au démarrage sur le modèle de `purgeExpiredTokens` (proposition : générations et fichiers à 12 mois, comptes inactifs à 24 mois, journaux à 6 mois).
+
+À rédiger, avant d'ouvrir les inscriptions au public :
+
+- Une **politique de confidentialité** distincte des mentions légales : finalités, bases légales (exécution du contrat pour le service, intérêt légitime pour les journaux de sécurité, obligation légale pour la facturation), durées de conservation, destinataires, droits et moyen concret de les exercer, contact.
+- Le **registre des traitements** (art. 30) — un tableau suffit à cette échelle, mais il est obligatoire, le traitement n'étant pas occasionnel.
+- **Sous-traitants et transferts hors UE** : Google (Vertex AI — noter la région utilisée), Stripe, Hostinger, le relais SMTP. Accepter leurs DPA et les citer nommément dans la politique.
+- **Cookies** : le seul cookie est `__Host-sid`, strictement nécessaire au service → **aucun consentement requis**. Le bandeau actuel est informatif et ne doit pas bloquer le site. Cela change dès le premier outil d'analyse ou pixel ajouté.
 
 ### Quand tu veux encaisser
 8. Compte Stripe en sandbox, créer 3 produits + 1 prix mensuel chacun + 1 prix unique pour le pack, remplir les `STRIPE_PRICE_*`, activer le Customer Portal, créer l'endpoint webhook. Détail : `docs/STRIPE-ABONNEMENTS.md` §11.
@@ -132,3 +159,15 @@ Procédure complète et vérifiable : **`docs/DEPLOIEMENT-2026-09.md`**. En rés
 - **Essai gratuit** : 5 générations à vie aujourd'hui. Alternative : 7 jours d'essai sur une formule payante avec carte (filtre mieux les robots, réduit la conversion).
 - **Dépassement** : pack de 20 à 6 € aujourd'hui. Alternative : facturation à l'usage (Stripe meters), plus complexe.
 - **`gemini-3-pro-image`** (+0,033 $/image) pour les emballages très chargés en texte : à trancher après comparaison sur de vrais produits.
+
+## 10. Comptes administrateur
+
+Le rôle vient de `ADMIN_EMAILS` dans `.env` (adresses séparées par des virgules), **jamais d'une requête HTTP** : on ne peut pas se promouvoir depuis l'application, il faut un accès au serveur. `syncAdmins()` applique la liste à chaque démarrage, dans les deux sens — retirer une adresse retire le rôle. Une adresse listée qui s'inscrit ensuite est admin dès la création (`roleFor`).
+
+Un compte admin : **aucun quota** (`quotaState` court-circuité, `planKey: 'admin'`), pas de blocage sur la confirmation d'e-mail, et accès à `/admin.html`. Les routes `/api/admin/*` répondent **404** à tout autre compte, pour ne pas confirmer leur existence.
+
+La console donne : volumétrie et coûts (total, mois, jour), répartition par modèle et par thème, taux de repli du Directeur Artistique, liste des comptes (formule, générations, coût, crédits, verrouillage, confirmation), et l'historique des 100 dernières générations avec leur erreur. Actions : offrir ou retirer des crédits, confirmer une adresse à la main, déverrouiller un compte, révoquer toutes ses sessions, supprimer une génération (ligne + fichiers), supprimer un compte (lignes + fichiers + sessions). Un compte admin ne peut pas être supprimé depuis la console.
+
+```
+ADMIN_EMAILS=vdp.corentin@gmail.com,info@garage-vandeput.be
+```

@@ -42,6 +42,8 @@ function navLinks(page, user, billing = false) {
     links.push({ href: '/history.html', key: 'history', label: 'Historique' });
   }
   if (billing) links.push({ href: '/tarifs.html', key: 'tarifs', label: 'Tarifs' });
+  // Le lien n'apparaît que pour un admin ; la protection reste serveur (404).
+  if (user && user.isAdmin) links.push({ href: '/admin.html', key: 'admin', label: 'Admin' });
   return links;
 }
 

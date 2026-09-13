@@ -65,6 +65,20 @@ export const api = {
     cancel: () => request('/api/billing/cancel', { method: 'POST' }),
   },
 
+  // Administration. 404 pour un compte non admin : l'existence des routes
+  // n'est pas observable depuis le navigateur.
+  admin: {
+    overview: () => request('/api/admin/overview'),
+    users: (q) => request(`/api/admin/users${q ? `?q=${encodeURIComponent(q)}` : ''}`),
+    generations: (status) => request(`/api/admin/generations${status ? `?status=${encodeURIComponent(status)}` : ''}`),
+    credits: (id, credits) => request(`/api/admin/users/${id}/credits`, json({ credits })),
+    verifyUser: (id) => request(`/api/admin/users/${id}/verify`, { method: 'POST' }),
+    unlock: (id) => request(`/api/admin/users/${id}/unlock`, { method: 'POST' }),
+    logoutAll: (id) => request(`/api/admin/users/${id}/logout-all`, { method: 'POST' }),
+    deleteUser: (id) => request(`/api/admin/users/${id}`, { method: 'DELETE' }),
+    deleteGeneration: (id) => request(`/api/admin/generations/${id}`, { method: 'DELETE' }),
+  },
+
   // Générations. `signal` : AbortController pour l'annulation côté client.
   generate: (formData, { signal } = {}) => request('/api/generate', { method: 'POST', body: formData, signal }),
   history: (status = 'done') => request(`/api/history?status=${encodeURIComponent(status)}`),

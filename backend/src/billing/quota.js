@@ -2,9 +2,20 @@
 // l'accès (Stripe reste la vérité du paiement, recopiée par le webhook).
 import { PLANS, ACTIVE_STATUSES } from './plans.js';
 import { getUser, getSubscription, usedSince, consumeCredit } from './store.js';
+import { isAdmin } from '../admin.js';
 
 export function quotaState(userId) {
   const user = getUser(userId);
+  // Compte administrateur : aucun décompte. Le quota sert à protéger la
+  // trésorerie contre les clients, pas contre l'exploitant.
+  if (isAdmin(userId)) {
+    return {
+      planKey: 'admin', planLabel: 'Administrateur', status: 'active',
+      quota: Infinity, used: usedSince(userId, user.created_at), credits: 0,
+      remaining: Infinity, exhausted: false, lifetime: false,
+      periodStart: user.created_at, periodEnd: null, cancelAtPeriodEnd: false, unlimited: true,
+    };
+  }
   const sub = getSubscription(userId);
   const active = sub && ACTIVE_STATUSES.has(sub.status);
   const plan = active ? PLANS[sub.plan_key] || PLANS.free : PLANS.free;

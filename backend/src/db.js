@@ -85,6 +85,9 @@ if (ensureColumn('users', 'email_verified', 'INTEGER NOT NULL DEFAULT 0')) {
   if (n) console.log(`✉️  ${n} compte(s) existant(s) marqué(s) comme vérifiés (antériorité).`);
 }
 ensureColumn('users', 'email_verified_at', 'TEXT');
+// Rôle : 'user' | 'admin'. Positionné depuis ADMIN_EMAILS au démarrage
+// (backend/src/admin.js) — jamais modifiable par une requête HTTP.
+ensureColumn('users', 'role', "TEXT NOT NULL DEFAULT 'user'");
 
 // Jetons à usage unique (vérification d'e-mail, réinitialisation de mot de
 // passe plus tard). Seul le SHA-256 du jeton est stocké.

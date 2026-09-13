@@ -84,7 +84,9 @@ function renderCurrent() {
   // À l'inscription, afficher « 0 / 5 utilisées » n'apporte rien : on laisse la
   // place au choix de formule.
   if (!s || (ONBOARDING && s.planKey === 'free')) { currentEl.classList.add('hidden'); return; }
-  const pct = s.quota > 0 ? Math.min(100, Math.round((s.used / s.quota) * 100)) : 100;
+  // Compte admin : quota illimité (le serveur renvoie quota = null, Infinity
+  // n'étant pas représentable en JSON).
+  const pct = s.unlimited ? 0 : s.quota > 0 ? Math.min(100, Math.round((s.used / s.quota) * 100)) : 100;
   const paid = s.planKey !== 'free' && s.status !== 'inactive';
   currentEl.classList.remove('hidden');
   currentEl.innerHTML = `
@@ -93,7 +95,7 @@ function renderCurrent() {
         <span class="font-label-sm text-label-sm font-semibold tracking-[0.08em] uppercase text-secondary">Votre formule</span>
         <span class="font-headline-md text-headline-md text-on-surface">${escapeHtml(s.planLabel)}${s.status === 'past_due' ? ' <span class="font-body-sm text-error">(paiement en attente)</span>' : ''}</span>
         <span class="font-body-sm text-body-sm text-secondary">
-          ${s.used} / ${s.quota} générations utilisées${s.credits ? ` · ${s.credits} crédit${s.credits > 1 ? 's' : ''} en réserve` : ''}
+          ${s.unlimited ? `${s.used} générations · aucune limite` : `${s.used} / ${s.quota} générations utilisées`}${s.credits ? ` · ${s.credits} crédit${s.credits > 1 ? 's' : ''} en réserve` : ''}
           ${s.lifetime ? '' : s.periodEnd ? ` · recharge le ${fmtDate(s.periodEnd)}` : ''}
           ${s.cancelAtPeriodEnd ? ' · résiliation programmée' : ''}
         </span>

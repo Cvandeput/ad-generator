@@ -11,8 +11,8 @@ import { config } from '../config.js';
 export default function requireVerified(req, res, next) {
   if (!config.emailVerification || !req.session?.userId) return next();
 
-  const user = db.prepare('SELECT email, email_verified FROM users WHERE id = ?').get(req.session.userId);
-  if (!user || user.email_verified) return next();
+  const user = db.prepare('SELECT email, email_verified, role FROM users WHERE id = ?').get(req.session.userId);
+  if (!user || user.email_verified || user.role === 'admin') return next();
 
   // La table n'existe que si la facturation a été activée au moins une fois.
   let sub = null;

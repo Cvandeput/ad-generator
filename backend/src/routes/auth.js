@@ -8,6 +8,7 @@ import { passwordIssues, MAX_PASSWORD } from '../password.js';
 import requireAuth from '../middleware/requireAuth.js';
 import { destroyUserSessions } from '../sessions.js';
 import { createToken, consumeToken } from '../tokens.js';
+import { roleFor } from '../admin.js';
 import { sendMail, verificationEmail } from '../mail.js';
 
 const router = Router();
@@ -62,6 +63,8 @@ function publicUser(row) {
     id: row.id,
     email: row.email,
     createdAt: row.created_at,
+    role: row.role || 'user',
+    isAdmin: row.role === 'admin',
     termsVersion: row.terms_version || null,
     termsOutdated: row.terms_version !== config.termsVersion,
     // Sans vérification activée, tout le monde est considéré comme vérifié.
@@ -137,10 +140,12 @@ router.post('/register', registerLimiter, async (req, res, next) => {
     // tant que l'adresse n'est pas confirmée (anti-comptes en série).
     const info = db
       .prepare(
-        `INSERT INTO users (email, password_hash, terms_version, terms_accepted_at, password_changed_at, email_verified, email_verified_at)
-         VALUES (?, ?, ?, ?, ?, ?, ?)`
+        `INSERT INTO users (email, password_hash, terms_version, terms_accepted_at, password_changed_at, email_verified, email_verified_at, role)
+         VALUES (?, ?, ?, ?, ?, ?, ?, ?)`
       )
-      .run(email, hash, config.termsVersion, now, now, config.emailVerification ? 0 : 1, config.emailVerification ? null : now);
+      // roleFor : une adresse listée dans ADMIN_EMAILS est admin dès la
+      // création, sans attendre un redémarrage du serveur.
+      .run(email, hash, config.termsVersion, now, now, config.emailVerification ? 0 : 1, config.emailVerification ? null : now, roleFor(email));
     const user = db.prepare('SELECT * FROM users WHERE id = ?').get(info.lastInsertRowid);
     audit('register.ok', req, { userId: user.id, verification: config.emailVerification });
 

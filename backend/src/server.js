@@ -16,6 +16,9 @@ import { errorHandler, notFound } from './middleware/errors.js';
 import { purgeExpiredSessions } from './sessions.js';
 import { purgeExpiredTokens } from './tokens.js';
 import requireVerified from './middleware/requireVerified.js';
+import requireAdmin from './middleware/requireAdmin.js';
+import adminRoutes from './routes/admin.js';
+import { syncAdmins } from './admin.js';
 import { RETIRED, normalizeModel } from './pricing.js';
 
 // Facturation (prototype) : entièrement optionnelle. BILLING_ENABLED=false (défaut)
@@ -100,6 +103,7 @@ app.use('/api', (_req, res, next) => {
 });
 
 seedUsers(); // crée/maj les comptes pré-définis (SEED_USERS)
+syncAdmins(); // ADMIN_EMAILS → rôle admin (quota illimité + /api/admin)
 const purged = purgeExpiredSessions();
 if (purged) console.log(`🧹 ${purged} session(s) expirée(s) purgée(s)`);
 const purgedTokens = purgeExpiredTokens();
@@ -126,6 +130,9 @@ if (BILLING) {
   app.use('/api/billing', billing.default);
   console.log(`💳 Facturation activée (mode ${billing.MODE})`);
 }
+// Console d'administration : requireAdmin répond 404 aux non-admins, donc
+// l'existence de ces routes n'est pas observable.
+app.use('/api/admin', requireAdmin, adminRoutes);
 app.use('/api/auth', authRoutes);
 app.use('/api', generateRoutes);
 app.use('/api', notFound);

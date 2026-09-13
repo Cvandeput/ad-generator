@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="fr">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Administration — AdCraft</title>
+    <meta name="robots" content="noindex, nofollow" />
+    <link rel="icon" href="/img/icons/favicon.ico" sizes="48x48" />
+    <link rel="manifest" href="/site.webmanifest" />
+    <meta name="theme-color" content="#1d4ed8" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="" />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&display=block" rel="stylesheet" />
+    <link rel="stylesheet" href="/css/app.css" />
+  </head>
+  <body class="bg-background text-on-surface font-body-base antialiased flex flex-col min-h-screen">
+    <header id="site-header" data-page="admin" class="bg-surface-container-lowest border-b border-outline-variant sticky top-0 z-50"></header>
+
+    <main class="flex-grow w-full max-w-container-max mx-auto px-lg py-xl flex flex-col gap-xl">
+      <div class="flex flex-col gap-sm">
+        <h1 class="font-display-lg text-display-lg text-on-surface">Administration</h1>
+        <p class="font-body-sm text-body-sm text-secondary">Réservé aux comptes listés dans <code>ADMIN_EMAILS</code>. Générations illimitées, aucun quota.</p>
+      </div>
+
+      <div id="error" class="hidden rounded-lg border border-error bg-error-container/40 px-lg py-md font-body-sm text-body-sm"></div>
+
+      <!-- Chiffres clés -->
+      <section id="stats" class="grid grid-cols-2 md:grid-cols-4 gap-md"></section>
+
+      <!-- Répartition -->
+      <section class="grid grid-cols-1 lg:grid-cols-2 gap-lg">
+        <div class="rounded-xl border border-outline-variant bg-surface-container-lowest p-lg flex flex-col gap-md">
+          <h2 class="font-display-sm text-display-sm">Modèles utilisés</h2>
+          <div id="models" class="overflow-x-auto"></div>
+        </div>
+        <div class="rounded-xl border border-outline-variant bg-surface-container-lowest p-lg flex flex-col gap-md">
+          <h2 class="font-display-sm text-display-sm">Thèmes les plus demandés</h2>
+          <div id="themes" class="overflow-x-auto"></div>
+        </div>
+      </section>
+
+      <!-- Comptes -->
+      <section class="rounded-xl border border-outline-variant bg-surface-container-lowest p-lg flex flex-col gap-md">
+        <div class="flex flex-wrap items-center justify-between gap-md">
+          <h2 class="font-display-sm text-display-sm">Comptes</h2>
+          <input id="search" type="search" placeholder="Filtrer par e-mail…" autocomplete="off"
+                 class="rounded-lg border border-outline-variant bg-surface px-md py-sm font-body-sm text-body-sm min-w-[240px]" />
+        </div>
+        <div id="users" class="overflow-x-auto"></div>
+      </section>
+
+      <!-- Générations récentes -->
+      <section class="rounded-xl border border-outline-variant bg-surface-container-lowest p-lg flex flex-col gap-md">
+        <div class="flex flex-wrap items-center justify-between gap-md">
+          <h2 class="font-display-sm text-display-sm">Générations récentes</h2>
+          <select id="gen-status" class="rounded-lg border border-outline-variant bg-surface px-md py-sm font-body-sm text-body-sm">
+            <option value="">Toutes</option>
+            <option value="done">Réussies</option>
+            <option value="error">En échec</option>
+            <option value="pending">En cours</option>
+          </select>
+        </div>
+        <div id="generations" class="overflow-x-auto"></div>
+      </section>
+    </main>
+
+    <footer id="site-footer" class="border-t border-outline-variant bg-surface-container-lowest mt-2xl"></footer>
+    <script type="module" src="/js/nav.js"></script>
+    <script type="module" src="/js/admin.js"></script>
+  </body>
+</html>

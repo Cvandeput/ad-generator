@@ -81,6 +81,10 @@ export const config = {
   sessionIdleMs: Number(process.env.SESSION_IDLE_HOURS || 24) * 3600 * 1000,
   sessionAbsoluteMs: Number(process.env.SESSION_ABSOLUTE_DAYS || 7) * 24 * 3600 * 1000,
 
+  // Comptes administrateurs (quota illimité + console). Liste d'e-mails
+  // séparés par des virgules : la promotion passe par le serveur, pas par l'app.
+  adminEmails: String(process.env.ADMIN_EMAILS || '')
+    .split(',').map((e) => e.trim().toLowerCase()).filter(Boolean),
   registerMode: REGISTER_MODE,
   emailVerification: EMAIL_VERIFICATION,
   verificationTtlHours: Number(process.env.EMAIL_VERIFICATION_TTL_HOURS || 24),
