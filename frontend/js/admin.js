@@ -6,7 +6,15 @@ const $ = (id) => document.getElementById(id);
 const errorEl = $('error');
 const euro = (usd, rate) => (usd * rate).toFixed(2).replace('.', ',');
 const esc = (s) => String(s ?? '').replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
-const date = (s) => (s ? new Date(s.replace(' ', 'T') + 'Z').toLocaleString('fr-BE', { dateStyle: 'short', timeStyle: 'short' }) : '—');
+// Deux formats cohabitent en base : SQLite ('2026-09-13 17:31:29', UTC, sans
+// fuseau) et ISO ('...T17:31:29.746Z', écrit par Node). On ne rajoute le 'Z'
+// que sur le premier, sinon Date() renvoie Invalid Date.
+const date = (s) => {
+  if (!s) return '—';
+  const iso = /[TZ]/.test(s) ? s : s.replace(' ', 'T') + 'Z';
+  const d = new Date(iso);
+  return Number.isNaN(d.getTime()) ? '—' : d.toLocaleString('fr-BE', { dateStyle: 'short', timeStyle: 'short' });
+};
 
 function fail(err) {
   errorEl.textContent = err instanceof ApiError && err.status === 404
