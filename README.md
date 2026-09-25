@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="frontend/img/logo-adcraft.png" alt="AdCraft" width="210" />
+  <img src="frontend/img/logo-adcraft.webp" alt="AdCraft" width="210" />
 </p>
 
 <h1 align="center">AdCraft — Générateur de publicités IA</h1>
@@ -175,8 +175,30 @@ La logique de prompt (briefs de thème pour le Directeur Artistique, presets de 
 | GET | `/api/history` | Historique du compte (`?status=done\|error\|all`) |
 | GET | `/api/usage` | Consommation (mois courant / total), prix unitaire courant, quotas |
 | GET | `/api/image/:id` | Image générée (`?download=1` pour forcer le téléchargement) |
+| GET | `/api/account/deletion-preview` | Ce qui sera effacé et conservé (alimente la confirmation) |
+| POST | `/api/account/delete` | Suppression de compte — **mot de passe exigé**. Pseudonymise, efface les fichiers, résilie l'abonnement (`docs/SUPPRESSION-COMPTE.md`) |
+| GET | `/api/billing/withdrawal` | Éligibilité à la rétractation + **montant exact** du remboursement |
+| POST | `/api/billing/withdrawal` | Exercer la rétractation (`kind`: `subscription` \| `pack`, `expectedRefundCents`) — `docs/RETRACTATION.md` |
+
+`POST /api/billing/checkout` et `/api/billing/pack` exigent désormais `withdrawalConsent: true`
+(consentement exprès à l'exécution immédiate). Sans lui : 400 `WITHDRAWAL_CONSENT_REQUIRED` — une
+vente sans ce consentement serait remboursable à 100 %, cf. `docs/RETRACTATION.md` §3.1.
 
 Toutes les mutations exigent un en-tête `Origin`/`Referer` de même origine (ou listé dans `APP_ORIGINS`).
+
+## Tests
+
+```bash
+cd backend && npm install && npm test     # prorata, rétractation, suppression de compte, 404
+cd frontend && npm run check:i18n         # parité stricte des 3 dictionnaires
+```
+
+## Pages d'erreur
+
+`frontend/404.html` et `frontend/50x.html`, servies par nginx via
+`nginx/snippets/adcraft-error-pages.conf`. **Les routes `/api/` continuent de renvoyer du JSON** :
+`proxy_intercept_errors off` pour les 404 du backend, `error_page … = @api_error` pour les 502
+quand le conteneur est à l'arrêt. Procédure de recette dans ce fichier même snippet.
 
 ## Sécurité
 
