@@ -1,18 +1,29 @@
-// Fragments d'UI réutilisables (design system "AdCraft Studio"), partagés entre
-// le dashboard et l'historique. Un seul endroit à retoucher par composant.
+// Fragments d'UI réutilisables (design system Studio), partagés entre le
+// dashboard et l'historique. Un seul endroit à retoucher par composant.
+import { t, has, date as fmtLocale, relative, parseServerDate, money } from './i18n.js';
 
-// Source unique des thèmes (valeur envoyée au backend + libellé affiché +
-// dégradé d'aperçu de la tuile, repris de la maquette Studio).
+// Source unique des thèmes : la `value` est envoyée au backend et sert de clé
+// de prompt — elle ne se traduit JAMAIS. Seul le libellé est localisé.
 export const THEMES = [
-  { value: 'classique', label: 'Classique', gradient: 'linear-gradient(135deg,#f3f4f3 0%,#e8e8e7 100%)' },
-  { value: 'ete', label: 'Été', gradient: 'linear-gradient(135deg,#fde9c8 0%,#f5c98d 100%)' },
-  { value: 'extravagant', label: 'Extravagant', gradient: 'linear-gradient(135deg,#d6dcff 0%,#b7c4ff 100%)' },
-  { value: 'sport', label: 'Sport', gradient: 'linear-gradient(135deg,#dfe4e6 0%,#b4bcc0 100%)' },
-  { value: 'fete', label: 'Nuit', gradient: 'linear-gradient(135deg,#3a3f57 0%,#1f2333 100%)' },
-  { value: 'luxe', label: 'Luxe', gradient: 'linear-gradient(135deg,#e9e1dd 0%,#ccc5c2 100%)' },
-  { value: 'noel', label: 'Noël', gradient: 'linear-gradient(135deg,#dbe7e4 0%,#a9c6bf 100%)' },
-];
-export const THEME_LABELS = Object.fromEntries(THEMES.map((t) => [t.value, t.label]));
+  { value: 'classique', gradient: 'linear-gradient(135deg,#f3f4f3 0%,#e8e8e7 100%)' },
+  { value: 'ete', gradient: 'linear-gradient(135deg,#fde9c8 0%,#f5c98d 100%)' },
+  { value: 'extravagant', gradient: 'linear-gradient(135deg,#d6dcff 0%,#b7c4ff 100%)' },
+  { value: 'sport', gradient: 'linear-gradient(135deg,#dfe4e6 0%,#b4bcc0 100%)' },
+  { value: 'fete', gradient: 'linear-gradient(135deg,#3a3f57 0%,#1f2333 100%)' },
+  { value: 'luxe', gradient: 'linear-gradient(135deg,#e9e1dd 0%,#ccc5c2 100%)' },
+  { value: 'noel', gradient: 'linear-gradient(135deg,#dbe7e4 0%,#a9c6bf 100%)' },
+].map((th) => ({ ...th, label: t(`themes.${th.value}`) }));
+
+export const THEME_LABELS = Object.fromEntries(THEMES.map((th) => [th.value, th.label]));
+
+// Libellé d'une catégorie produit. La valeur stockée est française (elle part
+// dans le prompt) ; on la traduit pour l'affichage quand on la connaît, sinon
+// on montre telle quelle ce que l'utilisateur a saisi.
+export function categoryLabel(value) {
+  if (!value) return '';
+  const key = `categories.${String(value).toLowerCase().replace(/\s+/g, '_')}`;
+  return has(key) ? t(key) : String(value);
+}
 
 export function escapeHtml(s) {
   return String(s ?? '').replace(/[&<>"']/g, (c) =>
@@ -22,9 +33,7 @@ export function escapeHtml(s) {
 
 // created_at stocké en UTC "YYYY-MM-DD HH:MM:SS".
 export function fmtDate(s) {
-  if (!s) return '';
-  const d = new Date(s.replace(' ', 'T') + 'Z');
-  return d.toLocaleString('fr-FR', {
+  return fmtLocale(s, {
     day: '2-digit',
     month: 'short',
     year: 'numeric',
@@ -33,35 +42,36 @@ export function fmtDate(s) {
   });
 }
 
-// Date relative pour les cartes d'historique (maquette : « Il y a 2 h »,
-// « Hier, 18:04 », « 12 oct., 16:45 »). created_at stocké en UTC.
+// Date relative pour les cartes d'historique (« Il y a 2 h », « Hier, 18:04 »,
+// « 12 oct., 16:45 »). Intl.RelativeTimeFormat fait la formulation : pas de
+// composition manuelle, sinon l'ordre des mots casse en néerlandais.
 export function fmtRelative(s) {
-  if (!s) return '';
-  const d = new Date(s.replace(' ', 'T') + 'Z');
+  const d = parseServerDate(s);
+  if (!d) return '';
   const now = new Date();
   const diffMin = Math.floor((now - d) / 60000);
-  const hhmm = d.toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' });
-  if (diffMin < 1) return "À l'instant";
-  if (diffMin < 60) return `Il y a ${diffMin} min`;
-  if (diffMin < 1440 && d.getDate() === now.getDate()) return `Il y a ${Math.floor(diffMin / 60)} h`;
+  const hhmm = fmtLocale(d, { hour: '2-digit', minute: '2-digit' });
+  if (diffMin < 1) return t('time.now');
+  if (diffMin < 60) return relative(-diffMin, 'minute');
+  if (diffMin < 1440 && d.getDate() === now.getDate()) return relative(-Math.floor(diffMin / 60), 'hour');
   const yesterday = new Date(now);
   yesterday.setDate(now.getDate() - 1);
   if (d.getDate() === yesterday.getDate() && d.getMonth() === yesterday.getMonth() && d.getFullYear() === yesterday.getFullYear()) {
-    return `Hier, ${hhmm}`;
+    return t('time.dayTime', { day: relative(-1, 'day', { numeric: 'auto' }), time: hhmm });
   }
-  return `${d.toLocaleDateString('fr-FR', { day: 'numeric', month: 'short' })}, ${hhmm}`;
+  return t('time.dayTime', { day: fmtLocale(d, { day: 'numeric', month: 'short' }), time: hhmm });
 }
 
 export function productLabel(g) {
   return [g.brand, g.flavor].filter(Boolean).join(' · ') || g.brand || '—';
 }
 
-// En-tête d'usage : consommation du mois courant. Accord (image/images) et
-// séparateur décimal français (virgule). Ex : "1 image · 0,04 € ce mois".
+// En-tête d'usage : consommation du mois courant. Accord singulier/pluriel par
+// Intl.PluralRules, montant par Intl.NumberFormat (virgule en fr-BE et nl-BE,
+// point en anglais). Ex : « 1 image · 0,04 € ce mois ».
 export function usageLabel(u) {
-  const n = u.currentMonth.count;
-  const eur = u.currentMonth.eur.toFixed(2).replace('.', ',');
-  return `${n} image${n > 1 ? 's' : ''} · ${eur} € ce mois`;
+  const count = u.currentMonth.count;
+  return t('usage.header', { count, amount: money(u.currentMonth.eur) });
 }
 
 // Vignette cassée (404, image corrompue) OU sortie dégénérée 1×1 (n8n/Gemini) :
@@ -100,7 +110,7 @@ export function wireImageFallbacks() {
 export function brokenThumb() {
   return `<div class="js-broken hidden absolute inset-0 flex-col items-center justify-center gap-xs bg-surface-container-low text-secondary text-center p-sm flex">
       <span class="material-symbols-outlined text-[28px]">broken_image</span>
-      <span class="font-label-sm text-label-sm">Aperçu indisponible</span>
+      <span class="font-label-sm text-label-sm">${escapeHtml(t('history.thumbUnavailable'))}</span>
     </div>`;
 }
 
@@ -108,14 +118,14 @@ export function brokenThumb() {
 // (bordure accent 2px + pastille cochée) géré par app.js sur .theme-preview.
 export function renderThemeButtons() {
   return THEMES.map(
-    (t) => `
-      <button type="button" data-theme="${t.value}" class="theme-btn flex flex-col gap-[5px] text-left focus:outline-none">
-        <div class="theme-preview h-[52px] rounded-lg border border-outline-variant flex items-end justify-end p-[5px]" style="background:${t.gradient}">
+    (th) => `
+      <button type="button" data-theme="${th.value}" class="theme-btn flex flex-col gap-[5px] text-left rounded-lg outline-none focus-visible:ring-2 focus-visible:ring-primary-container focus-visible:ring-offset-2">
+        <div class="theme-preview h-[52px] rounded-lg border border-outline-variant flex items-end justify-end p-[5px]" style="background:${th.gradient}">
           <span class="theme-check w-[14px] h-[14px] rounded-full bg-primary-container hidden items-center justify-center">
             <span class="material-symbols-outlined text-on-primary text-[9px]">check</span>
           </span>
         </div>
-        <span class="theme-label font-label-sm text-label-sm text-on-surface-variant text-center">${escapeHtml(t.label)}</span>
+        <span class="theme-label font-label-sm text-label-sm text-on-surface-variant text-center">${escapeHtml(th.label)}</span>
       </button>`
   ).join('');
 }
@@ -125,20 +135,25 @@ export function renderThemeButtons() {
 export function successCard(g) {
   const label = productLabel(g);
   const themeLabel = THEME_LABELS[g.theme] || g.theme;
+  const download = escapeHtml(t('common.download'));
+  const remove = escapeHtml(t('common.delete'));
   return `
     <div class="js-card group flex flex-col gap-sm" data-id="${g.id}">
       <div class="relative aspect-[4/5] bg-surface-container-low border border-outline-variant rounded-lg overflow-hidden">
         <img src="${g.url}" alt="${escapeHtml(label)}" class="w-full h-full object-cover" loading="lazy" ${IMG_FALLBACK_ATTRS} />
         ${brokenThumb()}
-        <div class="absolute inset-0 flex items-end justify-end gap-xs p-sm opacity-0 group-hover:opacity-100 transition-opacity z-10"
-             style="background:linear-gradient(to top,rgba(26,28,28,0.55) 0%,rgba(26,28,28,0) 42%)">
-          <a href="${g.url}?download=1" download title="Télécharger" aria-label="Télécharger"
-             class="w-[30px] h-[30px] bg-surface-container-lowest rounded flex items-center justify-center text-on-surface hover:bg-surface-container transition-colors">
-            <span class="material-symbols-outlined text-[15px]">download</span>
+        <div class="absolute inset-0 flex items-end justify-end gap-xs p-xs lg:p-sm opacity-100 lg:opacity-0 lg:group-hover:opacity-100 lg:group-focus-within:opacity-100 transition-opacity z-10 lg:[background:linear-gradient(to_top,rgba(26,28,28,0.55)_0%,rgba(26,28,28,0)_42%)]">
+          <a href="${g.url}?download=1" download title="${download}" aria-label="${download}"
+             class="w-11 h-11 lg:w-[30px] lg:h-[30px] flex items-center justify-center group/act">
+            <span class="w-[30px] h-[30px] bg-surface-container-lowest rounded flex items-center justify-center text-on-surface group-hover/act:bg-surface-container transition-colors">
+              <span class="material-symbols-outlined text-[15px]">download</span>
+            </span>
           </a>
-          <button type="button" class="js-delete w-[30px] h-[30px] bg-surface-container-lowest rounded flex items-center justify-center text-error hover:bg-surface-container transition-colors"
-                  data-id="${g.id}" title="Supprimer" aria-label="Supprimer">
-            <span class="material-symbols-outlined text-[15px]">delete</span>
+          <button type="button" class="js-delete w-11 h-11 lg:w-[30px] lg:h-[30px] flex items-center justify-center group/act"
+                  data-id="${g.id}" title="${remove}" aria-label="${remove}">
+            <span class="w-[30px] h-[30px] bg-surface-container-lowest rounded flex items-center justify-center text-error group-hover/act:bg-surface-container transition-colors">
+              <span class="material-symbols-outlined text-[15px]">delete</span>
+            </span>
           </button>
         </div>
       </div>
@@ -146,7 +161,7 @@ export function successCard(g) {
         <span class="font-body-sm text-body-sm font-semibold text-on-surface truncate">${escapeHtml(label)}</span>
         <div class="flex items-center gap-sm">
           <span class="bg-surface-container text-on-surface-variant px-sm py-[2px] rounded-full font-label-sm text-label-sm">${escapeHtml(themeLabel)}</span>
-          <span class="font-label-sm text-label-sm text-outline" title="${fmtDate(g.createdAt)}">${fmtRelative(g.createdAt)}</span>
+          <span class="font-label-sm text-label-sm text-outline" title="${escapeHtml(fmtDate(g.createdAt))}">${escapeHtml(fmtRelative(g.createdAt))}</span>
         </div>
       </div>
     </div>`;
@@ -157,20 +172,22 @@ export function successCard(g) {
 export function failureRow(g, { withRetry = true } = {}) {
   const themeLabel = THEME_LABELS[g.theme] || g.theme;
   return `
-    <li class="js-failure flex justify-between items-center gap-md py-sm border-b border-outline-variant last:border-0" data-id="${g.id}">
+    <li class="js-failure flex flex-col sm:flex-row sm:justify-between sm:items-center gap-sm sm:gap-md py-sm border-b border-outline-variant last:border-0" data-id="${g.id}">
       <div class="flex flex-col min-w-0">
         <span class="font-label-md text-label-md text-on-surface truncate">${escapeHtml(productLabel(g))} <span class="text-secondary font-body-sm">· ${escapeHtml(
     themeLabel
-  )} · ${fmtDate(g.createdAt)}</span></span>
-        <span class="font-body-sm text-body-sm text-secondary break-words">Raison : ${escapeHtml(g.error || 'Erreur inconnue')}</span>
+  )} · ${escapeHtml(fmtDate(g.createdAt))}</span></span>
+        <span class="font-body-sm text-body-sm text-secondary break-words">${escapeHtml(
+          t('history.failureReason', { message: g.error || t('history.unknownError') })
+        )}</span>
       </div>
       <div class="flex gap-xs shrink-0">
         ${
           withRetry
-            ? `<button type="button" class="js-retry px-sm py-xs bg-surface-container-lowest border border-outline-variant rounded text-on-surface font-label-sm text-label-sm hover:bg-surface-container transition-colors" data-id="${g.id}">Relancer</button>`
+            ? `<button type="button" class="js-retry px-sm py-xs min-h-[44px] lg:min-h-0 inline-flex items-center bg-surface-container-lowest border border-outline-variant rounded text-on-surface font-label-sm text-label-sm hover:bg-surface-container transition-colors" data-id="${g.id}">${escapeHtml(t('common.retry'))}</button>`
             : ''
         }
-        <button type="button" class="js-delete px-sm py-xs bg-error text-on-error rounded font-label-sm text-label-sm hover:opacity-90 transition-opacity" data-id="${g.id}">Supprimer</button>
+        <button type="button" class="js-delete px-sm py-xs min-h-[44px] lg:min-h-0 inline-flex items-center bg-error text-on-error rounded font-label-sm text-label-sm hover:opacity-90 transition-opacity" data-id="${g.id}">${escapeHtml(t('common.delete'))}</button>
       </div>
     </li>`;
 }
@@ -178,14 +195,13 @@ export function failureRow(g, { withRetry = true } = {}) {
 // Bandeau des échecs repliable (<details> natif). Rien si aucun échec.
 export function failuresBlock(errorCount) {
   if (!errorCount) return '';
-  const n = errorCount;
-  const plural = n > 1 ? 's' : '';
+  const count = errorCount;
   return `
-    <details class="js-failures group bg-surface-container-low border border-outline-variant rounded overflow-hidden" data-count="${n}">
-      <summary class="flex justify-between items-center gap-sm px-md py-sm cursor-pointer list-none hover:bg-surface-container transition-colors">
+    <details class="js-failures group bg-surface-container-low border border-outline-variant rounded overflow-hidden" data-count="${count}">
+      <summary class="flex justify-between items-center gap-sm px-md py-sm min-h-[44px] lg:min-h-0 cursor-pointer list-none hover:bg-surface-container transition-colors">
         <div class="flex items-center gap-sm text-on-surface-variant">
           <span class="material-symbols-outlined text-outline text-[15px]">error_outline</span>
-          <span class="js-failures-count font-label-md text-label-md">${n} génération${plural} échouée${plural}</span>
+          <span class="js-failures-count font-label-md text-label-md">${escapeHtml(t('history.failuresCount', { count }))}</span>
         </div>
         <span class="material-symbols-outlined text-outline transform group-open:rotate-180 transition-transform">expand_more</span>
       </summary>

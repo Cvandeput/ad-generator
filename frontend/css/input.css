@@ -15,6 +15,87 @@
     line-height: 1;
     user-select: none;
   }
+
+  /* --- Grain plein écran ----------------------------------------------------
+     Demande produit : overlay de texture 10-15% sur tout le site, pour casser
+     le côté trop lisse des aplats très clairs (#ffffff / #f9f9f8 / #f3f4f3).
+     Bruit fin généré par feTurbulence (fractalNoise), désaturé (feColorMatrix
+     saturate=0), encodé en data-URI SVG inline : zéro requête réseau, ~340
+     octets, tuile de 200×200 répétée (stitchTiles='stitch' évite les coutures
+     visibles à la répétition).
+
+     ::before sur <body> plutôt qu'un élément ajouté au DOM : rien à toucher
+     côté HTML/JS, aucune dépendance à un script pour exister. `position:
+     fixed; inset: 0` le cale sur le viewport, pas sur la hauteur totale du
+     document : il ne grandit pas avec le contenu ni le scroll, et ne peut pas
+     provoquer de barre de défilement horizontale (un `absolute` suivrait au
+     contraire la largeur/hauteur de <body> et pourrait déborder). */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3e%3cfilter id='grain'%3e%3cfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='2' stitchTiles='stitch'/%3e%3cfeColorMatrix type='saturate' values='0'/%3e%3c/filter%3e%3crect width='200' height='200' filter='url(%23grain)'/%3e%3c/svg%3e");
+    background-repeat: repeat;
+    background-size: 200px 200px;
+
+    /* 0.12 = milieu de la fourchette 10-15% demandée : perceptible sur les
+       aplats clairs sans « salir » le blanc. `mix-blend-mode: multiply` rend
+       le bruit net y compris sur du blanc pur ; testé face à `overlay`, qui
+       sur nos fonds très clairs (luminance > 0.5) se comporte comme `screen`
+       et rend le grain quasi invisible (mesuré sur pixels réellement rendus :
+       fond moyen inchangé, 248.7 -> 248.7 ; grain non perceptible à l'oeil sur
+       capture zoomée x6). multiply, lui, assombrit légèrement les fonds clairs
+       (248.7 -> 244.8, -1.6 %) : impact mesuré <= 0.4 point de ratio WCAG sur
+       3 paires texte/fond (dont la plus sensible : text-secondary/background,
+       6.15 -> 6.15), marge restante de 1.6 à 11.3 points au-dessus du seuil
+       4.5:1. Détail dans le rapport de vérification. */
+    opacity: 0.12;
+    mix-blend-mode: multiply;
+
+    /* Sans cette ligne, ce calque plein écran intercepte tous les clics/taps
+       du site — boutons, liens, champs — et rend l'appli inutilisable. Le
+       pseudo-élément reste purement visuel : les événements traversent
+       jusqu'à l'élément réel en dessous. */
+    pointer-events: none;
+
+    /* Au-dessus des aplats et du contenu normal du document (texte, cartes,
+       boutons « en flux »), mais sous : les mini-overlays de survol (z-10 sur
+       les vignettes dans components.js/app.js), le header sticky (z-50), le
+       bandeau cookies (z-[60]) et la modale CGU (z-[70]) — cf. js/nav.js et
+       les z-[...] du HTML. Valeur basse et explicite plutôt que z-index:auto,
+       pour qu'un futur composant avec un z-index positif reste au-dessus du
+       grain sans qu'on ait à y repenser. */
+    z-index: 1;
+  }
+
+  /* Personne ne demande moins de transparence ici pour l'instant, mais le
+     coût de le prévoir est nul : on retire le calque plutôt que de le
+     neutraliser à moitié. Bloc à part (pas imbriqué dans body::before) : ce
+     fichier n'utilise pas la CSS Nesting native ailleurs et ce projet ne fait
+     tourner que tailwindcss+autoprefixer (pas de postcss-nested) — un @media
+     imbriqué ressortirait tel quel du build au lieu d'être remonté, au bon
+     vouloir du support nesting du navigateur. Un bloc top-level classique ne
+     dépend d'aucun des deux. */
+  @media (prefers-reduced-transparency: reduce) {
+    body::before {
+      display: none;
+    }
+  }
+
+  /* Le grain est un calque plein écran au-dessus du flux normal (cf.
+     body::before ci-dessus) : sans contre-mesure il recouvrirait aussi les
+     <img>. Or AdCraft vend des visuels publicitaires générés — un grain
+     plaqué sur une photo produit est un défaut, pas un style. On repasse les
+     images devant le calque : `position: relative` ne change rien à la mise
+     en page (pas de top/left) mais fait entrer l'image dans le même ordre
+     d'empilement que le grain, et z-index: 2 (> 1) l'y place au-dessus. Reste
+     sous le z-10 des overlays de survol (bouton « retirer » sur une vignette
+     uploadée, etc.) qui doivent rester au-dessus de l'image qu'ils
+     recouvrent. */
+  img {
+    position: relative;
+    z-index: 2;
+  }
 }
 
 @layer components {

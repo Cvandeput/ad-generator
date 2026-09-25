@@ -1,9 +1,10 @@
 // Page historique : filtres (recherche marque, catégorie, thème, tri) + échecs.
 // N'affiche que les réussites ; les échecs sont signalés par le bandeau repliable.
 import { api } from './api.js';
-import { successCard, failuresBlock, THEME_LABELS, wireImageFallbacks } from './components.js';
+import { successCard, failuresBlock, THEME_LABELS, categoryLabel, wireImageFallbacks } from './components.js';
 import { wireGridDeletes, wireFailures } from './ui.js';
 import { mountChrome, refreshUsage } from './nav.js';
+import { t } from './i18n.js';
 
 const PAGE = 12; // multiple des colonnes de la grille (2/3/4) → pas de trous
 
@@ -46,7 +47,7 @@ function populateFilters() {
   resetSelect(fCategory);
   resetSelect(fTheme);
   for (const c of [...new Set(all.map((g) => g.category).filter(Boolean))].sort()) {
-    fCategory.appendChild(option(c, c));
+    fCategory.appendChild(option(c, categoryLabel(c)));
   }
   for (const t of [...new Set(all.map((g) => g.theme).filter(Boolean))]) {
     fTheme.appendChild(option(t, THEME_LABELS[t] || t));
@@ -101,11 +102,9 @@ function render() {
       <div class="w-16 h-16 bg-surface-container-high rounded-full flex items-center justify-center mb-md">
         <span class="material-symbols-outlined text-[32px] text-secondary">image_not_supported</span>
       </div>
-      <h2 class="font-headline-md text-headline-md text-on-surface mb-xs">Aucun résultat</h2>
+      <h2 class="font-headline-md text-headline-md text-on-surface mb-xs">${t('history.empty.title')}</h2>
       <p class="font-body-base text-body-base text-secondary max-w-md">${
-        hasFailures
-          ? 'Aucune génération réussie pour cette sélection — dépliez les échecs ci-dessus pour comprendre.'
-          : 'Aucun visuel généré pour le moment. Lancez une génération pour voir vos créations ici.'
+        hasFailures ? t('history.empty.withFailures') : t('history.empty.none')
       }</p>
     </div>`;
 }

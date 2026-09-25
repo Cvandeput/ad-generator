@@ -9,7 +9,31 @@ module.exports = {
   theme: {
     extend: {
       colors: {
-        outline: '#747686',
+        // Contraste WCAG AA (1.4.3). Ancienne valeur : #747686 — 4.49 sur
+        // surface-container-lowest (#ffffff), 4.26 sur background (#f9f9f8),
+        // 4.07 sur surface-container-low (#f3f4f3) et 3.87 sur
+        // surface-container (#eeeeed, panneau gauche de login.html) : sous
+        // 4.5 partout, alors que le token ne sert QUE de couleur de texte
+        // (text-outline : légendes, mentions, prix unitaires, icônes ;
+        // placeholder:text-outline) — jamais de fond ni de bordure, donc
+        // l'assombrir ne se propage nulle part ailleurs.
+        // Teinte et saturation d'origine conservées (HSL 233°/7 % -> 232°/7 %),
+        // seule la luminosité descend de 49 % à 42 % : le gris reste discret.
+        // Ratios CSS : 5.68 sur #ffffff · 5.40 sur #f9f9f8 · 5.15 sur #f3f4f3
+        // · 4.90 sur #eeeeed (le fond réel le plus sombre, relevé au rendu et
+        // non déduit du CSS).
+        // Mesuré AU PIXEL, grain compris : le calque body::before de
+        // css/input.css (opacity .12, mix-blend-mode: multiply) assombrit
+        // texte ET fond d'environ 1.4 % et coûte ~0.08 point de ratio — axe ne
+        // le voit pas, il ne lit que le CSS calculé. Ratios réellement rendus :
+        // 5.61 / 5.32 / 5.08 / 4.82. Quasi insensible à l'opacité du grain
+        // (les deux plans s'assombrissent ensemble) : ~4.8 de 10 % à 20 %.
+        // ⚠ Garde-fou : sur surface-container-highest / surface-variant
+        // (#e2e2e2) ce gris retombe à 4.29 rendu, et à 4.31 sur error-container
+        // (#ffdad6). Ces deux paires n'existent nulle part aujourd'hui ; ne pas
+        // poser de text-outline sur ces fonds sans réassombrir le token
+        // (#5f6170 les couvre, à 4.66 rendu).
+        outline: '#646674',
         'surface-dim': '#dadad9',
         'on-error': '#ffffff',
         error: '#ba1a1a',

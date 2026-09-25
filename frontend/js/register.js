@@ -1,6 +1,13 @@
 // Inscription : contrôle en direct des critères (miroir de backend/src/password.js —
 // le serveur reste l'autorité), code d'invitation selon REGISTER_MODE, CGU.
 import { api, ApiError } from './api.js';
+import { t, currentLang, DEFAULT_LANG, renderLanguageSwitch, wireLanguageSwitch } from './i18n.js';
+
+const slot = document.getElementById('lang-slot');
+if (slot) {
+  slot.innerHTML = renderLanguageSwitch({ id: 'lang-register' });
+  wireLanguageSwitch(slot);
+}
 
 const form = document.getElementById('register-form');
 const modeHint = document.getElementById('mode-hint');
@@ -61,11 +68,12 @@ form.addEventListener('submit', async (e) => {
       return;
     }
     // Adresse déjà utilisée : réponse neutre du serveur, on renvoie vers la connexion.
-    successEl.textContent = (res && res.message) || 'Compte créé. Connectez-vous.';
+    // Le message du serveur est en français : hors FR, notre clé (même formulation neutre).
+    successEl.textContent = (currentLang() === DEFAULT_LANG && res && res.message) || t('register.created');
     successEl.classList.remove('hidden');
     setTimeout(() => (window.location.href = '/login.html'), 2500);
   } catch (err) {
-    errorEl.textContent = err instanceof ApiError ? err.message : 'Erreur';
+    errorEl.textContent = err instanceof ApiError ? err.message : t('errors.generic');
     errorEl.classList.remove('hidden');
     evaluate();
   }
@@ -84,17 +92,15 @@ api
   .then((cfg) => {
     mode = (cfg && cfg.registerMode) || 'closed';
     if (mode === 'closed') {
-      modeHint.textContent = "Les inscriptions sont fermées : l'accès se fait sur invitation. Contactez l'administrateur.";
+      modeHint.textContent = t('register.modeClosed');
       return;
     }
-    modeHint.textContent = mode === 'invite'
-      ? "Un code d'invitation est nécessaire pour créer un compte."
-      : 'Quelques secondes, et le studio est à vous.';
+    modeHint.textContent = mode === 'invite' ? t('register.modeInvite') : t('register.modeOpen');
     inviteField.classList.toggle('hidden', mode !== 'invite');
     form.invite.required = mode === 'invite';
     form.classList.remove('hidden');
     evaluate();
   })
   .catch(() => {
-    modeHint.textContent = 'Service indisponible, réessayez plus tard.';
+    modeHint.textContent = t('register.unavailable');
   });

@@ -1,19 +1,105 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">
+<!-- Trois langues servies par la même URL, distinguées par ?lang= (cf.
+     docs/I18N.md). Chaque <url> déclare ses alternates xhtml:link, y compris
+     vers elle-même, comme l'exige la spécification hreflang. L'URL sans
+     paramètre est la version française, également x-default. -->
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+        xmlns:xhtml="http://www.w3.org/1999/xhtml"
+        xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">
   <url>
     <loc>https://ads.devwork.cloud/</loc>
-    <lastmod>2026-09-13</lastmod>
+    <lastmod>2026-09-16</lastmod>
     <changefreq>monthly</changefreq>
     <priority>1.0</priority>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://ads.devwork.cloud/" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://ads.devwork.cloud/?lang=en" />
+    <xhtml:link rel="alternate" hreflang="nl" href="https://ads.devwork.cloud/?lang=nl" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://ads.devwork.cloud/" />
     <image:image>
       <image:loc>https://ads.devwork.cloud/img/site/og-image.jpg</image:loc>
-      <image:title>AdCraft — photo brute vers visuel publicitaire</image:title>
+      <image:title>Photo produit brute vers visuel publicitaire</image:title>
     </image:image>
   </url>
   <url>
+    <loc>https://ads.devwork.cloud/?lang=en</loc>
+    <lastmod>2026-09-16</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.9</priority>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://ads.devwork.cloud/" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://ads.devwork.cloud/?lang=en" />
+    <xhtml:link rel="alternate" hreflang="nl" href="https://ads.devwork.cloud/?lang=nl" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://ads.devwork.cloud/" />
+  </url>
+  <url>
+    <loc>https://ads.devwork.cloud/?lang=nl</loc>
+    <lastmod>2026-09-16</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.9</priority>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://ads.devwork.cloud/" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://ads.devwork.cloud/?lang=en" />
+    <xhtml:link rel="alternate" hreflang="nl" href="https://ads.devwork.cloud/?lang=nl" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://ads.devwork.cloud/" />
+  </url>
+
+  <url>
+    <loc>https://ads.devwork.cloud/tarifs.html</loc>
+    <lastmod>2026-09-16</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://ads.devwork.cloud/tarifs.html" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://ads.devwork.cloud/tarifs.html?lang=en" />
+    <xhtml:link rel="alternate" hreflang="nl" href="https://ads.devwork.cloud/tarifs.html?lang=nl" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://ads.devwork.cloud/tarifs.html" />
+  </url>
+  <url>
+    <loc>https://ads.devwork.cloud/tarifs.html?lang=en</loc>
+    <lastmod>2026-09-16</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://ads.devwork.cloud/tarifs.html" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://ads.devwork.cloud/tarifs.html?lang=en" />
+    <xhtml:link rel="alternate" hreflang="nl" href="https://ads.devwork.cloud/tarifs.html?lang=nl" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://ads.devwork.cloud/tarifs.html" />
+  </url>
+  <url>
+    <loc>https://ads.devwork.cloud/tarifs.html?lang=nl</loc>
+    <lastmod>2026-09-16</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://ads.devwork.cloud/tarifs.html" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://ads.devwork.cloud/tarifs.html?lang=en" />
+    <xhtml:link rel="alternate" hreflang="nl" href="https://ads.devwork.cloud/tarifs.html?lang=nl" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://ads.devwork.cloud/tarifs.html" />
+  </url>
+
+  <url>
     <loc>https://ads.devwork.cloud/legal.html</loc>
-    <lastmod>2026-09-13</lastmod>
+    <lastmod>2026-09-16</lastmod>
     <changefreq>yearly</changefreq>
     <priority>0.2</priority>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://ads.devwork.cloud/legal.html" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://ads.devwork.cloud/legal.html?lang=en" />
+    <xhtml:link rel="alternate" hreflang="nl" href="https://ads.devwork.cloud/legal.html?lang=nl" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://ads.devwork.cloud/legal.html" />
+  </url>
+  <url>
+    <loc>https://ads.devwork.cloud/legal.html?lang=en</loc>
+    <lastmod>2026-09-16</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.1</priority>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://ads.devwork.cloud/legal.html" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://ads.devwork.cloud/legal.html?lang=en" />
+    <xhtml:link rel="alternate" hreflang="nl" href="https://ads.devwork.cloud/legal.html?lang=nl" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://ads.devwork.cloud/legal.html" />
+  </url>
+  <url>
+    <loc>https://ads.devwork.cloud/legal.html?lang=nl</loc>
+    <lastmod>2026-09-16</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.1</priority>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://ads.devwork.cloud/legal.html" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://ads.devwork.cloud/legal.html?lang=en" />
+    <xhtml:link rel="alternate" hreflang="nl" href="https://ads.devwork.cloud/legal.html?lang=nl" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://ads.devwork.cloud/legal.html" />
   </url>
 </urlset>

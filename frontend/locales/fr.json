@@ -1,0 +1,763 @@
+{
+  "account": {
+    "delete": {
+      "checkbox": "J’ai compris que cette suppression est définitive.",
+      "confirm": "Supprimer définitivement",
+      "cta": "Supprimer mon compte",
+      "doneNotice": "Votre compte a été supprimé. Votre abonnement est résilié et vos images ont été effacées.",
+      "erased": [
+        "Votre adresse e-mail et votre mot de passe : le compte devient anonyme, plus personne ne peut s’y connecter.",
+        "Les photos que vous avez déposées et les visuels générés ({{count}}), supprimés du disque.",
+        "Vos sessions sur tous vos appareils, et les descriptions que vous avez saisies."
+      ],
+      "erasedTitle": "Ce qui est effacé",
+      "intro": "Cette action est irréversible. Lisez ce qu’elle fait exactement avant de confirmer.",
+      "kept": [
+        "Les lignes de consommation ({{generations}}) sans votre nom : date, thème, coût. Elles ne permettent plus de remonter à vous.",
+        "Les factures déjà émises, chez notre prestataire de paiement, pendant {{years}} ans."
+      ],
+      "keptTitle": "Ce qui est conservé",
+      "password": "Votre mot de passe, pour confirmer",
+      "passwordRequired": "Saisissez votre mot de passe pour confirmer.",
+      "teaser": "Vous pouvez supprimer votre compte à tout moment. Nous vous expliquons avant ce qui est effacé et ce qui est conservé.",
+      "title": "Supprimer votre compte",
+      "why": "La conservation des données de facturation répond à une obligation comptable ; elle ne couvre ni votre profil, ni vos photos, qui sont bien supprimés."
+    },
+    "title": "Votre compte"
+  },
+  "admin": {
+    "gens": {
+      "deleteConfirm": "Supprimer la génération #{{id}} et ses fichiers ?",
+      "failed": "échec",
+      "filterAria": "Filtrer les générations par état",
+      "head": [
+        "#",
+        "Compte",
+        "Marque",
+        "Thème",
+        "État",
+        "Modèle",
+        "Produits",
+        "DA",
+        "Coût",
+        "Date",
+        ""
+      ],
+      "regionAria": "Générations récentes (tableau défilant horizontalement)",
+      "rowStatus": {
+        "done": "réussie",
+        "error": "échec",
+        "pending": "en cours"
+      },
+      "status": {
+        "all": "Toutes",
+        "done": "Réussies",
+        "error": "En échec",
+        "pending": "En cours"
+      },
+      "title": "Générations récentes"
+    },
+    "models": {
+      "head": [
+        "Modèle",
+        "Générations",
+        "Coût"
+      ],
+      "regionAria": "Modèles utilisés (tableau défilant horizontalement)",
+      "title": "Modèles utilisés"
+    },
+    "noData": "Aucune donnée.",
+    "notAdmin": "Cette console est réservée aux administrateurs.",
+    "stats": {
+      "accounts": "Comptes",
+      "accountsHint": "{{verified}} vérifiés · {{week}} cette semaine",
+      "generations": "Générations",
+      "generationsHint": "{{done}} réussies · {{errors}} en échec",
+      "thisMonth": "Ce mois",
+      "thisMonthHint": "{{amount}} · aujourd'hui {{today}}",
+      "totalCost": "Coût total"
+    },
+    "subtitle_html": "Réservé aux comptes listés dans <code>ADMIN_EMAILS</code>. Générations illimitées, aucun quota.",
+    "themes": {
+      "artDirector": "Directeur artistique : {{auto}} scènes composées, {{fallback}} replis{{rate}}.",
+      "failureRate": " ({{pct}} d'échec du node texte)",
+      "head": [
+        "Thème",
+        "Générations"
+      ],
+      "regionAria": "Thèmes les plus demandés (tableau défilant horizontalement)",
+      "title": "Thèmes les plus demandés"
+    },
+    "title": "Administration",
+    "users": {
+      "deleteConfirm": "Supprimer définitivement {{email}} ? Le compte, son historique et ses fichiers sont effacés. Irréversible.",
+      "deletedOn": "Compte supprimé le {{date}}",
+      "head": [
+        "#",
+        "E-mail",
+        "Formule",
+        "Réussies",
+        "Coût",
+        "Crédits",
+        "Inscription",
+        "Dernière connexion",
+        "Actions"
+      ],
+      "lockedTitle": "Compte verrouillé",
+      "noActions": "compte désactivé",
+      "planAdmin": "admin (illimité)",
+      "regionAria": "Comptes (tableau défilant horizontalement)",
+      "revoke": "Révoquer sessions",
+      "searchAria": "Filtrer les comptes par e-mail",
+      "searchPlaceholder": "Filtrer par e-mail…",
+      "showDeleted": "Comptes désactivés",
+      "title": "Comptes",
+      "unlock": "Déverrouiller",
+      "unverifiedTitle": "Adresse non confirmée",
+      "verify": "Vérifier"
+    }
+  },
+  "categories": {
+    "alcool": "Alcool",
+    "autre": "Autre",
+    "boisson": "Boisson",
+    "boisson_énergisante": "Boisson énergisante",
+    "chips": "Chips",
+    "cosmétique": "Cosmétique",
+    "parfum": "Parfum",
+    "snack": "Snack",
+    "épicerie": "Épicerie"
+  },
+  "common": {
+    "backHome": "Retour à l'accueil",
+    "cancel": "Annuler",
+    "delete": "Supprimer",
+    "download": "Télécharger",
+    "email": "Adresse e-mail",
+    "emailPlaceholder": "nom@exemple.com",
+    "loading": "Chargement…",
+    "password": "Mot de passe",
+    "retry": "Relancer",
+    "sending": "Envoi…",
+    "skipToContent": "Aller au contenu"
+  },
+  "cookies": {
+    "ok": "J'ai compris",
+    "region": "Information cookies",
+    "text_html": "{{brand}} n'utilise qu'un cookie technique de session, indispensable pour vous garder connecté. Aucun cookie publicitaire ni de suivi. <a href=\"/legal.html#cookies\" class=\"text-primary-container underline\">En savoir plus</a>"
+  },
+  "errors": {
+    "code": {
+      "ADMIN_ACCOUNT": "Un compte administrateur ne peut pas être supprimé depuis cette page.",
+      "ALREADY_PENDING": "Une demande est déjà en cours de traitement.",
+      "AMOUNT_CHANGED": "Le montant a changé, revalidez.",
+      "BAD_PASSWORD": "Mot de passe incorrect.",
+      "EMAIL_NOT_VERIFIED": "Confirmez votre adresse e-mail pour lancer une génération.",
+      "GENERATIONS_PENDING": "Des générations sont en cours ; réessayez quand elles sont terminées.",
+      "NOT_ELIGIBLE": "Rétractation impossible pour ce contrat.",
+      "NO_PACK": "Aucun pack de générations ne peut faire l’objet d’une rétractation.",
+      "NO_SUBSCRIPTION": "Aucun contrat en cours ne peut faire l’objet d’une rétractation.",
+      "QUOTA_EXCEEDED": "Quota mensuel atteint. Changez de formule ou achetez un pack.",
+      "SUBSCRIPTION_CANCEL_FAILED": "Votre abonnement n'a pas pu être résilié. Réessayez dans un instant.",
+      "WINDOW_EXPIRED": "Le délai de rétractation de 14 jours est écoulé.",
+      "WITHDRAWAL_CONSENT_REQUIRED": "Vous devez demander expressément le démarrage immédiat du service pour poursuivre."
+    },
+    "generic": "Une erreur est survenue. Réessayez.",
+    "network": "Connexion au serveur impossible",
+    "status": {
+      "400": "Requête invalide.",
+      "401": "Session expirée. Reconnectez-vous.",
+      "402": "Quota atteint. Changez de formule ou achetez un pack de générations.",
+      "403": "Action non autorisée.",
+      "404": "Ressource introuvable.",
+      "409": "Cette action entre en conflit avec l'état actuel du compte.",
+      "413": "Fichier trop volumineux.",
+      "415": "Format de fichier non pris en charge.",
+      "429": "Trop de demandes en peu de temps. Patientez quelques instants.",
+      "500": "Le serveur a rencontré un problème. Réessayez dans quelques instants."
+    }
+  },
+  "footer": {
+    "contact": "Contact",
+    "cookies": "Cookies",
+    "copyright": "© {{year}} {{brand}}",
+    "copyrightFixed": "© 2026 {{brand}}",
+    "legalLinks": "Liens légaux",
+    "legalNotice": "Mentions légales",
+    "privacy": "Confidentialité",
+    "terms": "CGU"
+  },
+  "history": {
+    "empty": {
+      "none": "Aucun visuel généré pour le moment. Lancez une génération pour voir vos créations ici.",
+      "title": "Aucun résultat",
+      "withFailures": "Aucune génération réussie pour cette sélection — dépliez les échecs ci-dessus pour comprendre."
+    },
+    "failureReason": "Raison : {{message}}",
+    "failuresCount_one": "{{count}} génération échouée",
+    "failuresCount_other": "{{count}} générations échouées",
+    "filters": {
+      "allCategories": "Toutes catégories",
+      "allThemes": "Tous thèmes",
+      "brandAria": "Rechercher une marque",
+      "brandPlaceholder": "Rechercher une marque…",
+      "categoryAria": "Filtrer par catégorie",
+      "reset": "Réinitialiser",
+      "sortAria": "Trier les visuels",
+      "sortBrand": "Marque (A → Z)",
+      "sortNewest": "Plus récent",
+      "sortOldest": "Plus ancien",
+      "themeAria": "Filtrer par thème"
+    },
+    "loadMore": "Charger plus",
+    "subtitle": "Consultez et gérez vos visuels générés.",
+    "thumbUnavailable": "Aperçu indisponible",
+    "title": "Historique",
+    "unknownError": "Erreur inconnue"
+  },
+  "home": {
+    "fidelity": {
+      "afterAlt": "Pot de Nutella mis en scène sur une planche en bois avec des noisettes",
+      "beforeAlt": "Pot de Nutella, photo brute",
+      "privacy_html": "Vos photos sont transmises à Google Cloud (Vertex AI) le temps de la génération, puis conservées dans votre historique jusqu'à ce que vous les supprimiez. <a class=\"text-primary-container underline\" href=\"/legal.html#confidentialite\">Politique de confidentialité</a>.",
+      "text": "L'étiquette, le logo, la typographie et les couleurs sont repris de vos photos, sans réinterprétation. Seul le décor autour du produit est composé. C'est la contrainte qui distingue un visuel utilisable d'une image d'illustration.",
+      "title": "Le packaging reste le vôtre"
+    },
+    "gallery": {
+      "item1Alt": "Sachet de chips Lay's mis en scène sur un plan de travail en bois",
+      "item1Caption": "Chips · Classique",
+      "item2Alt": "Canette Red Bull mise en scène dans une ambiance nocturne néon",
+      "item2Caption": "Boisson · Nuit",
+      "item3Alt": "Bouteille de champagne mise en scène dans une salle à manger élégante",
+      "item3Caption": "Alcool · Luxe",
+      "item4Alt": "Boîte de Ferrero Rocher mise en scène devant un sapin de Noël",
+      "item4Caption": "Confiserie · Noël",
+      "subtitle": "Des visuels réellement produits par l'outil, sans retouche.",
+      "title": "Exemples"
+    },
+    "hero": {
+      "afterAlt": "Canette Red Bull mise en scène sur un terrain de basket au coucher du soleil, visuel généré par {{brand}}",
+      "beforeAlt": "Canette Red Bull, photo brute prise au smartphone",
+      "bullets": "Sept thèmes de mise en scène · format 4:5 prêt pour les réseaux · packaging conservé à l'identique · plusieurs produits par visuel",
+      "ctaExamples": "Voir des exemples",
+      "ctaStudio": "Ouvrir le studio",
+      "eyebrow": "Photographie produit générative",
+      "text": "Déposez une photo de votre produit. {{brand}} compose un décor cohérent avec ce que vous vendez, sans jamais retoucher le packaging. Le visuel est prêt en moins de deux minutes.",
+      "title": "Vos produits, mis en scène comme en studio."
+    },
+    "labels": {
+      "generated": "Visuel généré",
+      "raw": "Photo brute"
+    },
+    "steps": {
+      "one": {
+        "text": "Une à quatorze photos, même prises au smartphone. Un produit par photo, ou plusieurs produits sur une même photo : tous apparaîtront dans le visuel.",
+        "title": "Déposez vos photos"
+      },
+      "subtitle": "Pas de brief à rédiger, pas de logiciel de retouche à ouvrir.",
+      "three": {
+        "text": "Classique, Été, Sport, Luxe… ou écrivez vous-même le décor voulu. Le reste est composé pour vous.",
+        "title": "Choisissez un thème"
+      },
+      "title": "Trois informations suffisent",
+      "two": {
+        "text": "Marque, catégorie, variante. Précisez la forme réelle — canette, sachet, pot — pour que le décor tombe juste.",
+        "title": "Décrivez le produit"
+      }
+    }
+  },
+  "legal": {
+    "s1": {
+      "contact_html": "<strong class=\"text-on-surface\">Contact :</strong> <a class=\"text-primary-container underline\" href=\"#contact\">voir la section Contact</a>.",
+      "editor_html": "<strong class=\"text-on-surface\">Éditeur du service :</strong> {{brand}}, édité par <span class=\"bg-error-container text-on-error-container px-xs rounded\">[Nom / prénom ou dénomination — À COMPLÉTER]</span>, <span class=\"bg-error-container text-on-error-container px-xs rounded\">[adresse postale — À COMPLÉTER]</span>, Belgique.",
+      "hosting_html": "<strong class=\"text-on-surface\">Hébergement :</strong> serveur privé virtuel loué auprès de <span class=\"bg-error-container text-on-error-container px-xs rounded\">[hébergeur, adresse — À COMPLÉTER]</span>. Génération des images : Google Cloud (Vertex AI), Google Ireland Limited, Gordon House, Barrow Street, Dublin 4, Irlande.",
+      "ip_html": "<strong class=\"text-on-surface\">Propriété intellectuelle :</strong> le site, son code, son design et son logo sont la propriété de l'éditeur. Les marques, logos et packagings visibles sur les visuels d'exemple appartiennent à leurs titulaires respectifs et ne sont montrés qu'à titre de démonstration technique.",
+      "title": "1. Mentions légales",
+      "vat_html": "<strong class=\"text-on-surface\">Numéro d'entreprise (BCE) :</strong> <span class=\"bg-error-container text-on-error-container px-xs rounded\">[À COMPLÉTER ou « activité non commerciale »]</span>"
+    },
+    "s2": {
+      "controller": {
+        "text": "L'éditeur identifié à la section 1.",
+        "title": "Responsable du traitement"
+      },
+      "data": {
+        "account_html": "<strong class=\"text-on-surface\">Compte :</strong> adresse e-mail, mot de passe (stocké uniquement sous forme de hachage bcrypt), date d'acceptation des présentes, date de dernière connexion. Finalité : authentification et gestion du compte (base légale : exécution du contrat).",
+        "generations_html": "<strong class=\"text-on-surface\">Générations :</strong> photos déposées, informations produit saisies (marque, catégorie, goût, description, décor), visuels générés, prompt utilisé, modèle et coût. Finalité : fourniture du service, historique personnel, suivi de consommation (base légale : exécution du contrat).",
+        "logs_html": "<strong class=\"text-on-surface\">Journaux techniques :</strong> adresse IP, horodatage et nature des événements de sécurité (connexion, échec, verrouillage). Finalité : sécurité du service, prévention des abus (base légale : intérêt légitime). Conservation : 30 jours.",
+        "title": "Données traitées et finalités"
+      },
+      "processors": {
+        "google_html": "Les photos déposées et les informations produit sont transmises à <strong class=\"text-on-surface\">Google Cloud (Vertex AI)</strong> pour composer la scène et générer le visuel. Google agit comme sous-traitant selon ses conditions de traitement des données ; les données peuvent être traitées hors de l'Union européenne dans le cadre des clauses contractuelles types de Google. Aucune donnée n'est vendue ni utilisée à des fins publicitaires.",
+        "n8n": "L'orchestration des générations est réalisée par une instance n8n auto-hébergée sur le même serveur que le service.",
+        "title": "Sous-traitants et transferts"
+      },
+      "retention": {
+        "text": "Photos et visuels : jusqu'à suppression par vous (bouton « Supprimer » de l'historique) ou suppression du compte. Compte : jusqu'à demande de suppression. Journaux : 30 jours.",
+        "title": "Durée de conservation"
+      },
+      "rights": {
+        "text_html": "Accès, rectification, effacement, limitation, portabilité et opposition : écrivez-nous (section Contact). Vous pouvez introduire une réclamation auprès de l'Autorité de protection des données (APD), rue de la Presse 35, 1000 Bruxelles — <a class=\"text-primary-container underline\" href=\"https://www.autoriteprotectiondonnees.be\" rel=\"noopener\" target=\"_blank\">autoriteprotectiondonnees.be</a>.",
+        "title": "Vos droits"
+      },
+      "security": {
+        "text": "Connexion chiffrée (HTTPS), mots de passe hachés (bcrypt), cookie de session HttpOnly/Secure/SameSite, verrouillage après échecs répétés, quotas par compte, isolation stricte des données entre comptes.",
+        "title": "Sécurité"
+      },
+      "title": "2. Politique de confidentialité (RGPD)"
+    },
+    "s3": {
+      "intro_html": "{{brand}} n'utilise <strong class=\"text-on-surface\">aucun cookie publicitaire, analytique ou de suivi</strong>, et aucun service tiers de mesure d'audience.",
+      "outro": "Les cookies strictement nécessaires ne requièrent pas de consentement (art. 129 de la loi belge relative aux communications électroniques) ; le bandeau affiché a une vocation d'information. Les polices d'écriture sont chargées depuis Google Fonts, qui reçoit alors votre adresse IP.",
+      "rowNotice_html": "<td class=\"py-sm pr-md\"><code>app.cookieNotice.v1</code></td><td class=\"py-sm pr-md\">Stockage local du navigateur</td><td class=\"py-sm pr-md\">Mémoriser que le bandeau d'information a été lu</td><td class=\"py-sm\">Jusqu'à effacement des données du navigateur</td>",
+      "rowSession_html": "<td class=\"py-sm pr-md\"><code>__Host-sid</code> (ou <code>sid</code> en local)</td><td class=\"py-sm pr-md\">Cookie technique, strictement nécessaire</td><td class=\"py-sm pr-md\">Maintien de votre session connectée</td><td class=\"py-sm\">24 h d'inactivité, 7 jours maximum</td>",
+      "tableAria": "Cookies et stockage local (tableau défilant horizontalement)",
+      "thDuration": "Durée",
+      "thName": "Nom",
+      "thPurpose": "Finalité",
+      "thType": "Type",
+      "title": "3. Cookies et stockage local"
+    },
+    "s4": {
+      "p1_html": "<strong class=\"text-on-surface\">4.1 Objet.</strong> {{brand}} génère, à partir de photos de produit que vous déposez, des visuels publicitaires par intelligence artificielle. L'accès se fait sur invitation ; l'éditeur peut refuser, suspendre ou clôturer un compte à tout moment, notamment en cas d'abus.",
+      "p2_html": "<strong class=\"text-on-surface\">4.2 Vos engagements.</strong> Vous certifiez détenir les droits nécessaires sur les photos déposées (produits, packagings, marques) et n'utiliser les visuels générés que dans le respect des droits des titulaires de marques. Il est interdit de déposer des contenus illicites, des photos de personnes identifiables sans leur accord, ou de tenter de contourner les quotas et protections du service.",
+      "p3_html": "<strong class=\"text-on-surface\">4.3 Visuels générés.</strong> Les visuels sont produits par un modèle d'IA : ils peuvent contenir des erreurs (texte d'emballage altéré, produit manquant, artefacts). Vous vérifiez chaque visuel avant toute diffusion. Vous disposez des droits d'usage sur les visuels générés à partir de vos propres contenus, dans les limites des conditions d'utilisation de Google Cloud.",
+      "p4_html": "<strong class=\"text-on-surface\">4.4 Quotas et coûts.</strong> Chaque génération a un coût réel (modèle image) affiché dans le studio et comptabilisé dans votre consommation. Des quotas horaires et journaliers par compte s'appliquent. L'éditeur peut modifier les quotas ou facturer l'usage après information préalable.",
+      "p5_html": "<strong class=\"text-on-surface\">4.5 Disponibilité et responsabilité.</strong> Service fourni « en l'état », sans garantie de disponibilité continue ni de résultat. L'éditeur n'est pas responsable des usages faits des visuels ni des dommages indirects. Sa responsabilité est limitée au montant éventuellement payé au cours des trois derniers mois.",
+      "p6_html": "<strong class=\"text-on-surface\">4.6 Sécurité du compte.</strong> Vous êtes responsable de la confidentialité de votre mot de passe. Signalez toute utilisation non autorisée. La fonction « déconnexion de tous les appareils » est disponible via l'API et le changement de mot de passe révoque les autres sessions.",
+      "p7_html": "<strong class=\"text-on-surface\">4.7 Modifications.</strong> Les présentes peuvent évoluer ; une nouvelle version vous est soumise pour acceptation à la connexion suivante.",
+      "p8_html": "<strong class=\"text-on-surface\">4.8 Droit applicable.</strong> Droit belge. En cas de litige, tentative de résolution amiable préalable, puis tribunaux de l'arrondissement du siège de l'éditeur.",
+      "title": "4. Conditions générales d'utilisation"
+    },
+    "s5": {
+      "contact_html": "Questions, demande d'accès, exercice de vos droits ou signalement de sécurité : <span class=\"bg-error-container text-on-error-container px-xs rounded\">[adresse e-mail de contact — À COMPLÉTER]</span>.",
+      "disclosure": "Signalement d'une vulnérabilité : merci de nous laisser un délai raisonnable pour corriger avant toute divulgation publique.",
+      "title": "6. Contact"
+    },
+    "title": "Informations légales",
+    "toc": {
+      "terms": "Conditions d'utilisation",
+      "withdrawal": "Rétractation"
+    },
+    "tocAria": "Sommaire",
+    "updated_html": "Dernière mise à jour : 13 septembre 2026 (version <code>2026-09-13</code>).",
+    "withdrawal": {
+      "form": {
+        "body": "À l'attention de [éditeur — voir section 1] :\n\nJe vous notifie par la présente ma rétractation du contrat portant sur la prestation de services ci-dessous :\n\n— Commandé le : ……………………\n— Nom du consommateur : ……………………\n— Adresse du consommateur : ……………………\n— Adresse e-mail du compte : ……………………\n\nSignature (uniquement en cas de notification sur papier) : ……………………\nDate : ……………………",
+        "note": "À compléter et à renvoyer uniquement si vous souhaitez vous rétracter du contrat.",
+        "title": "Formulaire type de rétractation"
+      },
+      "p1_html": "<strong class=\"text-on-surface\">5.1 Principe.</strong> Si vous êtes un consommateur, vous disposez de <strong class=\"text-on-surface\">14 jours</strong> à compter de la conclusion du contrat pour vous rétracter, sans avoir à vous justifier et sans pénalité.",
+      "p2_html": "<strong class=\"text-on-surface\">5.2 Exécution immédiate et montant proportionnel.</strong> En souscrivant, vous demandez expressément que le service commence immédiatement, avant la fin de ce délai. Si vous vous rétractez ensuite, le contrat prend fin mais vous restez redevable de la part déjà fournie, calculée au prorata des générations consommées sur celles incluses dans votre formule. Exemple : 60 générations utilisées sur 100, vous payez 60 % du prix et le solde vous est remboursé.",
+      "p3_html": "<strong class=\"text-on-surface\">5.3 Visuels déjà générés.</strong> Chaque visuel livré est un contenu numérique fourni : votre droit de rétractation s’éteint pour celui-ci, ce que traduit précisément le calcul au prorata ci-dessus.",
+      "p4_html": "<strong class=\"text-on-surface\">5.4 Packs de générations.</strong> Un pack acheté à l’unité est un contrat distinct, avec son propre délai de 14 jours courant depuis son achat. Les crédits encore inutilisés vous sont remboursés.",
+      "p5_html": "<strong class=\"text-on-surface\">5.5 Comment l’exercer.</strong> Depuis la page <a href=\"/tarifs.html\" class=\"text-primary-container underline\">Tarifs</a>, qui affiche le montant exact avant confirmation ; ou par une déclaration dénuée d’ambiguïté envoyée à l’adresse de contact, le formulaire ci-dessous pouvant être utilisé sans obligation.",
+      "p6_html": "<strong class=\"text-on-surface\">5.6 Remboursement.</strong> Il intervient au plus tard 14 jours après réception de votre décision, par le même moyen de paiement que celui utilisé pour la commande, sans frais.",
+      "p7_html": "<strong class=\"text-on-surface\">5.7 Professionnels.</strong> Le droit de rétractation est réservé aux consommateurs. Un achat effectué pour les besoins d’une activité professionnelle n’en bénéficie pas.",
+      "title": "5. Droit de rétractation"
+    }
+  },
+  "login": {
+    "afterAlt": "San Pellegrino mis en scène sur une terrasse méditerranéenne fleurie",
+    "badCredentials": "E-mail ou mot de passe incorrect.",
+    "beforeAlt": "Bouteille San Pellegrino, photo brute",
+    "inviteOnly": "L'accès se fait sur invitation. Contactez l'administrateur pour obtenir un compte.",
+    "inviteRequired": " (code d'invitation requis)",
+    "legalLinks_html": "<a class=\"underline\" href=\"/legal.html#mentions\">Mentions légales</a> · <a class=\"underline\" href=\"/legal.html#confidentialite\">Confidentialité</a>",
+    "noAccount_html": "Pas encore de compte ? <a href=\"/register.html\" class=\"text-primary-container underline\">Créer un compte</a>",
+    "pitchText": "Une photo de produit, trois informations, un thème — et le visuel est prêt à publier.",
+    "pitchTitle": "Le packaging ne bouge pas. Le décor, si.",
+    "subtitle": "Accédez à votre studio et à vos visuels.",
+    "title": "Connexion"
+  },
+  "meta": {
+    "admin": {
+      "title": "Administration — {{brand}}"
+    },
+    "history": {
+      "description": "Vos visuels publicitaires générés avec {{brand}} : consultation, téléchargement, suppression.",
+      "title": "Historique — {{brand}}"
+    },
+    "home": {
+      "description": "{{brand}} compose un décor publicitaire cohérent autour de votre produit, sans jamais retoucher le packaging. Visuel 4:5 prêt à publier en moins de deux minutes.",
+      "ldDescription": "Générateur de visuels publicitaires : déposez une photo produit, choisissez un thème, obtenez un visuel 4:5 avec le packaging conservé à l'identique.",
+      "ogDescription": "Déposez une photo de votre produit, choisissez un thème : {{brand}} compose le décor et conserve le packaging à l'identique.",
+      "ogImageAlt": "Canette Red Bull : photo brute à gauche, visuel publicitaire généré sur un terrain de basket à droite",
+      "ogTitle": "{{brand}} — Vos produits, mis en scène comme en studio",
+      "title": "{{brand}} — Vos produits, mis en scène comme en studio",
+      "twitterDescription": "Photo brute → visuel publicitaire 4:5, packaging intact."
+    },
+    "legal": {
+      "description": "Mentions légales, politique de confidentialité (RGPD), cookies et conditions générales d'utilisation du service {{brand}}.",
+      "title": "Mentions légales, confidentialité et CGU — {{brand}}"
+    },
+    "login": {
+      "description": "Connexion à votre studio {{brand}}.",
+      "title": "Connexion — {{brand}}"
+    },
+    "notFound": {
+      "description": "Cette page n'existe pas ou a été déplacée.",
+      "title": "Page introuvable — {{brand}}"
+    },
+    "pricing": {
+      "description": "Formules {{brand}} : nombre de générations de visuels publicitaires incluses par mois, sans engagement.",
+      "title": "Tarifs — {{brand}}"
+    },
+    "register": {
+      "description": "Créer un compte {{brand}}. Formule gratuite incluse, sans carte bancaire.",
+      "title": "Créer un compte — {{brand}}"
+    },
+    "siteName": "{{brand}}",
+    "studio": {
+      "description": "Studio {{brand}} : déposez vos photos produit, choisissez un thème, générez un visuel publicitaire 4:5.",
+      "title": "Studio — {{brand}}"
+    },
+    "verify": {
+      "title": "Confirmation de votre adresse — {{brand}}"
+    }
+  },
+  "nav": {
+    "admin": "Admin",
+    "examples": "Exemples",
+    "generate": "Générer",
+    "history": "Historique",
+    "home": "Accueil",
+    "homeAria": "{{brand}} — accueil",
+    "howItWorks": "Fonctionnement",
+    "language": "Langue",
+    "login": "Se connecter",
+    "logoAlt": "{{brand}}",
+    "logout": "Déconnexion",
+    "logoutTitle": "Déconnexion ({{email}})",
+    "mainNav": "Navigation principale",
+    "menu": "Menu",
+    "mobileNav": "Navigation mobile",
+    "pricing": "Tarifs",
+    "signup": "Créer un compte",
+    "studio": "Studio"
+  },
+  "notFound": {
+    "code": "Erreur 404",
+    "exitsAria": "Où aller ensuite",
+    "help_html": "Vous cherchiez quelque chose de précis ? <a href=\"/legal.html#contact\" class=\"text-primary-container underline\">Écrivez-nous</a>.",
+    "history": "Mon historique",
+    "home": "Retour à l'accueil",
+    "pricing": "Voir les tarifs",
+    "studio": "Ouvrir le studio",
+    "text": "Le lien est peut-être périmé, ou l'adresse comporte une faute de frappe. Voici par où repartir.",
+    "title": "Cette page n'existe pas"
+  },
+  "plans": {
+    "free": {
+      "features": [
+        "Les 7 thèmes",
+        "Historique et téléchargement"
+      ],
+      "label": "Découverte",
+      "pitch": "Pour essayer l'outil."
+    },
+    "pro": {
+      "features": [
+        "Tout Starter",
+        "Relance gratuite d’un échec",
+        "Support par e-mail"
+      ],
+      "label": "Pro",
+      "pitch": "Pour publier régulièrement sur les réseaux."
+    },
+    "starter": {
+      "features": [
+        "Les 7 thèmes",
+        "Décor personnalisé",
+        "Jusqu’à 6 produits par visuel"
+      ],
+      "label": "Starter",
+      "pitch": "Pour un commerce, quelques visuels par semaine."
+    },
+    "studio": {
+      "features": [
+        "Tout Pro",
+        "Priorité de traitement"
+      ],
+      "label": "Studio",
+      "pitch": "Pour une agence ou plusieurs marques."
+    }
+  },
+  "pricing": {
+    "cta": {
+      "choose": "Choisir",
+      "continueFree": "Continuer en gratuit",
+      "createAccount": "Créer un compte",
+      "currentPlan": "Formule actuelle",
+      "includedByDefault": "Inclus par défaut",
+      "switchPlan": "Changer pour cette formule"
+    },
+    "current": {
+      "cancelConfirm": "Résilier tout de suite (mode démo) ?",
+      "cancelDemo": "Résilier (démo)",
+      "cancelScheduled": " · résiliation programmée",
+      "credits_one": " · {{count}} crédit en réserve",
+      "credits_other": " · {{count}} crédits en réserve",
+      "label": "Votre formule",
+      "manage": "Gérer mon abonnement",
+      "openStudio": "Ouvrir le studio",
+      "pastDue_html": "<span class=\"font-body-sm text-error\">(paiement en attente)</span>",
+      "renew": " · recharge le {{date}}",
+      "unlimited": "{{used}} générations · aucune limite",
+      "used": "{{used}} / {{quota}} générations utilisées"
+    },
+    "errors": {
+      "billingDisabled_html": "La facturation n'est pas activée sur ce serveur (<code>BILLING_ENABLED=false</code>).",
+      "operationFailed": "Opération impossible",
+      "plansUnavailable": "Impossible de charger les formules."
+    },
+    "faq": {
+      "a1": "Elle n'est pas décomptée. Seules les générations qui produisent un visuel consomment votre quota, et vous pouvez relancer un échec gratuitement depuis l'historique.",
+      "a2": "À chaque date de prélèvement, pas le 1er du mois. Si vous vous abonnez le 17, votre quota repart le 17 de chaque mois.",
+      "a3": "Non. En revanche, les packs de générations achetés à l'unité n'expirent pas et se consomment une fois le quota mensuel épuisé.",
+      "a4": "À tout moment depuis « Gérer mon abonnement ». Le changement est proratisé, la résiliation prend effet à la fin de la période déjà payée.",
+      "a5_html": "Vous en disposez pendant 14 jours après votre souscription. Comme le service démarre immédiatement à votre demande, vous ne payez que la part déjà utilisée : le solde vous est remboursé. Détail et formulaire : <a href=\"/legal.html#retractation\" class=\"text-primary-container underline\">section Rétractation</a>.",
+      "q1": "Que se passe-t-il si une génération échoue ?",
+      "q2": "Quand mon compteur se remet-il à zéro ?",
+      "q3": "Les générations non utilisées sont-elles reportées ?",
+      "q4": "Puis-je changer de formule ou résilier ?",
+      "q5": "Et le droit de rétractation de 14 jours ?",
+      "title": "Questions fréquentes"
+    },
+    "free": "Gratuit",
+    "loadingPlans": "Chargement des formules…",
+    "noCard": "sans carte bancaire",
+    "notices": {
+      "checkoutCancel": "Paiement annulé, aucun montant n'a été débité.",
+      "checkoutSuccess": "Paiement enregistré. Votre formule est active — si le compteur ci-dessous n'est pas encore à jour, rafraîchissez dans quelques secondes.",
+      "demoMode_html": "<strong>Prototype — mode démo.</strong> Aucune clé Stripe configurée : les boutons simulent l'abonnement en base pour tester les quotas. Aucun paiement, aucune carte.",
+      "demoPack_html": "Crédits ajoutés en <strong>mode démo</strong>.",
+      "demoSubscribed_html": "Formule activée en <strong>mode démo</strong> : rien n'a été facturé, aucun appel à Stripe.",
+      "packSuccess": "Pack de générations crédité.",
+      "verif_html": "Votre compte est créé. <strong>Un e-mail de confirmation vient de partir</strong> : cliquez sur le lien pour débloquer vos générations offertes. Vous pouvez déjà choisir un abonnement — il est actif immédiatement, sans attendre la confirmation.",
+      "welcome": "Votre compte est créé. Vous pouvez commencer gratuitement ou prendre un abonnement tout de suite — le paiement se fait sur une page sécurisée Stripe."
+    },
+    "onboardingSubNoFree": "Choisissez la formule qui correspond à votre volume. Paiement sécurisé par Stripe, résiliable en un clic.",
+    "onboardingSub_one": "Votre compte démarre avec {{count}} génération offerte. Prenez un abonnement quand vous voulez aller plus loin : paiement sécurisé par Stripe, résiliable en un clic.",
+    "onboardingSub_other": "Votre compte démarre avec {{count}} générations offertes. Prenez un abonnement quand vous voulez aller plus loin : paiement sécurisé par Stripe, résiliable en un clic.",
+    "onboardingTitle": "Bienvenue — choisissez votre formule",
+    "pack": {
+      "buy": "Acheter le pack",
+      "text_one": "Pack de {{count}} génération à {{amount}}, sans abonnement. Le crédit n'expire pas et se consomme une fois le quota mensuel épuisé.",
+      "text_other": "Pack de {{count}} générations à {{amount}}, sans abonnement. Les crédits n'expirent pas et se consomment une fois le quota mensuel épuisé.",
+      "title": "Besoin de plus ce mois-ci ?"
+    },
+    "perMonth": "/mois",
+    "quotaLifetime_one": "{{count}} génération au total",
+    "quotaLifetime_other": "{{count}} générations au total",
+    "quotaMonthly_one": "{{count}} génération / mois",
+    "quotaMonthly_other": "{{count}} générations / mois",
+    "recommended": "Recommandé",
+    "redirecting": "Redirection…",
+    "subtitle": "Chaque formule inclut un nombre de générations par mois. Le compteur repart à la date de votre prélèvement. Sans engagement, résiliable en un clic.",
+    "title": "Des visuels, pas des abonnements compliqués",
+    "unitPrice": "soit {{amount}} par visuel"
+  },
+  "register": {
+    "confirmPassword": "Confirmer le mot de passe",
+    "consent_html": "J'ai lu et j'accepte les <a class=\"text-primary-container underline\" href=\"/legal.html#mentions\" rel=\"noopener\" target=\"_blank\">mentions légales</a>, la <a class=\"text-primary-container underline\" href=\"/legal.html#confidentialite\" rel=\"noopener\" target=\"_blank\">politique de confidentialité</a> et les <a class=\"text-primary-container underline\" href=\"/legal.html#cgu\" rel=\"noopener\" target=\"_blank\">conditions d'utilisation</a>. Je certifie détenir les droits sur les photos que je déposerai.",
+    "created": "Si cette adresse est disponible, votre compte a été créé. Connectez-vous.",
+    "freeStart": "Vous démarrez sur la formule gratuite, sans carte bancaire. Vous choisirez un abonnement juste après.",
+    "haveAccount": "Déjà un compte ? Se connecter",
+    "inviteCode": "Code d'invitation",
+    "modeClosed": "Les inscriptions sont fermées : l'accès se fait sur invitation. Contactez l'administrateur.",
+    "modeInvite": "Un code d'invitation est nécessaire pour créer un compte.",
+    "modeOpen": "Quelques secondes, et le studio est à vous.",
+    "rules": {
+      "classes": "3 types parmi : minuscule, majuscule, chiffre, symbole",
+      "email": "Ne contient pas votre e-mail",
+      "length": "12 caractères minimum",
+      "match": "Les deux saisies correspondent"
+    },
+    "submit": "Créer mon compte",
+    "title": "Créer un compte",
+    "unavailable": "Service indisponible, réessayez plus tard."
+  },
+  "serverError": {
+    "code": "Erreur serveur",
+    "metaTitle": "Service momentanément indisponible — {{brand}}",
+    "retry": "Réessayer",
+    "text": "L'incident est de notre côté, pas du vôtre. Vos visuels et votre historique ne sont pas affectés. Réessayez dans quelques instants.",
+    "title": "Le service ne répond pas"
+  },
+  "studio": {
+    "art": {
+      "help": "S'il est rempli, ce décor remplace celui du thème. La fidélité au packaging reste garantie.",
+      "label": "Décor souhaité",
+      "placeholder": "Ex : sur une botte de paille dans une grange en pierre, lumière rasante du matin",
+      "summary": "Précisez le décor souhaité"
+    },
+    "empty": {
+      "text": "Configurez vos paramètres puis cliquez sur « Générer » pour visualiser le résultat.",
+      "title": "Toile de création"
+    },
+    "error": {
+      "title": "Échec de la génération"
+    },
+    "errors": {
+      "noBrand": "Renseignez la marque.",
+      "noCategory": "Choisissez une catégorie.",
+      "noImage": "Ajoutez au moins une image.",
+      "noTheme": "Choisissez un thème."
+    },
+    "generate": "Générer le visuel",
+    "generating": "Génération…",
+    "photos": {
+      "add": "Ajouter",
+      "count": "{{n}} / {{max}}",
+      "help": "Déposez de 1 à 14 photos. Un produit par photo, ou plusieurs produits sur une même photo : ils apparaîtront tous dans le visuel. Plusieurs angles du même produit comptent pour un seul.",
+      "title": "Photos du produit"
+    },
+    "preview": {
+      "open": "Ouvrir « {{name}} » en grand",
+      "remove": "Retirer"
+    },
+    "product": {
+      "brand": "Marque",
+      "brandPlaceholder": "Ex : Red Bull",
+      "category": "Catégorie",
+      "categoryPlaceholder": "Sélectionner…",
+      "count": "Nombre de produits distincts",
+      "countHelp": "À renseigner si l'IA se trompe sur le nombre de produits à afficher (1 à 6).",
+      "countPlaceholder": "Détecté automatiquement",
+      "description": "Description",
+      "descriptionHelp": "Précisez la forme réelle : canette, sachet, pot, coffret…",
+      "descriptionPlaceholder": "Ex : croissant fourré au Nutella",
+      "flavor": "Goût",
+      "flavorPlaceholder": "Ex : pêche",
+      "optional": "(optionnel)",
+      "title": "Produit"
+    },
+    "progress": {
+      "cancel": "Annuler",
+      "step1": "Envoi des images",
+      "step2": "Composition du visuel (Gemini)",
+      "step3": "Rendu haute définition",
+      "text": "Cela peut prendre jusqu'à ~2 minutes. Gardez la page ouverte.",
+      "title": "Génération en cours…"
+    },
+    "quota": {
+      "cta": "Voir les formules",
+      "title": "Quota atteint"
+    },
+    "result": {
+      "alt": "Visuel généré",
+      "badge": "Décor composé par l'IA"
+    },
+    "srTitle": "Studio de génération de visuels",
+    "terms": "Conditions d'utilisation",
+    "theme": {
+      "one": "1 thème",
+      "title": "Thème de mise en scène"
+    },
+    "unitCost": "≈ {{amount}} par visuel ({{model}}{{size}}) · {{perHour}}/h, {{perDay}}/jour · 30 à 120 s",
+    "unitCostLoading": "Coût par visuel : chargement…",
+    "unverified": {
+      "title": "Confirmez votre adresse"
+    }
+  },
+  "terms": {
+    "accept": "J'ai lu et j'accepte ces documents.",
+    "acceptBtn": "Accepter et continuer",
+    "error": "Échec, réessayez.",
+    "intro_html": "Pour continuer à utiliser {{brand}}, merci de prendre connaissance et d'accepter les <a href=\"/legal.html#mentions\" target=\"_blank\" rel=\"noopener\" class=\"text-primary-container underline\">mentions légales</a>, la <a href=\"/legal.html#confidentialite\" target=\"_blank\" rel=\"noopener\" class=\"text-primary-container underline\">politique de confidentialité</a> et les <a href=\"/legal.html#cgu\" target=\"_blank\" rel=\"noopener\" class=\"text-primary-container underline\">conditions d'utilisation</a>.",
+    "logoutBtn": "Me déconnecter",
+    "title": "Mentions légales et CGU"
+  },
+  "themes": {
+    "classique": "Classique",
+    "ete": "Été",
+    "extravagant": "Extravagant",
+    "fete": "Nuit",
+    "luxe": "Luxe",
+    "noel": "Noël",
+    "sport": "Sport"
+  },
+  "time": {
+    "dayTime": "{{day}}, {{time}}",
+    "now": "À l'instant"
+  },
+  "ui": {
+    "deleteConfirm": "Supprimer définitivement cette génération ?\nLe visuel généré sera perdu, cette action est irréversible.",
+    "deleteFailed": "La suppression a échoué.",
+    "loadFailed": "Chargement impossible.",
+    "noFailures": "Aucun échec.",
+    "retryFailed": "La relance a échoué.",
+    "retrying": "Relance…"
+  },
+  "usage": {
+    "header_one": "{{count}} image · {{amount}} ce mois",
+    "header_other": "{{count}} images · {{amount}} ce mois"
+  },
+  "verify": {
+    "askEmail": "Votre adresse e-mail :",
+    "done": {
+      "text": "Votre compte est actif et vos générations offertes sont débloquées.",
+      "title": "Adresse confirmée"
+    },
+    "expired": {
+      "text": "Ce lien a déjà servi ou a dépassé sa durée de validité. Demandez-en un nouveau ci-dessous.",
+      "title": "Lien invalide ou expiré"
+    },
+    "failed": {
+      "text": "Réessayez dans quelques instants.",
+      "title": "Confirmation impossible"
+    },
+    "incomplete": {
+      "text": "Ce lien ne contient pas de jeton de confirmation. Ouvrez-le directement depuis l'e-mail reçu.",
+      "title": "Lien incomplet"
+    },
+    "pending": "Confirmation en cours…",
+    "resend": "Recevoir un nouveau lien",
+    "sent": {
+      "text": "Consultez votre boîte de réception.",
+      "title": "C'est envoyé"
+    }
+  },
+  "verifyBanner": {
+    "failed": "Envoi impossible",
+    "resend": "Renvoyer l'e-mail",
+    "sent": "E-mail envoyé",
+    "text_html": "Confirmez votre adresse <strong>{{email}}</strong> pour débloquer vos générations offertes. Pensez aux indésirables."
+  },
+  "withdrawal": {
+    "confirm": {
+      "checkbox": "J’ai lu le montant ci-dessus et je confirme ma rétractation.",
+      "cta": "Confirmer la rétractation",
+      "packEffect": "Les crédits encore en réserve sont retirés de votre compte.",
+      "subEffect": "Votre abonnement prend fin immédiatement et l'accès aux générations s'arrête.",
+      "title": "Confirmer votre rétractation"
+    },
+    "consent": {
+      "checkbox": "Je demande expressément que l'exécution commence immédiatement, avant la fin du délai de rétractation de 14 jours. Je reconnais perdre mon droit de rétractation pour chaque visuel effectivement généré et, si je me rétracte, devoir payer au prorata la part déjà fournie.",
+      "confirm": "Je confirme et je paie",
+      "explain": "Vous gardez votre droit de rétractation pendant 14 jours. Si vous l'exercez, vous ne payez que la part déjà utilisée : le solde vous est remboursé.",
+      "introPack": "Vous allez acheter {{count}} générations. Les crédits sont disponibles immédiatement.",
+      "introSub": "Vous allez souscrire la formule {{plan}}. Le service démarre immédiatement.",
+      "title": "Avant le paiement"
+    },
+    "cta": "Me rétracter",
+    "daysLeft_one": "Il vous reste {{count}} jour, jusqu’au {{date}}.",
+    "daysLeft_other": "Il vous reste {{count}} jours, jusqu’au {{date}}.",
+    "errors": {
+      "amountChanged": "Le montant a changé depuis l’affichage de cette page. Elle va se recharger."
+    },
+    "manualReview": "Vous avez déjà exercé ce droit récemment : votre demande sera enregistrée et traitée manuellement sous 14 jours.",
+    "notices": {
+      "done": "Rétractation enregistrée. {{amount}} vous seront remboursés sur votre moyen de paiement d’origine.",
+      "review": "Demande enregistrée ({{amount}}). Elle sera traitée manuellement sous 14 jours."
+    },
+    "pack": {
+      "detail": "Il vous reste {{left}} crédits sur {{total}} : le remboursement serait de {{amount}}.",
+      "title": "Droit de rétractation — pack de générations"
+    },
+    "sub": {
+      "detail": "Vous avez utilisé {{used}} des {{total}} générations de votre formule : le remboursement serait de {{amount}}.",
+      "title": "Droit de rétractation — 14 jours"
+    }
+  }
+}

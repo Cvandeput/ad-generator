@@ -3,8 +3,12 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Créer un compte — AdCraft</title>
-    <meta name="description" content="Créer un compte AdCraft. Formule gratuite incluse, sans carte bancaire." />
+
+    <!-- i18n : masque le document le temps de l'hydratation (cf. js/i18n-boot.js). -->
+    <script src="/js/i18n-boot.js"></script>
+
+    <title data-i18n="meta.register.title">Créer un compte</title>
+    <meta name="description" data-i18n-attr="content:meta.register.description" content="Créez votre compte. Formule gratuite incluse, sans carte bancaire." />
     <meta name="robots" content="noindex, nofollow" />
     <link rel="icon" href="/img/icons/favicon.ico" sizes="48x48" />
     <link rel="icon" type="image/png" sizes="32x32" href="/img/icons/favicon-32.png" />
@@ -20,62 +24,65 @@
   </head>
   <body class="bg-background text-on-surface font-body-base w-full min-h-screen flex flex-col">
     <div class="h-[60px] flex-shrink-0 flex items-center justify-between px-lg">
-      <a href="/" class="flex items-center gap-sm" aria-label="AdCraft — accueil">
-        <img src="/img/logo-adcraft.png" alt="AdCraft" width="105" height="24" class="h-6 w-auto" />
+      <a href="/" class="flex items-center gap-sm min-h-[44px]" aria-label="" data-i18n-attr="aria-label:nav.homeAria">
+        <img src="/img/logo-adcraft.webp" alt="" data-i18n-attr="alt:nav.logoAlt" width="105" height="24" class="h-6 w-auto" />
       </a>
-      <a href="/login.html" class="flex items-center gap-xs text-secondary hover:text-on-surface transition-colors">
-        <span class="font-label-md text-label-md">Déjà un compte ? Se connecter</span>
-        <span class="material-symbols-outlined text-[18px]">arrow_forward</span>
-      </a>
+      <div class="flex items-center gap-md">
+        <div id="lang-slot" class="flex items-center"></div>
+        <a href="/login.html" class="flex items-center gap-xs min-h-[44px] text-secondary hover:text-on-surface transition-colors">
+          <span class="font-label-md text-label-md" data-i18n="register.haveAccount">Déjà un compte ? Se connecter</span>
+          <span class="material-symbols-outlined text-[18px]" aria-hidden="true">arrow_forward</span>
+        </a>
+      </div>
     </div>
 
     <div class="flex-1 flex items-center justify-center px-lg pb-xl">
       <main class="w-full max-w-[420px] flex flex-col gap-lg">
         <div class="flex flex-col gap-xs">
-          <h1 class="font-display-lg text-display-lg text-on-surface">Créer un compte</h1>
-          <p id="mode-hint" class="font-body-base text-body-base text-secondary">Chargement…</p>
-          <p class="font-body-sm text-body-sm text-outline">Vous démarrez sur la formule gratuite, sans carte bancaire. Vous choisirez un abonnement juste après.</p>
+          <h1 class="font-display-lg text-display-lg text-on-surface" data-i18n="register.title">Créer un compte</h1>
+          <p id="mode-hint" class="font-body-base text-body-base text-secondary" data-i18n="common.loading">Chargement…</p>
+          <p class="font-body-sm text-body-sm text-outline" data-i18n="register.freeStart">Vous démarrez sur la formule gratuite, sans carte bancaire. Vous choisirez un abonnement juste après.</p>
         </div>
 
         <form id="register-form" class="flex flex-col gap-md hidden" novalidate>
           <div id="invite-field" class="flex flex-col gap-xs hidden">
-            <label class="font-label-md text-label-md text-on-surface" for="invite">Code d'invitation</label>
+            <label class="font-label-md text-label-md text-on-surface" for="invite" data-i18n="register.inviteCode">Code d'invitation</label>
             <input id="invite" name="invite" type="text" autocomplete="off" required spellcheck="false"
-              class="w-full h-[40px] px-md bg-surface-container-lowest border border-outline-variant rounded font-body-base text-on-surface placeholder:text-outline focus:outline-none focus:border-primary-container focus:ring-1 focus:ring-primary-container transition-colors" />
+              class="w-full h-11 lg:h-[40px] px-md bg-surface-container-lowest border border-outline rounded font-body-base text-on-surface placeholder:text-outline focus:outline-none focus:border-primary-container focus:ring-1 focus:ring-primary-container transition-colors" />
           </div>
           <div class="flex flex-col gap-xs">
-            <label class="font-label-md text-label-md text-on-surface" for="email">Adresse e-mail</label>
-            <input id="email" name="email" type="email" required autocomplete="username" maxlength="254" placeholder="nom@exemple.com"
-              class="w-full h-[40px] px-md bg-surface-container-lowest border border-outline-variant rounded font-body-base text-on-surface placeholder:text-outline focus:outline-none focus:border-primary-container focus:ring-1 focus:ring-primary-container transition-colors" />
+            <label class="font-label-md text-label-md text-on-surface" for="email" data-i18n="common.email">Adresse e-mail</label>
+            <input id="email" name="email" type="email" required autocomplete="username" maxlength="254" placeholder="nom@exemple.com" data-i18n-attr="placeholder:common.emailPlaceholder"
+              class="w-full h-11 lg:h-[40px] px-md bg-surface-container-lowest border border-outline rounded font-body-base text-on-surface placeholder:text-outline focus:outline-none focus:border-primary-container focus:ring-1 focus:ring-primary-container transition-colors" />
           </div>
           <div class="flex flex-col gap-xs">
-            <label class="font-label-md text-label-md text-on-surface" for="password">Mot de passe</label>
-            <input id="password" name="password" type="password" required autocomplete="new-password" minlength="12" maxlength="128" placeholder="12 caractères minimum"
+            <label class="font-label-md text-label-md text-on-surface" for="password" data-i18n="common.password">Mot de passe</label>
+            <input id="password" name="password" type="password" required autocomplete="new-password" minlength="12" maxlength="128" placeholder="12 caractères minimum" data-i18n-attr="placeholder:register.rules.length"
               aria-describedby="pw-rules"
-              class="w-full h-[40px] px-md bg-surface-container-lowest border border-outline-variant rounded font-body-base text-on-surface placeholder:text-outline focus:outline-none focus:border-primary-container focus:ring-1 focus:ring-primary-container transition-colors" />
+              class="w-full h-11 lg:h-[40px] px-md bg-surface-container-lowest border border-outline rounded font-body-base text-on-surface placeholder:text-outline focus:outline-none focus:border-primary-container focus:ring-1 focus:ring-primary-container transition-colors" />
             <ul id="pw-rules" class="flex flex-col gap-[2px] font-body-sm text-body-sm text-secondary" aria-live="polite">
-              <li data-rule="length" class="flex items-center gap-xs"><span class="material-symbols-outlined text-[15px] text-outline">radio_button_unchecked</span>12 caractères minimum</li>
-              <li data-rule="classes" class="flex items-center gap-xs"><span class="material-symbols-outlined text-[15px] text-outline">radio_button_unchecked</span>3 types parmi : minuscule, majuscule, chiffre, symbole</li>
-              <li data-rule="email" class="flex items-center gap-xs"><span class="material-symbols-outlined text-[15px] text-outline">radio_button_unchecked</span>Ne contient pas votre e-mail</li>
-              <li data-rule="match" class="flex items-center gap-xs"><span class="material-symbols-outlined text-[15px] text-outline">radio_button_unchecked</span>Les deux saisies correspondent</li>
+              <li data-rule="length" class="flex items-center gap-xs"><span class="material-symbols-outlined text-[15px] text-outline" aria-hidden="true">radio_button_unchecked</span><span data-i18n="register.rules.length">12 caractères minimum</span></li>
+              <li data-rule="classes" class="flex items-center gap-xs"><span class="material-symbols-outlined text-[15px] text-outline" aria-hidden="true">radio_button_unchecked</span><span data-i18n="register.rules.classes">3 types parmi : minuscule, majuscule, chiffre, symbole</span></li>
+              <li data-rule="email" class="flex items-center gap-xs"><span class="material-symbols-outlined text-[15px] text-outline" aria-hidden="true">radio_button_unchecked</span><span data-i18n="register.rules.email">Ne contient pas votre e-mail</span></li>
+              <li data-rule="match" class="flex items-center gap-xs"><span class="material-symbols-outlined text-[15px] text-outline" aria-hidden="true">radio_button_unchecked</span><span data-i18n="register.rules.match">Les deux saisies correspondent</span></li>
             </ul>
           </div>
           <div class="flex flex-col gap-xs">
-            <label class="font-label-md text-label-md text-on-surface" for="password2">Confirmer le mot de passe</label>
+            <label class="font-label-md text-label-md text-on-surface" for="password2" data-i18n="register.confirmPassword">Confirmer le mot de passe</label>
             <input id="password2" name="password2" type="password" required autocomplete="new-password" maxlength="128"
-              class="w-full h-[40px] px-md bg-surface-container-lowest border border-outline-variant rounded font-body-base text-on-surface placeholder:text-outline focus:outline-none focus:border-primary-container focus:ring-1 focus:ring-primary-container transition-colors" />
+              class="w-full h-11 lg:h-[40px] px-md bg-surface-container-lowest border border-outline rounded font-body-base text-on-surface placeholder:text-outline focus:outline-none focus:border-primary-container focus:ring-1 focus:ring-primary-container transition-colors" />
           </div>
 
           <label class="flex items-start gap-sm cursor-pointer p-md bg-surface-container-low border border-outline-variant rounded-lg">
-            <input id="terms" name="terms" type="checkbox" required class="mt-[2px] rounded border-outline-variant text-primary-container focus:ring-primary-container" />
-            <span class="font-body-sm text-body-sm text-on-surface">J'ai lu et j'accepte les <a href="/legal.html#mentions" target="_blank" rel="noopener" class="text-primary-container underline">mentions légales</a>, la <a href="/legal.html#confidentialite" target="_blank" rel="noopener" class="text-primary-container underline">politique de confidentialité</a> et les <a href="/legal.html#cgu" target="_blank" rel="noopener" class="text-primary-container underline">conditions d'utilisation</a>. Je certifie détenir les droits sur les photos que je déposerai.</span>
+            <input id="terms" name="terms" type="checkbox" required class="mt-[2px] w-5 h-5 shrink-0 rounded border-outline text-primary-container focus:ring-primary-container" />
+            <span class="font-body-sm text-body-sm text-on-surface" data-i18n-html="register.consent_html">J'ai lu et j'accepte les <a href="/legal.html#mentions" target="_blank" rel="noopener" class="text-primary-container underline">mentions légales</a>, la <a href="/legal.html#confidentialite" target="_blank" rel="noopener" class="text-primary-container underline">politique de confidentialité</a> et les <a href="/legal.html#cgu" target="_blank" rel="noopener" class="text-primary-container underline">conditions d'utilisation</a>. Je certifie détenir les droits sur les photos que je déposerai.</span>
           </label>
 
           <p id="error" class="font-body-sm text-body-sm text-error hidden" role="alert"></p>
           <p id="success" class="font-body-sm text-body-sm text-on-surface-variant hidden" role="status"></p>
 
           <button id="submit-btn" type="submit" disabled
-            class="w-full h-[40px] bg-primary-container text-on-primary rounded font-label-md text-label-md flex items-center justify-center hover:bg-primary transition-colors disabled:opacity-60">
+            class="w-full h-11 lg:h-[40px] bg-primary-container text-on-primary rounded font-label-md text-label-md flex items-center justify-center hover:bg-primary transition-colors disabled:opacity-60" data-i18n="register.submit">
             Créer mon compte
           </button>
         </form>
@@ -83,10 +90,10 @@
     </div>
 
     <footer class="px-lg py-md flex flex-wrap justify-center gap-md">
-      <span class="font-label-sm text-label-sm text-outline">© 2026 AdCraft</span>
-      <a href="/legal.html#mentions" class="font-label-sm text-label-sm text-secondary hover:text-on-surface">Mentions légales</a>
-      <a href="/legal.html#confidentialite" class="font-label-sm text-label-sm text-secondary hover:text-on-surface">Confidentialité</a>
-      <a href="/legal.html#cookies" class="font-label-sm text-label-sm text-secondary hover:text-on-surface">Cookies</a>
+      <span class="font-label-sm text-label-sm text-outline" data-i18n="footer.copyrightFixed">© 2026</span>
+      <a href="/legal.html#mentions" class="font-label-sm text-label-sm text-secondary hover:text-on-surface inline-flex items-center justify-center min-h-[44px] min-w-[44px] lg:min-h-0 lg:min-w-0" data-i18n="footer.legalNotice">Mentions légales</a>
+      <a href="/legal.html#confidentialite" class="font-label-sm text-label-sm text-secondary hover:text-on-surface inline-flex items-center justify-center min-h-[44px] min-w-[44px] lg:min-h-0 lg:min-w-0" data-i18n="footer.privacy">Confidentialité</a>
+      <a href="/legal.html#cookies" class="font-label-sm text-label-sm text-secondary hover:text-on-surface inline-flex items-center justify-center min-h-[44px] min-w-[44px] lg:min-h-0 lg:min-w-0" data-i18n="footer.cookies">Cookies</a>
     </footer>
 
     <script type="module" src="/js/register.js"></script>

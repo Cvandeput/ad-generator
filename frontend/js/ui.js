@@ -3,8 +3,9 @@
 
 import { api, ApiError } from './api.js';
 import { failureRow, escapeHtml } from './components.js';
+import { t } from './i18n.js';
 
-const DELETE_CONFIRM = 'Supprimer définitivement cette génération ?\nLe visuel généré sera perdu, cette action est irréversible.';
+const confirmDelete = () => confirm(t('ui.deleteConfirm'));
 
 function errMsg(err, fallback) {
   return err instanceof ApiError && err.message ? err.message : fallback;
@@ -19,7 +20,7 @@ export function wireGridDeletes(gridEl, { onDeleted } = {}) {
     const card = btn.closest('.js-card');
     const id = Number(btn.dataset.id);
     if (!card || !id) return;
-    if (!confirm(DELETE_CONFIRM)) return;
+    if (!confirmDelete()) return;
 
     const parent = card.parentNode;
     const anchor = card.nextSibling;
@@ -29,7 +30,7 @@ export function wireGridDeletes(gridEl, { onDeleted } = {}) {
       onDeleted?.(id);
     } catch (err) {
       parent.insertBefore(card, anchor); // restaure à sa place
-      alert(errMsg(err, 'La suppression a échoué.'));
+      alert(errMsg(err, t('ui.deleteFailed')));
     }
   });
 }
@@ -37,7 +38,7 @@ export function wireGridDeletes(gridEl, { onDeleted } = {}) {
 function setFailuresCount(details, n) {
   details.dataset.count = String(n);
   const label = details.querySelector('.js-failures-count');
-  if (label) label.textContent = `${n} génération${n > 1 ? 's' : ''} échouée${n > 1 ? 's' : ''}`;
+  if (label) label.textContent = t('history.failuresCount', { count: n });
   if (n <= 0) details.remove();
 }
 
@@ -52,15 +53,15 @@ export function wireFailures(rootEl, { withRetry = true, onResolved } = {}) {
 
   details.addEventListener('toggle', async () => {
     if (!details.open || loaded) return;
-    list.innerHTML = '<li class="py-sm font-body-sm text-body-sm text-secondary">Chargement…</li>';
+    list.innerHTML = `<li class="py-sm font-body-sm text-body-sm text-secondary">${escapeHtml(t('common.loading'))}</li>`;
     try {
       const { items } = await api.history('error');
       list.innerHTML =
         items.map((g) => failureRow(g, { withRetry })).join('') ||
-        '<li class="py-sm font-body-sm text-body-sm text-secondary">Aucun échec.</li>';
+        `<li class="py-sm font-body-sm text-body-sm text-secondary">${escapeHtml(t('ui.noFailures'))}</li>`;
       loaded = true;
     } catch (err) {
-      list.innerHTML = `<li class="py-sm font-body-sm text-body-sm text-error">${escapeHtml(errMsg(err, 'Chargement impossible.'))}</li>`;
+      list.innerHTML = `<li class="py-sm font-body-sm text-body-sm text-error">${escapeHtml(errMsg(err, t('ui.loadFailed')))}</li>`;
     }
   });
 
@@ -70,7 +71,7 @@ export function wireFailures(rootEl, { withRetry = true, onResolved } = {}) {
     const id = Number(row.dataset.id);
 
     if (e.target.closest('.js-delete')) {
-      if (!confirm(DELETE_CONFIRM)) return;
+      if (!confirmDelete()) return;
       const parent = row.parentNode;
       const anchor = row.nextSibling;
       row.remove(); // optimiste
@@ -79,7 +80,7 @@ export function wireFailures(rootEl, { withRetry = true, onResolved } = {}) {
         setFailuresCount(details, Number(details.dataset.count || 0) - 1);
       } catch (err) {
         parent.insertBefore(row, anchor);
-        alert(errMsg(err, 'La suppression a échoué.'));
+        alert(errMsg(err, t('ui.deleteFailed')));
       }
       return;
     }
@@ -87,14 +88,14 @@ export function wireFailures(rootEl, { withRetry = true, onResolved } = {}) {
     if (e.target.closest('.js-retry')) {
       const btn = e.target.closest('.js-retry');
       btn.disabled = true;
-      btn.textContent = 'Relance…';
+      btn.textContent = t('ui.retrying');
       try {
         await api.retry(id); // crée une nouvelle ligne (journal) ; l'échec reste
         onResolved?.(); // recharge : la réussite apparaît, compteurs à jour
       } catch (err) {
         btn.disabled = false;
-        btn.textContent = 'Relancer';
-        alert(errMsg(err, 'La relance a échoué.'));
+        btn.textContent = t('common.retry');
+        alert(errMsg(err, t('ui.retryFailed')));
       }
     }
   });

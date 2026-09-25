@@ -3,25 +3,38 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>AdCraft — Vos produits, mis en scène comme en studio</title>
-    <meta name="description" content="AdCraft compose un décor publicitaire cohérent autour de votre produit, sans jamais retoucher le packaging. Visuel 4:5 prêt à publier en moins de deux minutes." />
+
+    <!-- i18n : masque le document le temps de l'hydratation (cf. js/i18n-boot.js).
+         Script classique et bloquant : un module serait différé, donc trop tard. -->
+    <script src="/js/i18n-boot.js"></script>
+
+    <title data-i18n="meta.home.title">Vos produits, mis en scène comme en studio</title>
+    <meta name="description" data-i18n-attr="content:meta.home.description" content="Un décor publicitaire cohérent autour de votre produit, sans jamais retoucher le packaging. Visuel 4:5 prêt à publier en moins de deux minutes." />
     <link rel="canonical" href="https://ads.devwork.cloud/" />
+    <link rel="alternate" hreflang="fr" href="https://ads.devwork.cloud/" />
+    <link rel="alternate" hreflang="en" href="https://ads.devwork.cloud/?lang=en" />
+    <link rel="alternate" hreflang="nl" href="https://ads.devwork.cloud/?lang=nl" />
+    <link rel="alternate" hreflang="x-default" href="https://ads.devwork.cloud/" />
     <meta name="robots" content="index, follow" />
     <meta name="theme-color" content="#1d4ed8" />
 
     <meta property="og:type" content="website" />
-    <meta property="og:site_name" content="AdCraft" />
+    <!-- og:site_name porte le nom du produit : il n'est pas écrit ici mais
+         injecté depuis la constante BRAND (js/i18n.js) — voir docs/I18N.md. -->
+    <meta property="og:site_name" data-i18n-attr="content:meta.siteName" content="" />
     <meta property="og:locale" content="fr_BE" />
+    <meta property="og:locale:alternate" content="en_US" />
+    <meta property="og:locale:alternate" content="nl_BE" />
     <meta property="og:url" content="https://ads.devwork.cloud/" />
-    <meta property="og:title" content="AdCraft — Vos produits, mis en scène comme en studio" />
-    <meta property="og:description" content="Déposez une photo de votre produit, choisissez un thème : AdCraft compose le décor et conserve le packaging à l'identique." />
+    <meta property="og:title" data-i18n-attr="content:meta.home.ogTitle" content="Vos produits, mis en scène comme en studio" />
+    <meta property="og:description" data-i18n-attr="content:meta.home.ogDescription" content="Déposez une photo de votre produit, choisissez un thème : le décor est composé et le packaging conservé à l'identique." />
     <meta property="og:image" content="https://ads.devwork.cloud/img/site/og-image.jpg" />
     <meta property="og:image:width" content="1200" />
     <meta property="og:image:height" content="630" />
-    <meta property="og:image:alt" content="Canette Red Bull : photo brute à gauche, visuel publicitaire généré sur un terrain de basket à droite" />
+    <meta property="og:image:alt" data-i18n-attr="content:meta.home.ogImageAlt" content="Canette Red Bull : photo brute à gauche, visuel publicitaire généré sur un terrain de basket à droite" />
     <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:title" content="AdCraft — Vos produits, mis en scène comme en studio" />
-    <meta name="twitter:description" content="Photo brute → visuel publicitaire 4:5, packaging intact." />
+    <meta name="twitter:title" data-i18n-attr="content:meta.home.ogTitle" content="Vos produits, mis en scène comme en studio" />
+    <meta name="twitter:description" data-i18n-attr="content:meta.home.twitterDescription" content="Photo brute → visuel publicitaire 4:5, packaging intact." />
     <meta name="twitter:image" content="https://ads.devwork.cloud/img/site/og-image.jpg" />
 
     <link rel="icon" href="/img/icons/favicon.ico" sizes="48x48" />
@@ -37,15 +50,17 @@
     <link rel="stylesheet" href="/css/app.css" />
     <link rel="preload" as="image" href="/img/site/hero-apres.webp" />
 
-    <script type="application/ld+json">
+    <!-- `name` et `description` sont remplis au runtime par js/i18n.js (nom du
+         produit = constante, description = dictionnaire de la langue active). -->
+    <script type="application/ld+json" data-i18n-ld="meta.home.ldDescription">
       {
         "@context": "https://schema.org",
         "@type": "SoftwareApplication",
-        "name": "AdCraft",
+        "name": "",
         "url": "https://ads.devwork.cloud/",
         "applicationCategory": "DesignApplication",
         "operatingSystem": "Web",
-        "description": "Générateur de visuels publicitaires : dépose une photo produit, choisis un thème, obtiens un visuel 4:5 avec le packaging conservé à l'identique.",
+        "description": "Générateur de visuels publicitaires : déposez une photo produit, choisissez un thème, obtenez un visuel 4:5 avec le packaging conservé à l'identique.",
         "image": "https://ads.devwork.cloud/img/site/og-image.jpg",
         "inLanguage": "fr",
         "offers": { "@type": "Offer", "availability": "https://schema.org/LimitedAvailability", "price": "0", "priceCurrency": "EUR", "description": "Accès sur invitation" }
@@ -53,7 +68,7 @@
     </script>
   </head>
   <body class="bg-background text-on-surface font-body-base antialiased">
-    <a href="#contenu" class="sr-only focus:not-sr-only focus:absolute focus:top-sm focus:left-sm focus:z-[100] focus:bg-surface-container-lowest focus:px-md focus:py-sm focus:rounded focus:border focus:border-outline-variant">Aller au contenu</a>
+    <a href="#contenu" class="sr-only focus:not-sr-only focus:absolute focus:top-sm focus:left-sm focus:z-[100] focus:bg-surface-container-lowest focus:px-md focus:py-sm focus:rounded focus:border focus:border-outline-variant" data-i18n="common.skipToContent">Aller au contenu</a>
 
     <!-- TopNavBar (rendue par js/nav.js : état connecté, menu mobile) -->
     <header id="site-header" data-page="home" class="bg-surface-container-lowest border-b border-outline-variant sticky top-0 z-50"></header>
@@ -61,33 +76,33 @@
     <main id="contenu">
       <!-- Hero -->
       <section class="bg-surface-container-lowest border-b border-outline-variant">
-        <div class="w-full max-w-container-max mx-auto px-lg py-16 lg:py-24 flex flex-col lg:flex-row items-center gap-12 lg:gap-16">
+        <div class="w-full max-w-container-max mx-auto px-lg py-16 lg:py-24 flex flex-col lg:flex-row items-center gap-12 xl:gap-16">
           <div class="flex-1 min-w-0 flex flex-col gap-lg">
-            <span class="font-label-sm text-label-sm font-semibold tracking-[0.10em] uppercase text-secondary">Photographie produit générative</span>
-            <h1 class="font-display-xl text-display-lg md:text-display-xl text-on-surface [text-wrap:pretty]">Vos produits, mis en scène comme en studio.</h1>
-            <p class="font-body-base text-body-base text-on-surface-variant max-w-[480px] leading-6">Déposez une photo de votre produit. AdCraft compose un décor cohérent avec ce que vous vendez, sans jamais retoucher le packaging. Le visuel est prêt en moins de deux minutes.</p>
+            <span class="font-label-sm text-label-sm font-semibold tracking-[0.10em] uppercase text-secondary" data-i18n="home.hero.eyebrow">Photographie produit générative</span>
+            <h1 class="font-display-xl text-display-lg md:text-display-xl text-on-surface [text-wrap:pretty]" data-i18n="home.hero.title">Vos produits, mis en scène comme en studio.</h1>
+            <p class="font-body-base text-body-base text-on-surface-variant max-w-[480px] leading-6" data-i18n="home.hero.text">Déposez une photo de votre produit. Notre outil compose un décor cohérent avec ce que vous vendez, sans jamais retoucher le packaging. Le visuel est prêt en moins de deux minutes.</p>
             <div class="flex items-center gap-md flex-wrap">
-              <a href="/app.html" class="h-[42px] px-lg rounded bg-primary-container text-on-primary flex items-center font-label-md text-label-md hover:bg-primary transition-colors">Ouvrir le studio</a>
-              <a href="#galerie" class="h-[42px] px-lg rounded border border-outline-variant bg-surface-container-lowest text-on-surface-variant flex items-center font-label-md text-label-md hover:bg-surface-container transition-colors">Voir des exemples</a>
+              <a href="/app.html" class="h-11 px-lg rounded bg-primary-container text-on-primary flex items-center font-label-md text-label-md hover:bg-primary transition-colors" data-cta="studio" data-i18n="home.hero.ctaStudio">Ouvrir le studio</a>
+              <a href="#galerie" class="h-11 px-lg rounded border border-outline-variant bg-surface-container-lowest text-on-surface-variant flex items-center font-label-md text-label-md hover:bg-surface-container transition-colors" data-i18n="home.hero.ctaExamples">Voir des exemples</a>
             </div>
-            <span class="font-label-sm text-label-sm text-outline">Sept thèmes de mise en scène · format 4:5 prêt pour les réseaux · packaging conservé à l'identique · plusieurs produits par visuel</span>
+            <span class="font-label-sm text-label-sm text-outline" data-i18n="home.hero.bullets">Sept thèmes de mise en scène · format 4:5 prêt pour les réseaux · packaging conservé à l'identique · plusieurs produits par visuel</span>
           </div>
 
-          <div class="w-full lg:w-[620px] flex-shrink-0 flex items-stretch gap-md">
+          <div class="w-full md:max-w-[620px] lg:max-w-none lg:w-[46%] xl:w-[620px] flex-shrink-0 flex items-stretch gap-md">
             <figure class="flex-1 flex flex-col gap-sm m-0">
               <div class="aspect-[4/5] rounded-xl overflow-hidden border border-outline-variant bg-surface-container-low">
-                <img src="/img/site/hero-avant.webp" width="600" height="600" alt="Canette Red Bull, photo brute prise au smartphone" class="w-full h-full object-cover" />
+                <img src="/img/site/hero-avant.webp" width="600" height="600" alt="Canette Red Bull, photo brute prise au smartphone" data-i18n-attr="alt:home.hero.beforeAlt" class="w-full h-full object-cover" />
               </div>
-              <figcaption class="font-label-sm text-label-sm font-semibold tracking-[0.08em] uppercase text-outline">Photo brute</figcaption>
+              <figcaption class="font-label-sm text-label-sm font-semibold tracking-[0.08em] uppercase text-outline" data-i18n="home.labels.raw">Photo brute</figcaption>
             </figure>
             <div class="w-7 flex-shrink-0 flex items-center justify-center">
               <span class="material-symbols-outlined text-outline text-[22px]" aria-hidden="true">arrow_forward</span>
             </div>
             <figure class="flex-1 flex flex-col gap-sm m-0">
               <div class="aspect-[4/5] rounded-xl overflow-hidden border border-outline-variant shadow-[0_12px_32px_rgba(26,28,28,0.12)]">
-                <img src="/img/site/hero-apres.webp" width="896" height="1152" alt="Canette Red Bull mise en scène sur un terrain de basket au coucher du soleil, visuel généré par AdCraft" class="w-full h-full object-cover" fetchpriority="high" />
+                <img src="/img/site/hero-apres.webp" width="896" height="1152" alt="Canette Red Bull mise en scène sur un terrain de basket au coucher du soleil, visuel publicitaire généré" data-i18n-attr="alt:home.hero.afterAlt" class="w-full h-full object-cover" fetchpriority="high" />
               </div>
-              <figcaption class="font-label-sm text-label-sm font-semibold tracking-[0.08em] uppercase text-primary-container">Visuel généré</figcaption>
+              <figcaption class="font-label-sm text-label-sm font-semibold tracking-[0.08em] uppercase text-primary-container" data-i18n="home.labels.generated">Visuel généré</figcaption>
             </figure>
           </div>
         </div>
@@ -97,24 +112,24 @@
       <section id="fonctionnement" class="border-b border-outline-variant scroll-mt-[60px]">
         <div class="w-full max-w-container-max mx-auto px-lg py-16 lg:py-24 flex flex-col gap-xl">
           <div class="flex flex-col gap-sm">
-            <h2 class="font-display-lg text-display-lg text-on-surface">Trois informations suffisent</h2>
-            <p class="font-body-base text-body-base text-secondary max-w-[560px]">Pas de brief à rédiger, pas de logiciel de retouche à ouvrir.</p>
+            <h2 class="font-display-lg text-display-lg text-on-surface" data-i18n="home.steps.title">Trois informations suffisent</h2>
+            <p class="font-body-base text-body-base text-secondary max-w-[560px]" data-i18n="home.steps.subtitle">Pas de brief à rédiger, pas de logiciel de retouche à ouvrir.</p>
           </div>
-          <div class="grid grid-cols-1 md:grid-cols-3 gap-lg">
+          <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-lg">
             <article class="bg-surface-container-lowest border border-outline-variant rounded-xl p-lg flex flex-col gap-sm">
               <span class="font-label-sm text-label-sm font-semibold tracking-[0.08em] text-primary-container">01</span>
-              <h3 class="font-headline-md text-headline-md text-on-surface">Déposez vos photos</h3>
-              <p class="font-body-base text-body-base text-on-surface-variant">Une à quatorze photos, même prises au smartphone. Un produit par photo, ou plusieurs produits sur une même photo : tous apparaîtront dans le visuel.</p>
+              <h3 class="font-headline-md text-headline-md text-on-surface" data-i18n="home.steps.one.title">Déposez vos photos</h3>
+              <p class="font-body-base text-body-base text-on-surface-variant" data-i18n="home.steps.one.text">Une à quatorze photos, même prises au smartphone. Un produit par photo, ou plusieurs produits sur une même photo : tous apparaîtront dans le visuel.</p>
             </article>
             <article class="bg-surface-container-lowest border border-outline-variant rounded-xl p-lg flex flex-col gap-sm">
               <span class="font-label-sm text-label-sm font-semibold tracking-[0.08em] text-primary-container">02</span>
-              <h3 class="font-headline-md text-headline-md text-on-surface">Décrivez le produit</h3>
-              <p class="font-body-base text-body-base text-on-surface-variant">Marque, catégorie, variante. Précisez la forme réelle — canette, sachet, pot — pour que le décor tombe juste.</p>
+              <h3 class="font-headline-md text-headline-md text-on-surface" data-i18n="home.steps.two.title">Décrivez le produit</h3>
+              <p class="font-body-base text-body-base text-on-surface-variant" data-i18n="home.steps.two.text">Marque, catégorie, variante. Précisez la forme réelle — canette, sachet, pot — pour que le décor tombe juste.</p>
             </article>
             <article class="bg-surface-container-lowest border border-outline-variant rounded-xl p-lg flex flex-col gap-sm">
               <span class="font-label-sm text-label-sm font-semibold tracking-[0.08em] text-primary-container">03</span>
-              <h3 class="font-headline-md text-headline-md text-on-surface">Choisissez un thème</h3>
-              <p class="font-body-base text-body-base text-on-surface-variant">Classique, Été, Sport, Luxe… ou écrivez vous-même le décor voulu. Le reste est composé pour vous.</p>
+              <h3 class="font-headline-md text-headline-md text-on-surface" data-i18n="home.steps.three.title">Choisissez un thème</h3>
+              <p class="font-body-base text-body-base text-on-surface-variant" data-i18n="home.steps.three.text">Classique, Été, Sport, Luxe… ou écrivez vous-même le décor voulu. Le reste est composé pour vous.</p>
             </article>
           </div>
         </div>
@@ -124,33 +139,33 @@
       <section id="galerie" class="bg-surface-container-lowest border-b border-outline-variant scroll-mt-[60px]">
         <div class="w-full max-w-container-max mx-auto px-lg py-16 lg:py-24 flex flex-col gap-xl">
           <div class="flex flex-col gap-sm">
-            <h2 class="font-display-lg text-display-lg text-on-surface">Exemples</h2>
-            <p class="font-body-base text-body-base text-secondary">Des visuels réellement produits par l'outil, sans retouche.</p>
+            <h2 class="font-display-lg text-display-lg text-on-surface" data-i18n="home.gallery.title">Exemples</h2>
+            <p class="font-body-base text-body-base text-secondary" data-i18n="home.gallery.subtitle">Des visuels réellement produits par l'outil, sans retouche.</p>
           </div>
-          <div class="grid grid-cols-2 md:grid-cols-4 gap-lg md:gap-xl">
+          <div class="grid grid-cols-2 lg:grid-cols-4 gap-lg lg:gap-xl">
             <figure class="flex flex-col gap-sm m-0">
               <div class="aspect-[4/5] rounded-xl overflow-hidden border border-outline-variant bg-surface-container-low">
-                <img src="/img/site/galerie-1.webp" width="896" height="1152" alt="Sachet de chips Lay's mis en scène sur un plan de travail en bois" class="w-full h-full object-cover" loading="lazy" />
+                <img src="/img/site/galerie-1.webp" width="896" height="1152" alt="Sachet de chips Lay's mis en scène sur un plan de travail en bois" data-i18n-attr="alt:home.gallery.item1Alt" class="w-full h-full object-cover" loading="lazy" />
               </div>
-              <figcaption class="font-label-md text-label-md text-on-surface-variant">Chips · Classique</figcaption>
+              <figcaption class="font-label-md text-label-md text-on-surface-variant" data-i18n="home.gallery.item1Caption">Chips · Classique</figcaption>
             </figure>
             <figure class="flex flex-col gap-sm m-0">
               <div class="aspect-[4/5] rounded-xl overflow-hidden border border-outline-variant bg-surface-container-low">
-                <img src="/img/site/histo-2.webp" width="896" height="1152" alt="Canette Red Bull mise en scène dans une ambiance nocturne néon" class="w-full h-full object-cover" loading="lazy" />
+                <img src="/img/site/histo-2.webp" width="896" height="1152" alt="Canette Red Bull mise en scène dans une ambiance nocturne néon" data-i18n-attr="alt:home.gallery.item2Alt" class="w-full h-full object-cover" loading="lazy" />
               </div>
-              <figcaption class="font-label-md text-label-md text-on-surface-variant">Boisson · Nuit</figcaption>
+              <figcaption class="font-label-md text-label-md text-on-surface-variant" data-i18n="home.gallery.item2Caption">Boisson · Nuit</figcaption>
             </figure>
             <figure class="flex flex-col gap-sm m-0">
               <div class="aspect-[4/5] rounded-xl overflow-hidden border border-outline-variant bg-surface-container-low">
-                <img src="/img/site/galerie-3.webp" width="896" height="1152" alt="Bouteille de champagne mise en scène dans une salle à manger élégante" class="w-full h-full object-cover" loading="lazy" />
+                <img src="/img/site/galerie-3.webp" width="896" height="1152" alt="Bouteille de champagne mise en scène dans une salle à manger élégante" data-i18n-attr="alt:home.gallery.item3Alt" class="w-full h-full object-cover" loading="lazy" />
               </div>
-              <figcaption class="font-label-md text-label-md text-on-surface-variant">Alcool · Luxe</figcaption>
+              <figcaption class="font-label-md text-label-md text-on-surface-variant" data-i18n="home.gallery.item3Caption">Alcool · Luxe</figcaption>
             </figure>
             <figure class="flex flex-col gap-sm m-0">
               <div class="aspect-[4/5] rounded-xl overflow-hidden border border-outline-variant bg-surface-container-low">
-                <img src="/img/site/galerie-4.webp" width="896" height="1152" alt="Boîte de Ferrero Rocher mise en scène devant un sapin de Noël" class="w-full h-full object-cover" loading="lazy" />
+                <img src="/img/site/galerie-4.webp" width="896" height="1152" alt="Boîte de Ferrero Rocher mise en scène devant un sapin de Noël" data-i18n-attr="alt:home.gallery.item4Alt" class="w-full h-full object-cover" loading="lazy" />
               </div>
-              <figcaption class="font-label-md text-label-md text-on-surface-variant">Confiserie · Noël</figcaption>
+              <figcaption class="font-label-md text-label-md text-on-surface-variant" data-i18n="home.gallery.item4Caption">Confiserie · Noël</figcaption>
             </figure>
           </div>
         </div>
@@ -158,24 +173,24 @@
 
       <!-- Fidélité -->
       <section class="border-b border-outline-variant">
-        <div class="w-full max-w-container-max mx-auto px-lg py-16 lg:py-24 flex flex-col lg:flex-row items-center gap-12 lg:gap-16">
+        <div class="w-full max-w-container-max mx-auto px-lg py-16 lg:py-24 flex flex-col lg:flex-row items-center gap-12 xl:gap-16">
           <div class="flex-1 flex flex-col gap-md">
-            <h2 class="font-display-lg text-display-lg text-on-surface">Le packaging reste le vôtre</h2>
-            <p class="font-body-base text-body-base text-on-surface-variant max-w-[520px] leading-[23px]">L'étiquette, le logo, la typographie et les couleurs sont repris de vos photos, sans réinterprétation. Seul le décor autour du produit est composé. C'est la contrainte qui distingue un visuel utilisable d'une image d'illustration.</p>
-            <p class="font-body-sm text-body-sm text-secondary max-w-[520px]">Vos photos sont transmises à Google Cloud (Vertex AI) le temps de la génération, puis conservées dans votre historique jusqu'à ce que vous les supprimiez. <a href="/legal.html#confidentialite" class="text-primary-container underline">Politique de confidentialité</a>.</p>
+            <h2 class="font-display-lg text-display-lg text-on-surface" data-i18n="home.fidelity.title">Le packaging reste le vôtre</h2>
+            <p class="font-body-base text-body-base text-on-surface-variant max-w-[520px] leading-[23px]" data-i18n="home.fidelity.text">L'étiquette, le logo, la typographie et les couleurs sont repris de vos photos, sans réinterprétation. Seul le décor autour du produit est composé. C'est la contrainte qui distingue un visuel utilisable d'une image d'illustration.</p>
+            <p class="font-body-sm text-body-sm text-secondary max-w-[520px]" data-i18n-html="home.fidelity.privacy_html">Vos photos sont transmises à Google Cloud (Vertex AI) le temps de la génération, puis conservées dans votre historique jusqu'à ce que vous les supprimiez. <a href="/legal.html#confidentialite" class="text-primary-container underline">Politique de confidentialité</a>.</p>
           </div>
-          <div class="w-full lg:w-[560px] flex-shrink-0 flex gap-md">
+          <div class="w-full md:max-w-[560px] lg:max-w-none lg:w-[42%] xl:w-[560px] flex-shrink-0 flex gap-md">
             <figure class="flex-1 flex flex-col gap-sm m-0">
               <div class="aspect-square rounded-xl overflow-hidden border border-outline-variant bg-surface-container-low">
-                <img src="/img/site/studio-source-1.webp" width="800" height="800" alt="Pot de Nutella, photo brute" class="w-full h-full object-cover" loading="lazy" />
+                <img src="/img/site/studio-source-1.webp" width="800" height="800" alt="Pot de Nutella, photo brute" data-i18n-attr="alt:home.fidelity.beforeAlt" class="w-full h-full object-cover" loading="lazy" />
               </div>
-              <figcaption class="font-label-sm text-label-sm font-semibold tracking-[0.08em] uppercase text-outline">Photo brute</figcaption>
+              <figcaption class="font-label-sm text-label-sm font-semibold tracking-[0.08em] uppercase text-outline" data-i18n="home.labels.raw">Photo brute</figcaption>
             </figure>
             <figure class="flex-1 flex flex-col gap-sm m-0">
               <div class="aspect-square rounded-xl overflow-hidden border border-outline-variant">
-                <img src="/img/site/studio-apercu.webp" width="896" height="1152" alt="Pot de Nutella mis en scène sur une planche en bois avec des noisettes" class="w-full h-full object-cover" loading="lazy" />
+                <img src="/img/site/studio-apercu.webp" width="896" height="1152" alt="Pot de Nutella mis en scène sur une planche en bois avec des noisettes" data-i18n-attr="alt:home.fidelity.afterAlt" class="w-full h-full object-cover" loading="lazy" />
               </div>
-              <figcaption class="font-label-sm text-label-sm font-semibold tracking-[0.08em] uppercase text-primary-container">Visuel généré</figcaption>
+              <figcaption class="font-label-sm text-label-sm font-semibold tracking-[0.08em] uppercase text-primary-container" data-i18n="home.labels.generated">Visuel généré</figcaption>
             </figure>
           </div>
         </div>

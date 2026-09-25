@@ -1,0 +1,763 @@
+{
+  "account": {
+    "delete": {
+      "checkbox": "Ik begrijp dat deze verwijdering definitief is.",
+      "confirm": "Definitief verwijderen",
+      "cta": "Mijn account verwijderen",
+      "doneNotice": "Uw account is verwijderd. Uw abonnement is opgezegd en uw afbeeldingen zijn gewist.",
+      "erased": [
+        "Uw e-mailadres en uw wachtwoord: de account wordt anoniem en niemand kan er nog op inloggen.",
+        "De foto’s die u hebt geüpload en de gegenereerde visuals ({{count}}), van de schijf verwijderd.",
+        "Uw sessies op al uw toestellen, en de beschrijvingen die u hebt ingevoerd."
+      ],
+      "erasedTitle": "Wat wordt gewist",
+      "intro": "Deze handeling is onomkeerbaar. Lees wat ze precies doet voordat u bevestigt.",
+      "kept": [
+        "De verbruiksregels ({{generations}}) zonder uw naam: datum, thema, kostprijs. Ze zijn niet meer tot u herleidbaar.",
+        "De reeds uitgereikte facturen, bij onze betaaldienstverlener, gedurende {{years}} jaar."
+      ],
+      "keptTitle": "Wat wordt bewaard",
+      "password": "Uw wachtwoord, ter bevestiging",
+      "passwordRequired": "Voer uw wachtwoord in ter bevestiging.",
+      "teaser": "U kunt uw account op elk moment verwijderen. We leggen eerst uit wat wordt gewist en wat wordt bewaard.",
+      "title": "Uw account verwijderen",
+      "why": "Het bewaren van factuurgegevens beantwoordt aan een boekhoudkundige verplichting; het dekt noch uw profiel, noch uw foto’s, die wel degelijk worden verwijderd."
+    },
+    "title": "Uw account"
+  },
+  "admin": {
+    "gens": {
+      "deleteConfirm": "Generatie #{{id}} en de bijbehorende bestanden verwijderen?",
+      "failed": "mislukt",
+      "filterAria": "Generaties filteren op status",
+      "head": [
+        "#",
+        "Account",
+        "Merk",
+        "Thema",
+        "Status",
+        "Model",
+        "Producten",
+        "AL",
+        "Kost",
+        "Datum",
+        ""
+      ],
+      "regionAria": "Recente generaties (horizontaal schuivende tabel)",
+      "rowStatus": {
+        "done": "geslaagd",
+        "error": "mislukt",
+        "pending": "bezig"
+      },
+      "status": {
+        "all": "Alle",
+        "done": "Geslaagd",
+        "error": "Mislukt",
+        "pending": "Bezig"
+      },
+      "title": "Recente generaties"
+    },
+    "models": {
+      "head": [
+        "Model",
+        "Generaties",
+        "Kost"
+      ],
+      "regionAria": "Gebruikte modellen (horizontaal schuivende tabel)",
+      "title": "Gebruikte modellen"
+    },
+    "noData": "Geen gegevens.",
+    "notAdmin": "Deze console is voorbehouden aan beheerders.",
+    "stats": {
+      "accounts": "Accounts",
+      "accountsHint": "{{verified}} geverifieerd · {{week}} deze week",
+      "generations": "Generaties",
+      "generationsHint": "{{done}} geslaagd · {{errors}} mislukt",
+      "thisMonth": "Deze maand",
+      "thisMonthHint": "{{amount}} · vandaag {{today}}",
+      "totalCost": "Totale kost"
+    },
+    "subtitle_html": "Voorbehouden aan de accounts in <code>ADMIN_EMAILS</code>. Onbeperkt genereren, geen quotum.",
+    "themes": {
+      "artDirector": "Artistieke leiding: {{auto}} decors samengesteld, {{fallback}} keer teruggevallen{{rate}}.",
+      "failureRate": " ({{pct}} mislukkingen van de tekstnode)",
+      "head": [
+        "Thema",
+        "Generaties"
+      ],
+      "regionAria": "Meest gevraagde thema’s (horizontaal schuivende tabel)",
+      "title": "Meest gevraagde thema’s"
+    },
+    "title": "Beheer",
+    "users": {
+      "deleteConfirm": "{{email}} definitief verwijderen? Het account, de geschiedenis en de bestanden worden gewist. Onomkeerbaar.",
+      "deletedOn": "Account verwijderd op {{date}}",
+      "head": [
+        "#",
+        "E-mail",
+        "Formule",
+        "Geslaagd",
+        "Kost",
+        "Credits",
+        "Registratie",
+        "Laatste aanmelding",
+        "Acties"
+      ],
+      "lockedTitle": "Account vergrendeld",
+      "noActions": "account verwijderd",
+      "planAdmin": "admin (onbeperkt)",
+      "regionAria": "Accounts (horizontaal schuivende tabel)",
+      "revoke": "Sessies intrekken",
+      "searchAria": "Accounts filteren op e-mailadres",
+      "searchPlaceholder": "Filteren op e-mailadres…",
+      "showDeleted": "Verwijderde accounts",
+      "title": "Accounts",
+      "unlock": "Ontgrendelen",
+      "unverifiedTitle": "Adres niet bevestigd",
+      "verify": "Verifiëren"
+    }
+  },
+  "categories": {
+    "alcool": "Alcohol",
+    "autre": "Andere",
+    "boisson": "Drank",
+    "boisson_énergisante": "Energiedrank",
+    "chips": "Chips",
+    "cosmétique": "Cosmetica",
+    "parfum": "Parfum",
+    "snack": "Snack",
+    "épicerie": "Voeding"
+  },
+  "common": {
+    "backHome": "Terug naar de startpagina",
+    "cancel": "Annuleren",
+    "delete": "Verwijderen",
+    "download": "Downloaden",
+    "email": "E-mailadres",
+    "emailPlaceholder": "naam@voorbeeld.be",
+    "loading": "Laden…",
+    "password": "Wachtwoord",
+    "retry": "Opnieuw",
+    "sending": "Versturen…",
+    "skipToContent": "Naar de inhoud"
+  },
+  "cookies": {
+    "ok": "Begrepen",
+    "region": "Cookiemelding",
+    "text_html": "{{brand}} gebruikt alleen een technische sessiecookie, die nodig is om u aangemeld te houden. Geen reclame- of trackingcookies. <a href=\"/legal.html#cookies\" class=\"text-primary-container underline\">Meer weten</a>"
+  },
+  "errors": {
+    "code": {
+      "ADMIN_ACCOUNT": "Een beheerdersaccount kan niet via deze pagina worden verwijderd.",
+      "ALREADY_PENDING": "Er wordt al een aanvraag behandeld.",
+      "AMOUNT_CHANGED": "Het bedrag is gewijzigd, bevestig opnieuw.",
+      "BAD_PASSWORD": "Onjuist wachtwoord.",
+      "EMAIL_NOT_VERIFIED": "Bevestig uw e-mailadres om een generatie te starten.",
+      "GENERATIONS_PENDING": "Er lopen nog generaties; probeer het opnieuw zodra ze klaar zijn.",
+      "NOT_ELIGIBLE": "Herroeping is niet mogelijk voor deze overeenkomst.",
+      "NO_PACK": "Er is geen generatiepakket dat kan worden herroepen.",
+      "NO_SUBSCRIPTION": "Er is geen lopende overeenkomst die kan worden herroepen.",
+      "QUOTA_EXCEEDED": "Maandquotum bereikt. Verander van formule of koop een pakket.",
+      "SUBSCRIPTION_CANCEL_FAILED": "Uw abonnement kon niet worden opgezegd. Probeer het zo meteen opnieuw.",
+      "WINDOW_EXPIRED": "De herroepingstermijn van 14 dagen is verstreken.",
+      "WITHDRAWAL_CONSENT_REQUIRED": "U moet uitdrukkelijk verzoeken dat de dienst onmiddellijk start om verder te gaan."
+    },
+    "generic": "Er liep iets mis. Probeer opnieuw.",
+    "network": "Geen verbinding met de server",
+    "status": {
+      "400": "Ongeldige aanvraag.",
+      "401": "Sessie verlopen. Meld u opnieuw aan.",
+      "402": "Quotum bereikt. Verander van formule of koop een generatiepakket.",
+      "403": "U mag deze actie niet uitvoeren.",
+      "404": "Niet gevonden.",
+      "409": "Dit botst met de huidige toestand van het account.",
+      "413": "Bestand te groot.",
+      "415": "Bestandsformaat wordt niet ondersteund.",
+      "429": "Te veel aanvragen in korte tijd. Wacht even.",
+      "500": "De server liep tegen een probleem aan. Probeer het straks opnieuw."
+    }
+  },
+  "footer": {
+    "contact": "Contact",
+    "cookies": "Cookies",
+    "copyright": "© {{year}} {{brand}}",
+    "copyrightFixed": "© 2026 {{brand}}",
+    "legalLinks": "Juridische links",
+    "legalNotice": "Wettelijke vermeldingen",
+    "privacy": "Privacy",
+    "terms": "Voorwaarden"
+  },
+  "history": {
+    "empty": {
+      "none": "Nog geen visual gegenereerd. Start een generatie en uw werk verschijnt hier.",
+      "title": "Geen resultaten",
+      "withFailures": "Geen geslaagde generatie voor deze selectie — klap de mislukkingen hierboven open om te zien waarom."
+    },
+    "failureReason": "Reden: {{message}}",
+    "failuresCount_one": "{{count}} mislukte generatie",
+    "failuresCount_other": "{{count}} mislukte generaties",
+    "filters": {
+      "allCategories": "Alle categorieën",
+      "allThemes": "Alle thema’s",
+      "brandAria": "Een merk zoeken",
+      "brandPlaceholder": "Een merk zoeken…",
+      "categoryAria": "Filteren op categorie",
+      "reset": "Wissen",
+      "sortAria": "Visuals sorteren",
+      "sortBrand": "Merk (A → Z)",
+      "sortNewest": "Nieuwste eerst",
+      "sortOldest": "Oudste eerst",
+      "themeAria": "Filteren op thema"
+    },
+    "loadMore": "Meer laden",
+    "subtitle": "Bekijk en beheer de visuals die u genereerde.",
+    "thumbUnavailable": "Voorbeeld niet beschikbaar",
+    "title": "Geschiedenis",
+    "unknownError": "Onbekende fout"
+  },
+  "home": {
+    "fidelity": {
+      "afterAlt": "Een pot Nutella in scène gezet op een houten plank met hazelnoten",
+      "beforeAlt": "Een pot Nutella, ruwe foto",
+      "privacy_html": "Uw foto’s worden tijdens de generatie doorgestuurd naar Google Cloud (Vertex AI) en daarna in uw geschiedenis bewaard tot u ze verwijdert. <a href=\"/legal.html#confidentialite\" class=\"text-primary-container underline\">Privacybeleid</a>.",
+      "text": "Etiket, logo, typografie en kleuren worden rechtstreeks uit uw foto’s overgenomen, zonder herinterpretatie. Alleen het decor rond het product wordt samengesteld. Precies die beperking maakt het verschil tussen een bruikbare visual en een illustratiebeeld.",
+      "title": "Uw verpakking blijft intact"
+    },
+    "gallery": {
+      "item1Alt": "Een zak Lay’s chips in scène gezet op een houten werkblad",
+      "item1Caption": "Chips · Klassiek",
+      "item2Alt": "Een blikje Red Bull in scène gezet in een neonverlichte nachtsfeer",
+      "item2Caption": "Drank · Nacht",
+      "item3Alt": "Een fles champagne in scène gezet in een elegante eetkamer",
+      "item3Caption": "Alcohol · Luxe",
+      "item4Alt": "Een doos Ferrero Rocher in scène gezet voor een kerstboom",
+      "item4Caption": "Snoepgoed · Kerst",
+      "subtitle": "Echte resultaten van de tool, zonder retouche.",
+      "title": "Voorbeelden"
+    },
+    "hero": {
+      "afterAlt": "Een blikje Red Bull in scène gezet op een basketbalveld bij zonsondergang, visual gegenereerd door {{brand}}",
+      "beforeAlt": "Een blikje Red Bull, ruwe foto met de smartphone genomen",
+      "bullets": "Zeven decorthema’s · formaat 4:5, klaar voor sociale media · verpakking exact behouden · meerdere producten per visual",
+      "ctaExamples": "Voorbeelden bekijken",
+      "ctaStudio": "Studio openen",
+      "eyebrow": "Generatieve productfotografie",
+      "text": "Upload een foto van uw product. {{brand}} bouwt een decor dat past bij wat u verkoopt, zonder de verpakking ooit aan te raken. De visual is klaar in minder dan twee minuten.",
+      "title": "Studiobeelden van uw producten, zonder studio."
+    },
+    "labels": {
+      "generated": "Gegenereerde visual",
+      "raw": "Ruwe foto"
+    },
+    "steps": {
+      "one": {
+        "text": "Eén tot veertien foto’s, ook smartphonefoto’s. Eén product per foto, of meerdere producten op dezelfde foto: ze komen allemaal in de visual.",
+        "title": "Upload uw foto’s"
+      },
+      "subtitle": "Geen briefing te schrijven, geen fotobewerking te openen.",
+      "three": {
+        "text": "Klassiek, Zomer, Sport, Luxe… of schrijf zelf het decor dat u wilt. De rest stellen wij voor u samen.",
+        "title": "Kies een thema"
+      },
+      "title": "Drie gegevens volstaan",
+      "two": {
+        "text": "Merk, categorie, variant. Vermeld de echte vorm — blikje, zakje, pot — zodat het decor klopt.",
+        "title": "Beschrijf het product"
+      }
+    }
+  },
+  "legal": {
+    "s1": {
+      "contact_html": "<strong class=\"text-on-surface\">Contact:</strong> <a class=\"text-primary-container underline\" href=\"#contact\">zie de rubriek Contact</a>.",
+      "editor_html": "<strong class=\"text-on-surface\">Uitgever van de dienst:</strong> {{brand}}, uitgegeven door <span class=\"bg-error-container text-on-error-container px-xs rounded\">[Naam / voornaam of benaming — AAN TE VULLEN]</span>, <span class=\"bg-error-container text-on-error-container px-xs rounded\">[postadres — AAN TE VULLEN]</span>, België.",
+      "hosting_html": "<strong class=\"text-on-surface\">Hosting:</strong> virtuele privéserver gehuurd bij <span class=\"bg-error-container text-on-error-container px-xs rounded\">[hostingprovider, adres — AAN TE VULLEN]</span>. Generatie van de afbeeldingen: Google Cloud (Vertex AI), Google Ireland Limited, Gordon House, Barrow Street, Dublin 4, Ierland.",
+      "ip_html": "<strong class=\"text-on-surface\">Intellectuele eigendom:</strong> de site, de code, het ontwerp en het logo zijn eigendom van de uitgever. De merken, logo’s en verpakkingen die op de voorbeeldvisuals te zien zijn, behoren toe aan hun respectieve houders en worden enkel getoond als technische demonstratie.",
+      "title": "1. Wettelijke vermeldingen",
+      "vat_html": "<strong class=\"text-on-surface\">Ondernemingsnummer (KBO):</strong> <span class=\"bg-error-container text-on-error-container px-xs rounded\">[AAN TE VULLEN of ‘niet-commerciële activiteit’]</span>"
+    },
+    "s2": {
+      "controller": {
+        "text": "De uitgever vermeld in rubriek 1.",
+        "title": "Verwerkingsverantwoordelijke"
+      },
+      "data": {
+        "account_html": "<strong class=\"text-on-surface\">Account:</strong> e-mailadres, wachtwoord (uitsluitend bewaard als bcrypt-hash), datum waarop deze voorwaarden aanvaard werden, datum van laatste aanmelding. Doel: authenticatie en accountbeheer (rechtsgrond: uitvoering van de overeenkomst).",
+        "generations_html": "<strong class=\"text-on-surface\">Generaties:</strong> geüploade foto’s, ingevoerde productgegevens (merk, categorie, smaak, beschrijving, decor), gegenereerde visuals, gebruikte prompt, model en kost. Doel: levering van de dienst, persoonlijke geschiedenis, verbruiksopvolging (rechtsgrond: uitvoering van de overeenkomst).",
+        "logs_html": "<strong class=\"text-on-surface\">Technische logboeken:</strong> IP-adres, tijdstip en aard van de beveiligingsgebeurtenissen (aanmelding, mislukking, vergrendeling). Doel: beveiliging van de dienst, misbruik voorkomen (rechtsgrond: gerechtvaardigd belang). Bewaartermijn: 30 dagen.",
+        "title": "Verwerkte gegevens en doeleinden"
+      },
+      "processors": {
+        "google_html": "De geüploade foto’s en de productgegevens worden doorgestuurd naar <strong class=\"text-on-surface\">Google Cloud (Vertex AI)</strong> om het decor samen te stellen en de visual te genereren. Google treedt op als verwerker volgens zijn voorwaarden voor gegevensverwerking; de gegevens kunnen buiten de Europese Unie verwerkt worden in het kader van de standaardcontractbepalingen van Google. Er worden geen gegevens verkocht of voor reclamedoeleinden gebruikt.",
+        "n8n": "De generaties worden aangestuurd door een zelf gehoste n8n-instantie op dezelfde server als de dienst.",
+        "title": "Verwerkers en doorgiften"
+      },
+      "retention": {
+        "text": "Foto’s en visuals: tot u ze verwijdert (knop ‘Verwijderen’ in de geschiedenis) of uw account verwijdert. Account: tot u de verwijdering aanvraagt. Logboeken: 30 dagen.",
+        "title": "Bewaartermijn"
+      },
+      "rights": {
+        "text_html": "Inzage, verbetering, wissing, beperking, overdraagbaarheid en bezwaar: schrijf ons (rubriek Contact). U kunt ook klacht indienen bij de Gegevensbeschermingsautoriteit (GBA), Drukpersstraat 35, 1000 Brussel — <a href=\"https://www.gegevensbeschermingsautoriteit.be\" rel=\"noopener\" target=\"_blank\" class=\"text-primary-container underline\">gegevensbeschermingsautoriteit.be</a>.",
+        "title": "Uw rechten"
+      },
+      "security": {
+        "text": "Versleutelde verbinding (HTTPS), gehashte wachtwoorden (bcrypt), sessiecookie met HttpOnly/Secure/SameSite, vergrendeling na herhaalde mislukte pogingen, quota per account, strikte scheiding van de gegevens tussen accounts.",
+        "title": "Beveiliging"
+      },
+      "title": "2. Privacybeleid (AVG)"
+    },
+    "s3": {
+      "intro_html": "{{brand}} gebruikt <strong class=\"text-on-surface\">geen reclame-, analyse- of trackingcookies</strong>, en geen enkele externe dienst voor publieksmeting.",
+      "outro": "Strikt noodzakelijke cookies vereisen geen toestemming (art. 129 van de Belgische wet betreffende de elektronische communicatie); de getoonde banner dient louter ter informatie. De lettertypes worden geladen via Google Fonts, dat daarbij uw IP-adres ontvangt.",
+      "rowNotice_html": "<td class=\"py-sm pr-md\"><code>app.cookieNotice.v1</code></td><td class=\"py-sm pr-md\">Lokale opslag van de browser</td><td class=\"py-sm pr-md\">Onthouden dat de melding gelezen is</td><td class=\"py-sm\">Tot de browsergegevens gewist worden</td>",
+      "rowSession_html": "<td class=\"py-sm pr-md\"><code>__Host-sid</code> (of <code>sid</code> lokaal)</td><td class=\"py-sm pr-md\">Technische cookie, strikt noodzakelijk</td><td class=\"py-sm pr-md\">U aangemeld houden</td><td class=\"py-sm\">24 u inactiviteit, maximaal 7 dagen</td>",
+      "tableAria": "Cookies en lokale opslag (horizontaal schuivende tabel)",
+      "thDuration": "Duur",
+      "thName": "Naam",
+      "thPurpose": "Doel",
+      "thType": "Type",
+      "title": "3. Cookies en lokale opslag"
+    },
+    "s4": {
+      "p1_html": "<strong class=\"text-on-surface\">4.1 Voorwerp.</strong> {{brand}} genereert met artificiële intelligentie reclamevisuals op basis van de productfoto’s die u uploadt. De toegang verloopt op uitnodiging; de uitgever kan een account op elk moment weigeren, opschorten of afsluiten, in het bijzonder bij misbruik.",
+      "p2_html": "<strong class=\"text-on-surface\">4.2 Uw verbintenissen.</strong> U bevestigt dat u over de nodige rechten beschikt op de geüploade foto’s (producten, verpakkingen, merken) en dat u de gegenereerde visuals enkel gebruikt met respect voor de rechten van de merkhouders. Het is verboden onwettige inhoud te uploaden, foto’s van herkenbare personen zonder hun toestemming te gebruiken, of te proberen de quota en beveiligingen van de dienst te omzeilen.",
+      "p3_html": "<strong class=\"text-on-surface\">4.3 Gegenereerde visuals.</strong> De visuals worden door een AI-model gemaakt: ze kunnen fouten bevatten (vervormde tekst op de verpakking, ontbrekend product, artefacten). U controleert elke visual vóór publicatie. U beschikt over de gebruiksrechten op de visuals die uit uw eigen inhoud gegenereerd zijn, binnen de grenzen van de gebruiksvoorwaarden van Google Cloud.",
+      "p4_html": "<strong class=\"text-on-surface\">4.4 Quota en kosten.</strong> Elke generatie heeft een reële kost (beeldmodel), die in de studio getoond en in uw verbruik geteld wordt. Er gelden quota per uur en per dag per account. De uitgever kan de quota wijzigen of het gebruik aanrekenen na voorafgaande kennisgeving.",
+      "p5_html": "<strong class=\"text-on-surface\">4.5 Beschikbaarheid en aansprakelijkheid.</strong> De dienst wordt geleverd ‘zoals ze is’, zonder waarborg van ononderbroken beschikbaarheid of van enig resultaat. De uitgever is niet aansprakelijk voor het gebruik dat van de visuals gemaakt wordt, noch voor indirecte schade. Zijn aansprakelijkheid is beperkt tot het bedrag dat in voorkomend geval tijdens de laatste drie maanden betaald werd.",
+      "p6_html": "<strong class=\"text-on-surface\">4.6 Beveiliging van het account.</strong> U bent verantwoordelijk voor de vertrouwelijkheid van uw wachtwoord. Meld elk niet-toegestaan gebruik. De functie ‘afmelden op alle toestellen’ is beschikbaar via de API, en wie zijn wachtwoord wijzigt, trekt daarmee de andere sessies in.",
+      "p7_html": "<strong class=\"text-on-surface\">4.7 Wijzigingen.</strong> Deze voorwaarden kunnen wijzigen; een nieuwe versie wordt u bij de volgende aanmelding ter aanvaarding voorgelegd.",
+      "p8_html": "<strong class=\"text-on-surface\">4.8 Toepasselijk recht.</strong> Belgisch recht. Bij een geschil wordt eerst een minnelijke oplossing gezocht; daarna zijn de rechtbanken van het arrondissement waar de uitgever gevestigd is bevoegd.",
+      "title": "4. Algemene gebruiksvoorwaarden"
+    },
+    "s5": {
+      "contact_html": "Vragen, verzoek om inzage, uitoefening van uw rechten of melding van een beveiligingsprobleem: <span class=\"bg-error-container text-on-error-container px-xs rounded\">[e-mailadres voor contact — AAN TE VULLEN]</span>.",
+      "disclosure": "Melding van een kwetsbaarheid: geef ons een redelijke termijn om ze te verhelpen vóór elke publieke bekendmaking.",
+      "title": "6. Contact"
+    },
+    "title": "Juridische informatie",
+    "toc": {
+      "terms": "Gebruiksvoorwaarden",
+      "withdrawal": "Herroeping"
+    },
+    "tocAria": "Inhoudsopgave",
+    "updated_html": "Laatst bijgewerkt: 13 september 2026 (versie <code>2026-09-13</code>).",
+    "withdrawal": {
+      "form": {
+        "body": "Ter attentie van [uitgever — zie rubriek 1]:\n\nIk deel u hierbij mee dat ik de overeenkomst betreffende de levering van de volgende dienst herroep:\n\n— Besteld op: ……………………\n— Naam van de consument: ……………………\n— Adres van de consument: ……………………\n— E-mailadres van de account: ……………………\n\nHandtekening (alleen bij kennisgeving op papier): ……………………\nDatum: ……………………",
+        "note": "Enkel invullen en terugsturen als u de overeenkomst wenst te herroepen.",
+        "title": "Modelformulier voor herroeping"
+      },
+      "p1_html": "<strong class=\"text-on-surface\">5.1 Beginsel.</strong> Bent u een consument, dan beschikt u over <strong class=\"text-on-surface\">14 dagen</strong> vanaf het sluiten van de overeenkomst om te herroepen, zonder opgave van redenen en zonder boete.",
+      "p2_html": "<strong class=\"text-on-surface\">5.2 Onmiddellijke uitvoering en evenredig bedrag.</strong> Door in te schrijven verzoekt u uitdrukkelijk dat de dienst onmiddellijk start, vóór het einde van die termijn. Herroept u daarna, dan eindigt de overeenkomst, maar blijft u het reeds geleverde deel verschuldigd, berekend pro rata van de gebruikte generaties op het aantal dat in uw abonnement is inbegrepen. Voorbeeld: 60 gebruikte generaties op 100, u betaalt 60 % van de prijs en het saldo wordt u terugbetaald.",
+      "p3_html": "<strong class=\"text-on-surface\">5.3 Reeds gegenereerde visuals.</strong> Elke geleverde visual is geleverde digitale inhoud: uw herroepingsrecht vervalt daarvoor, en dat is precies wat de bovenstaande pro-rataberekening uitdrukt.",
+      "p4_html": "<strong class=\"text-on-surface\">5.4 Generatiepakketten.</strong> Een afzonderlijk gekocht pakket is een aparte overeenkomst, met een eigen termijn van 14 dagen die loopt vanaf de aankoop ervan. Nog ongebruikte credits worden u terugbetaald.",
+      "p5_html": "<strong class=\"text-on-surface\">5.5 Hoe uitoefenen.</strong> Via de pagina <a href=\"/tarifs.html\" class=\"text-primary-container underline\">Tarieven</a>, die het exacte bedrag toont vóór bevestiging; of via een ondubbelzinnige verklaring aan het contactadres, waarbij het onderstaande formulier mag worden gebruikt maar niet verplicht is.",
+      "p6_html": "<strong class=\"text-on-surface\">5.6 Terugbetaling.</strong> Zij gebeurt uiterlijk 14 dagen na ontvangst van uw beslissing, met hetzelfde betaalmiddel als bij de bestelling, zonder kosten.",
+      "p7_html": "<strong class=\"text-on-surface\">5.7 Ondernemingen.</strong> Het herroepingsrecht is voorbehouden aan consumenten. Een aankoop voor de behoeften van een beroepsactiviteit geniet er niet van.",
+      "title": "5. Herroepingsrecht"
+    }
+  },
+  "login": {
+    "afterAlt": "San Pellegrino in scène gezet op een mediterraan terras vol bloemen",
+    "badCredentials": "Onjuist e-mailadres of wachtwoord.",
+    "beforeAlt": "Een fles San Pellegrino, ruwe foto",
+    "inviteOnly": "De toegang verloopt op uitnodiging. Neem contact op met de beheerder voor een account.",
+    "inviteRequired": " (uitnodigingscode vereist)",
+    "legalLinks_html": "<a class=\"underline\" href=\"/legal.html#mentions\">Wettelijke vermeldingen</a> · <a class=\"underline\" href=\"/legal.html#confidentialite\">Privacy</a>",
+    "noAccount_html": "Nog geen account? <a href=\"/register.html\" class=\"text-primary-container underline\">Maak er een aan</a>",
+    "pitchText": "Eén productfoto, drie gegevens, een thema — en de visual is klaar om te posten.",
+    "pitchTitle": "De verpakking blijft. Het decor niet.",
+    "subtitle": "Terug naar uw studio en uw visuals.",
+    "title": "Aanmelden"
+  },
+  "meta": {
+    "admin": {
+      "title": "Beheer — {{brand}}"
+    },
+    "history": {
+      "description": "De reclamevisuals die u met {{brand}} genereerde: bekijken, downloaden, verwijderen.",
+      "title": "Geschiedenis — {{brand}}"
+    },
+    "home": {
+      "description": "{{brand}} bouwt een passend reclamedecor rond uw product, zonder de verpakking ook maar aan te raken. Een visual in 4:5, klaar om te posten in minder dan twee minuten.",
+      "ldDescription": "Generator van reclamevisuals: upload een productfoto, kies een thema en krijg een visual in 4:5 waarbij de verpakking exact behouden blijft.",
+      "ogDescription": "Upload een foto van uw product, kies een thema: {{brand}} bouwt het decor en laat de verpakking exact zoals ze is.",
+      "ogImageAlt": "Een blikje Red Bull: links de ruwe foto, rechts de gegenereerde reclamevisual op een basketbalveld",
+      "ogTitle": "{{brand}} — Studiobeelden van uw producten, zonder studio",
+      "title": "{{brand}} — Studiobeelden van uw producten, zonder studio",
+      "twitterDescription": "Ruwe foto → reclamevisual in 4:5, verpakking intact."
+    },
+    "legal": {
+      "description": "Wettelijke vermeldingen, privacybeleid (AVG), cookies en algemene gebruiksvoorwaarden van de dienst {{brand}}.",
+      "title": "Wettelijke vermeldingen, privacy en voorwaarden — {{brand}}"
+    },
+    "login": {
+      "description": "Meld u aan bij uw studio van {{brand}}.",
+      "title": "Aanmelden — {{brand}}"
+    },
+    "notFound": {
+      "description": "Deze pagina bestaat niet of is verplaatst.",
+      "title": "Pagina niet gevonden — {{brand}}"
+    },
+    "pricing": {
+      "description": "Formules van {{brand}}: hoeveel reclamevisuals u per maand kunt genereren, zonder verbintenis.",
+      "title": "Tarieven — {{brand}}"
+    },
+    "register": {
+      "description": "Maak een account aan bij {{brand}}. Gratis formule inbegrepen, zonder bankkaart.",
+      "title": "Account aanmaken — {{brand}}"
+    },
+    "siteName": "{{brand}}",
+    "studio": {
+      "description": "Studio van {{brand}}: upload uw productfoto’s, kies een thema en genereer een reclamevisual in 4:5.",
+      "title": "Studio — {{brand}}"
+    },
+    "verify": {
+      "title": "Bevestiging van uw e-mailadres — {{brand}}"
+    }
+  },
+  "nav": {
+    "admin": "Beheer",
+    "examples": "Voorbeelden",
+    "generate": "Genereren",
+    "history": "Geschiedenis",
+    "home": "Start",
+    "homeAria": "{{brand}} — startpagina",
+    "howItWorks": "Hoe het werkt",
+    "language": "Taal",
+    "login": "Aanmelden",
+    "logoAlt": "{{brand}}",
+    "logout": "Afmelden",
+    "logoutTitle": "Afmelden ({{email}})",
+    "mainNav": "Hoofdnavigatie",
+    "menu": "Menu",
+    "mobileNav": "Mobiele navigatie",
+    "pricing": "Tarieven",
+    "signup": "Account aanmaken",
+    "studio": "Studio"
+  },
+  "notFound": {
+    "code": "Fout 404",
+    "exitsAria": "Waar u verder kunt",
+    "help_html": "Zocht u iets specifieks? <a href=\"/legal.html#contact\" class=\"text-primary-container underline\">Neem contact op</a>.",
+    "history": "Mijn geschiedenis",
+    "home": "Terug naar de startpagina",
+    "pricing": "Tarieven bekijken",
+    "studio": "Studio openen",
+    "text": "De link is mogelijk verouderd, of het adres bevat een tikfout. Hier gaat u verder.",
+    "title": "Deze pagina bestaat niet"
+  },
+  "plans": {
+    "free": {
+      "features": [
+        "Alle 7 thema’s",
+        "Geschiedenis en downloads"
+      ],
+      "label": "Kennismaking",
+      "pitch": "Om de tool uit te proberen."
+    },
+    "pro": {
+      "features": [
+        "Alles uit Starter",
+        "Gratis nieuwe poging na een mislukking",
+        "Ondersteuning via e-mail"
+      ],
+      "label": "Pro",
+      "pitch": "Om regelmatig op sociale media te posten."
+    },
+    "starter": {
+      "features": [
+        "Alle 7 thema’s",
+        "Eigen decor",
+        "Tot 6 producten per visual"
+      ],
+      "label": "Starter",
+      "pitch": "Voor een handelszaak, enkele visuals per week."
+    },
+    "studio": {
+      "features": [
+        "Alles uit Pro",
+        "Voorrang bij verwerking"
+      ],
+      "label": "Studio",
+      "pitch": "Voor een bureau of meerdere merken."
+    }
+  },
+  "pricing": {
+    "cta": {
+      "choose": "Kiezen",
+      "continueFree": "Gratis verdergaan",
+      "createAccount": "Account aanmaken",
+      "currentPlan": "Huidige formule",
+      "includedByDefault": "Standaard inbegrepen",
+      "switchPlan": "Deze formule kiezen"
+    },
+    "current": {
+      "cancelConfirm": "Nu meteen opzeggen (demomodus)?",
+      "cancelDemo": "Opzeggen (demo)",
+      "cancelScheduled": " · opzegging gepland",
+      "credits_one": " · {{count}} credit in reserve",
+      "credits_other": " · {{count}} credits in reserve",
+      "label": "Uw formule",
+      "manage": "Abonnement beheren",
+      "openStudio": "Studio openen",
+      "pastDue_html": "<span class=\"font-body-sm text-error\">(betaling in behandeling)</span>",
+      "renew": " · opnieuw op {{date}}",
+      "unlimited": "{{used}} generaties · geen limiet",
+      "used": "{{used}} / {{quota}} generaties gebruikt"
+    },
+    "errors": {
+      "billingDisabled_html": "Facturatie staat niet aan op deze server (<code>BILLING_ENABLED=false</code>).",
+      "operationFailed": "Dit lukte niet",
+      "plansUnavailable": "De formules konden niet geladen worden."
+    },
+    "faq": {
+      "a1": "Die telt niet mee. Alleen generaties die een visual opleveren verbruiken uw quotum, en een mislukking kunt u gratis opnieuw proberen vanuit uw geschiedenis.",
+      "a2": "Op elke afrekendatum, niet op de 1e van de maand. Neemt u een abonnement op de 17e, dan start uw quotum elke maand opnieuw op de 17e.",
+      "a3": "Nee. Losse generatiepakketten vervallen daarentegen niet en worden gebruikt zodra uw maandquotum op is.",
+      "a4": "Altijd, via ‘Abonnement beheren’. Een wijziging wordt pro rata verrekend; een opzegging gaat in op het einde van de reeds betaalde periode.",
+      "a5_html": "U beschikt daarover gedurende 14 dagen na uw inschrijving. Omdat de dienst op uw verzoek onmiddellijk start, betaalt u enkel het reeds gebruikte deel: het saldo wordt u terugbetaald. Details en formulier: <a href=\"/legal.html#retractation\" class=\"text-primary-container underline\">rubriek Herroeping</a>.",
+      "q1": "Wat als een generatie mislukt?",
+      "q2": "Wanneer wordt mijn teller op nul gezet?",
+      "q3": "Worden ongebruikte generaties overgedragen?",
+      "q4": "Kan ik van formule veranderen of opzeggen?",
+      "q5": "En het herroepingsrecht van 14 dagen?",
+      "title": "Veelgestelde vragen"
+    },
+    "free": "Gratis",
+    "loadingPlans": "Formules laden…",
+    "noCard": "zonder bankkaart",
+    "notices": {
+      "checkoutCancel": "Betaling geannuleerd, er werd niets aangerekend.",
+      "checkoutSuccess": "Betaling geregistreerd. Uw formule is actief — staat de teller hieronder nog niet juist, vernieuw de pagina dan over enkele seconden.",
+      "demoMode_html": "<strong>Prototype — demomodus.</strong> Geen Stripe-sleutel ingesteld: de knoppen simuleren een abonnement in de databank om de quota te testen. Geen betaling, geen kaart.",
+      "demoPack_html": "Credits toegevoegd in <strong>demomodus</strong>.",
+      "demoSubscribed_html": "Formule geactiveerd in <strong>demomodus</strong>: er werd niets aangerekend en Stripe werd niet aangesproken.",
+      "packSuccess": "Generatiepakket toegekend.",
+      "verif_html": "Uw account is aangemaakt. <strong>Er is een bevestigingsmail onderweg</strong>: klik op de link om uw gratis generaties vrij te maken. U kunt nu al een abonnement kiezen — dat is meteen actief, zonder op de bevestiging te wachten.",
+      "welcome": "Uw account is aangemaakt. U kunt gratis beginnen of meteen een abonnement nemen — de betaling verloopt via een beveiligde Stripe-pagina."
+    },
+    "onboardingSubNoFree": "Kies de formule die bij uw volume past. Veilige betaling via Stripe, in één klik opzegbaar.",
+    "onboardingSub_one": "Uw account start met {{count}} gratis generatie. Neem een abonnement zodra u verder wilt gaan: veilige betaling via Stripe, in één klik opzegbaar.",
+    "onboardingSub_other": "Uw account start met {{count}} gratis generaties. Neem een abonnement zodra u verder wilt gaan: veilige betaling via Stripe, in één klik opzegbaar.",
+    "onboardingTitle": "Welkom — kies uw formule",
+    "pack": {
+      "buy": "Pakket kopen",
+      "text_one": "Pakket van {{count}} generatie voor {{amount}}, zonder abonnement. De credit vervalt niet en wordt gebruikt zodra uw maandquotum op is.",
+      "text_other": "Pakket van {{count}} generaties voor {{amount}}, zonder abonnement. De credits vervallen niet en worden gebruikt zodra uw maandquotum op is.",
+      "title": "Deze maand meer nodig?"
+    },
+    "perMonth": "/maand",
+    "quotaLifetime_one": "{{count}} generatie in totaal",
+    "quotaLifetime_other": "{{count}} generaties in totaal",
+    "quotaMonthly_one": "{{count}} generatie / maand",
+    "quotaMonthly_other": "{{count}} generaties / maand",
+    "recommended": "Aanbevolen",
+    "redirecting": "Doorsturen…",
+    "subtitle": "Elke formule bevat een aantal generaties per maand. De teller start opnieuw op uw afrekendatum. Zonder verbintenis, in één klik opzegbaar.",
+    "title": "Visuals, geen ingewikkelde abonnementen",
+    "unitPrice": "oftewel {{amount}} per visual"
+  },
+  "register": {
+    "confirmPassword": "Wachtwoord bevestigen",
+    "consent_html": "Ik heb de <a href=\"/legal.html#mentions\" target=\"_blank\" rel=\"noopener\" class=\"text-primary-container underline\">wettelijke vermeldingen</a>, het <a href=\"/legal.html#confidentialite\" target=\"_blank\" rel=\"noopener\" class=\"text-primary-container underline\">privacybeleid</a> en de <a href=\"/legal.html#cgu\" target=\"_blank\" rel=\"noopener\" class=\"text-primary-container underline\">gebruiksvoorwaarden</a> gelezen en aanvaard ze. Ik bevestig dat ik de rechten bezit op de foto’s die ik zal uploaden.",
+    "created": "Als dit adres beschikbaar is, is uw account aangemaakt. Meld u aan.",
+    "freeStart": "U start op de gratis formule, zonder bankkaart. Daarna kiest u een abonnement.",
+    "haveAccount": "Al een account? Aanmelden",
+    "inviteCode": "Uitnodigingscode",
+    "modeClosed": "De registraties zijn gesloten: de toegang verloopt op uitnodiging. Neem contact op met de beheerder.",
+    "modeInvite": "Een uitnodigingscode is nodig om een account aan te maken.",
+    "modeOpen": "Enkele seconden, en de studio is van u.",
+    "rules": {
+      "classes": "3 soorten uit: kleine letter, hoofdletter, cijfer, symbool",
+      "email": "Bevat uw e-mailadres niet",
+      "length": "Minstens 12 tekens",
+      "match": "Beide invoervelden komen overeen"
+    },
+    "submit": "Mijn account aanmaken",
+    "title": "Account aanmaken",
+    "unavailable": "Dienst niet beschikbaar, probeer het later opnieuw."
+  },
+  "serverError": {
+    "code": "Serverfout",
+    "metaTitle": "Dienst tijdelijk niet beschikbaar — {{brand}}",
+    "retry": "Opnieuw proberen",
+    "text": "Het probleem ligt bij ons, niet bij u. Uw visuals en uw geschiedenis blijven ongemoeid. Probeer het over enkele ogenblikken opnieuw.",
+    "title": "De dienst reageert niet"
+  },
+  "studio": {
+    "art": {
+      "help": "Vult u dit in, dan vervangt uw decor dat van het thema. De verpakking blijft hoe dan ook exact behouden.",
+      "label": "Gewenst decor",
+      "placeholder": "Bv. op een baal stro in een stenen schuur, laag ochtendlicht",
+      "summary": "Beschrijf het gewenste decor"
+    },
+    "empty": {
+      "text": "Stel uw parameters in en klik op ‘Genereren’ om het resultaat te zien.",
+      "title": "Uw canvas"
+    },
+    "error": {
+      "title": "Generatie mislukt"
+    },
+    "errors": {
+      "noBrand": "Vul het merk in.",
+      "noCategory": "Kies een categorie.",
+      "noImage": "Voeg minstens één afbeelding toe.",
+      "noTheme": "Kies een thema."
+    },
+    "generate": "Visual genereren",
+    "generating": "Genereren…",
+    "photos": {
+      "add": "Toevoegen",
+      "count": "{{n}} / {{max}}",
+      "help": "Upload 1 tot 14 foto’s. Eén product per foto, of meerdere producten op dezelfde foto: ze komen allemaal in de visual. Meerdere hoeken van hetzelfde product tellen als één.",
+      "title": "Productfoto’s"
+    },
+    "preview": {
+      "open": "‘{{name}}’ op ware grootte openen",
+      "remove": "Verwijderen"
+    },
+    "product": {
+      "brand": "Merk",
+      "brandPlaceholder": "Bv. Red Bull",
+      "category": "Categorie",
+      "categoryPlaceholder": "Selecteren…",
+      "count": "Aantal verschillende producten",
+      "countHelp": "Vul dit in als de AI zich vergist in het aantal producten dat getoond moet worden (1 tot 6).",
+      "countPlaceholder": "Automatisch herkend",
+      "description": "Beschrijving",
+      "descriptionHelp": "Vermeld de echte vorm: blikje, zakje, pot, geschenkdoos…",
+      "descriptionPlaceholder": "Bv. croissant gevuld met Nutella",
+      "flavor": "Smaak",
+      "flavorPlaceholder": "Bv. perzik",
+      "optional": "(optioneel)",
+      "title": "Product"
+    },
+    "progress": {
+      "cancel": "Annuleren",
+      "step1": "Afbeeldingen versturen",
+      "step2": "Visual samenstellen (Gemini)",
+      "step3": "Rendering in hoge resolutie",
+      "text": "Dit kan tot ~2 minuten duren. Houd de pagina open.",
+      "title": "Bezig met genereren…"
+    },
+    "quota": {
+      "cta": "Formules bekijken",
+      "title": "Quotum bereikt"
+    },
+    "result": {
+      "alt": "Gegenereerde visual",
+      "badge": "Decor samengesteld door AI"
+    },
+    "srTitle": "Studio voor het genereren van visuals",
+    "terms": "Gebruiksvoorwaarden",
+    "theme": {
+      "one": "1 thema",
+      "title": "Decorthema"
+    },
+    "unitCost": "≈ {{amount}} per visual ({{model}}{{size}}) · {{perHour}}/u, {{perDay}}/dag · 30 tot 120 s",
+    "unitCostLoading": "Kostprijs per visual: laden…",
+    "unverified": {
+      "title": "Bevestig uw e-mailadres"
+    }
+  },
+  "terms": {
+    "accept": "Ik heb deze documenten gelezen en aanvaard ze.",
+    "acceptBtn": "Aanvaarden en verdergaan",
+    "error": "Mislukt, probeer opnieuw.",
+    "intro_html": "Om {{brand}} te blijven gebruiken, vragen we u de <a href=\"/legal.html#mentions\" target=\"_blank\" rel=\"noopener\" class=\"text-primary-container underline\">wettelijke vermeldingen</a>, het <a href=\"/legal.html#confidentialite\" target=\"_blank\" rel=\"noopener\" class=\"text-primary-container underline\">privacybeleid</a> en de <a href=\"/legal.html#cgu\" target=\"_blank\" rel=\"noopener\" class=\"text-primary-container underline\">gebruiksvoorwaarden</a> te lezen en te aanvaarden.",
+    "logoutBtn": "Mij afmelden",
+    "title": "Wettelijke vermeldingen en voorwaarden"
+  },
+  "themes": {
+    "classique": "Klassiek",
+    "ete": "Zomer",
+    "extravagant": "Uitbundig",
+    "fete": "Nacht",
+    "luxe": "Luxe",
+    "noel": "Kerst",
+    "sport": "Sport"
+  },
+  "time": {
+    "dayTime": "{{day}}, {{time}}",
+    "now": "Zonet"
+  },
+  "ui": {
+    "deleteConfirm": "Deze generatie definitief verwijderen?\nDe gegenereerde visual gaat verloren; dit kan niet ongedaan gemaakt worden.",
+    "deleteFailed": "Verwijderen is mislukt.",
+    "loadFailed": "Laden is mislukt.",
+    "noFailures": "Geen mislukkingen.",
+    "retryFailed": "De nieuwe poging is mislukt.",
+    "retrying": "Opnieuw…"
+  },
+  "usage": {
+    "header_one": "{{count}} afbeelding · {{amount}} deze maand",
+    "header_other": "{{count}} afbeeldingen · {{amount}} deze maand"
+  },
+  "verify": {
+    "askEmail": "Uw e-mailadres:",
+    "done": {
+      "text": "Uw account is actief en uw gratis generaties zijn vrijgemaakt.",
+      "title": "Adres bevestigd"
+    },
+    "expired": {
+      "text": "Deze link is al gebruikt of is niet langer geldig. Vraag hieronder een nieuwe aan.",
+      "title": "Ongeldige of vervallen link"
+    },
+    "failed": {
+      "text": "Probeer het straks opnieuw.",
+      "title": "Bevestigen lukte niet"
+    },
+    "incomplete": {
+      "text": "Deze link bevat geen bevestigingstoken. Open hem rechtstreeks vanuit de e-mail die u kreeg.",
+      "title": "Onvolledige link"
+    },
+    "pending": "Bezig met bevestigen…",
+    "resend": "Een nieuwe link ontvangen",
+    "sent": {
+      "text": "Kijk in uw postvak in.",
+      "title": "Onderweg"
+    }
+  },
+  "verifyBanner": {
+    "failed": "Versturen lukte niet",
+    "resend": "E-mail opnieuw sturen",
+    "sent": "E-mail verstuurd",
+    "text_html": "Bevestig uw adres <strong>{{email}}</strong> om uw gratis generaties vrij te maken. Kijk ook even in ongewenste e-mail."
+  },
+  "withdrawal": {
+    "confirm": {
+      "checkbox": "Ik heb het bovenstaande bedrag gelezen en bevestig mijn herroeping.",
+      "cta": "Herroeping bevestigen",
+      "packEffect": "De resterende credits worden van uw account gehaald.",
+      "subEffect": "Uw abonnement eindigt onmiddellijk en de toegang tot de generaties stopt.",
+      "title": "Uw herroeping bevestigen"
+    },
+    "consent": {
+      "checkbox": "Ik verzoek uitdrukkelijk dat de uitvoering onmiddellijk begint, vóór het einde van de herroepingstermijn van 14 dagen. Ik erken dat ik mijn herroepingsrecht verlies voor elke daadwerkelijk gegenereerde visual en dat ik bij herroeping het reeds geleverde deel pro rata moet betalen.",
+      "confirm": "Bevestigen en betalen",
+      "explain": "U behoudt uw herroepingsrecht gedurende 14 dagen. Als u het uitoefent, betaalt u enkel het reeds gebruikte deel: het saldo wordt u terugbetaald.",
+      "introPack": "U staat op het punt {{count}} generaties te kopen. De credits zijn onmiddellijk beschikbaar.",
+      "introSub": "U staat op het punt het {{plan}}-abonnement te nemen. De dienst start onmiddellijk.",
+      "title": "Vóór de betaling"
+    },
+    "cta": "Herroepen",
+    "daysLeft_one": "U hebt nog {{count}} dag, tot {{date}}.",
+    "daysLeft_other": "U hebt nog {{count}} dagen, tot {{date}}.",
+    "errors": {
+      "amountChanged": "Het bedrag is gewijzigd sinds deze pagina werd weergegeven. De pagina wordt opnieuw geladen."
+    },
+    "manualReview": "U hebt dit recht onlangs al uitgeoefend: uw aanvraag wordt geregistreerd en binnen 14 dagen manueel behandeld.",
+    "notices": {
+      "done": "Herroeping geregistreerd. {{amount}} wordt terugbetaald op uw oorspronkelijke betaalmiddel.",
+      "review": "Aanvraag geregistreerd ({{amount}}). Zij wordt binnen 14 dagen manueel behandeld."
+    },
+    "pack": {
+      "detail": "U hebt nog {{left}} van de {{total}} credits over: de terugbetaling zou {{amount}} bedragen.",
+      "title": "Herroepingsrecht — generatiepakket"
+    },
+    "sub": {
+      "detail": "U hebt {{used}} van de {{total}} generaties van uw abonnement gebruikt: de terugbetaling zou {{amount}} bedragen.",
+      "title": "Herroepingsrecht — 14 dagen"
+    }
+  }
+}

@@ -3,7 +3,11 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Administration — AdCraft</title>
+
+    <!-- i18n : masque le document le temps de l'hydratation (cf. js/i18n-boot.js). -->
+    <script src="/js/i18n-boot.js"></script>
+
+    <title data-i18n="meta.admin.title">Administration</title>
     <meta name="robots" content="noindex, nofollow" />
     <link rel="icon" href="/img/icons/favicon.ico" sizes="48x48" />
     <link rel="manifest" href="/site.webmanifest" />
@@ -19,8 +23,8 @@
 
     <main class="flex-grow w-full max-w-container-max mx-auto px-lg py-xl flex flex-col gap-xl">
       <div class="flex flex-col gap-sm">
-        <h1 class="font-display-lg text-display-lg text-on-surface">Administration</h1>
-        <p class="font-body-sm text-body-sm text-secondary">Réservé aux comptes listés dans <code>ADMIN_EMAILS</code>. Générations illimitées, aucun quota.</p>
+        <h1 class="font-display-lg text-display-lg text-on-surface" data-i18n="admin.title">Administration</h1>
+        <p class="font-body-sm text-body-sm text-secondary" data-i18n-html="admin.subtitle_html">Réservé aux comptes listés dans <code>ADMIN_EMAILS</code>. Générations illimitées, aucun quota.</p>
       </div>
 
       <div id="error" class="hidden rounded-lg border border-error bg-error-container/40 px-lg py-md font-body-sm text-body-sm"></div>
@@ -31,42 +35,49 @@
       <!-- Répartition -->
       <section class="grid grid-cols-1 lg:grid-cols-2 gap-lg">
         <div class="rounded-xl border border-outline-variant bg-surface-container-lowest p-lg flex flex-col gap-md">
-          <h2 class="font-display-sm text-display-sm">Modèles utilisés</h2>
-          <div id="models" class="overflow-x-auto"></div>
+          <h2 class="font-headline-md text-headline-md text-on-surface" data-i18n="admin.models.title">Modèles utilisés</h2>
+          <div id="models" class="overflow-x-auto" tabindex="0" role="region" aria-label="Modèles utilisés (tableau défilant horizontalement)" data-i18n-attr="aria-label:admin.models.regionAria"></div>
         </div>
         <div class="rounded-xl border border-outline-variant bg-surface-container-lowest p-lg flex flex-col gap-md">
-          <h2 class="font-display-sm text-display-sm">Thèmes les plus demandés</h2>
-          <div id="themes" class="overflow-x-auto"></div>
+          <h2 class="font-headline-md text-headline-md text-on-surface" data-i18n="admin.themes.title">Thèmes les plus demandés</h2>
+          <div id="themes" class="overflow-x-auto" tabindex="0" role="region" aria-label="Thèmes les plus demandés (tableau défilant horizontalement)" data-i18n-attr="aria-label:admin.themes.regionAria"></div>
         </div>
       </section>
 
       <!-- Comptes -->
       <section class="rounded-xl border border-outline-variant bg-surface-container-lowest p-lg flex flex-col gap-md">
         <div class="flex flex-wrap items-center justify-between gap-md">
-          <h2 class="font-display-sm text-display-sm">Comptes</h2>
-          <input id="search" type="search" placeholder="Filtrer par e-mail…" autocomplete="off"
-                 class="rounded-lg border border-outline-variant bg-surface px-md py-sm font-body-sm text-body-sm min-w-[240px]" />
+          <h2 class="font-headline-md text-headline-md text-on-surface" data-i18n="admin.users.title">Comptes</h2>
+          <input id="search" type="search" aria-label="Filtrer les comptes par e-mail" placeholder="Filtrer par e-mail…" autocomplete="off" data-i18n-attr="aria-label:admin.users.searchAria;placeholder:admin.users.searchPlaceholder"
+                 class="w-full sm:w-auto h-11 lg:h-9 rounded-lg border border-outline bg-surface px-md font-body-sm text-body-sm sm:min-w-[240px]" />
+          <!-- Accès aux comptes désactivés : ils n'apparaissent jamais dans la
+               liste normale (ce ne sont plus des clients), mais ils restent
+               consultables — c'est la contrepartie de la conservation comptable.
+               Garder une trace sans pouvoir la lire n'aurait aucun sens. -->
+          <label class="flex items-center gap-sm min-h-[44px] lg:min-h-0 cursor-pointer font-label-md text-label-md text-on-surface-variant">
+            <input id="show-deleted" type="checkbox" class="w-5 h-5 rounded border-outline text-primary-container focus:ring-primary-container" />
+            <span data-i18n="admin.users.showDeleted">Comptes désactivés</span>
+          </label>
         </div>
-        <div id="users" class="overflow-x-auto"></div>
+        <div id="users" class="overflow-x-auto" tabindex="0" role="region" aria-label="Comptes (tableau défilant horizontalement)" data-i18n-attr="aria-label:admin.users.regionAria"></div>
       </section>
 
       <!-- Générations récentes -->
       <section class="rounded-xl border border-outline-variant bg-surface-container-lowest p-lg flex flex-col gap-md">
         <div class="flex flex-wrap items-center justify-between gap-md">
-          <h2 class="font-display-sm text-display-sm">Générations récentes</h2>
-          <select id="gen-status" class="rounded-lg border border-outline-variant bg-surface px-md py-sm font-body-sm text-body-sm">
-            <option value="">Toutes</option>
-            <option value="done">Réussies</option>
-            <option value="error">En échec</option>
-            <option value="pending">En cours</option>
+          <h2 class="font-headline-md text-headline-md text-on-surface" data-i18n="admin.gens.title">Générations récentes</h2>
+          <select id="gen-status" aria-label="Filtrer les générations par état" data-i18n-attr="aria-label:admin.gens.filterAria" class="w-full sm:w-auto h-11 lg:h-9 rounded-lg border border-outline bg-surface px-md font-body-sm text-body-sm">
+            <option value="" data-i18n="admin.gens.status.all">Toutes</option>
+            <option value="done" data-i18n="admin.gens.status.done">Réussies</option>
+            <option value="error" data-i18n="admin.gens.status.error">En échec</option>
+            <option value="pending" data-i18n="admin.gens.status.pending">En cours</option>
           </select>
         </div>
-        <div id="generations" class="overflow-x-auto"></div>
+        <div id="generations" class="overflow-x-auto" tabindex="0" role="region" aria-label="Générations récentes (tableau défilant horizontalement)" data-i18n-attr="aria-label:admin.gens.regionAria"></div>
       </section>
     </main>
 
     <footer id="site-footer" class="border-t border-outline-variant bg-surface-container-lowest mt-2xl"></footer>
-    <script type="module" src="/js/nav.js"></script>
     <script type="module" src="/js/admin.js"></script>
   </body>
 </html>

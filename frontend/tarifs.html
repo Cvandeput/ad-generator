@@ -3,10 +3,25 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Tarifs — AdCraft</title>
-    <meta name="description" content="Formules AdCraft : nombre de générations de visuels publicitaires incluses par mois, sans engagement." />
+
+    <!-- i18n : masque le document le temps de l'hydratation (cf. js/i18n-boot.js). -->
+    <script src="/js/i18n-boot.js"></script>
+
+    <title data-i18n="meta.pricing.title">Tarifs</title>
+    <meta name="description" data-i18n-attr="content:meta.pricing.description" content="Nos formules : nombre de générations de visuels publicitaires incluses par mois, sans engagement." />
     <link rel="canonical" href="https://ads.devwork.cloud/tarifs.html" />
+    <link rel="alternate" hreflang="fr" href="https://ads.devwork.cloud/tarifs.html" />
+    <link rel="alternate" hreflang="en" href="https://ads.devwork.cloud/tarifs.html?lang=en" />
+    <link rel="alternate" hreflang="nl" href="https://ads.devwork.cloud/tarifs.html?lang=nl" />
+    <link rel="alternate" hreflang="x-default" href="https://ads.devwork.cloud/tarifs.html" />
     <meta name="robots" content="index, follow" />
+    <meta property="og:site_name" data-i18n-attr="content:meta.siteName" content="" />
+    <meta property="og:locale" content="fr_BE" />
+    <meta property="og:locale:alternate" content="en_US" />
+    <meta property="og:locale:alternate" content="nl_BE" />
+    <meta property="og:url" content="https://ads.devwork.cloud/tarifs.html" />
+    <meta property="og:title" data-i18n-attr="content:meta.pricing.title" content="Tarifs" />
+    <meta property="og:description" data-i18n-attr="content:meta.pricing.description" content="Nos formules : nombre de générations de visuels publicitaires incluses par mois, sans engagement." />
     <link rel="icon" href="/img/icons/favicon.ico" sizes="48x48" />
     <link rel="icon" type="image/png" sizes="32x32" href="/img/icons/favicon-32.png" />
     <link rel="icon" type="image/png" sizes="16x16" href="/img/icons/favicon-16.png" />
@@ -27,16 +42,22 @@
       <div id="mode-banner"></div>
 
       <div class="flex flex-col gap-sm text-center max-w-[640px] mx-auto">
-        <h1 id="page-title" class="font-display-lg text-display-lg text-on-surface">Des visuels, pas des abonnements compliqués</h1>
-        <p id="page-sub" class="font-body-base text-body-base text-secondary">Chaque formule inclut un nombre de générations par mois. Le compteur repart à la date de votre prélèvement. Sans engagement, résiliable en un clic.</p>
+        <h1 id="page-title" class="font-display-lg text-display-lg text-on-surface" data-i18n="pricing.title">Des visuels, pas des abonnements compliqués</h1>
+        <p id="page-sub" class="font-body-base text-body-base text-secondary" data-i18n="pricing.subtitle">Chaque formule inclut un nombre de générations par mois. Le compteur repart à la date de votre prélèvement. Sans engagement, résiliable en un clic.</p>
       </div>
 
       <!-- État de l'abonnement courant -->
       <section id="current" class="hidden"></section>
 
+      <!-- Droit de rétractation : encart affiché UNIQUEMENT si le compte est
+           éligible (14 jours, contrat en cours). Le montant exact du
+           remboursement y est calculé côté serveur et affiché AVANT toute
+           confirmation — cf. js/tarifs.js. -->
+      <section id="withdrawal" class="hidden"></section>
+
       <!-- Grille des formules -->
       <section id="plans" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-lg items-stretch">
-        <p class="font-body-sm text-body-sm text-secondary col-span-full text-center">Chargement des formules…</p>
+        <p class="font-body-sm text-body-sm text-secondary col-span-full text-center" data-i18n="pricing.loadingPlans">Chargement des formules…</p>
       </section>
 
       <!-- Pack de dépassement -->
@@ -44,24 +65,34 @@
 
       <!-- FAQ -->
       <section class="flex flex-col gap-md max-w-[720px] mx-auto w-full">
-        <h2 class="font-headline-md text-headline-md text-on-surface">Questions fréquentes</h2>
+        <h2 class="font-headline-md text-headline-md text-on-surface" data-i18n="pricing.faq.title">Questions fréquentes</h2>
         <details class="bg-surface-container-lowest border border-outline-variant rounded-lg p-md">
-          <summary class="font-label-md text-label-md text-on-surface cursor-pointer">Que se passe-t-il si une génération échoue ?</summary>
-          <p class="font-body-sm text-body-sm text-secondary pt-sm">Elle n'est pas décomptée. Seules les générations qui produisent un visuel consomment votre quota, et vous pouvez relancer un échec gratuitement depuis l'historique.</p>
+          <summary class="font-label-md text-label-md text-on-surface cursor-pointer py-md lg:py-0" data-i18n="pricing.faq.q1">Que se passe-t-il si une génération échoue ?</summary>
+          <p class="font-body-sm text-body-sm text-secondary pt-sm" data-i18n="pricing.faq.a1">Elle n'est pas décomptée. Seules les générations qui produisent un visuel consomment votre quota, et vous pouvez relancer un échec gratuitement depuis l'historique.</p>
         </details>
         <details class="bg-surface-container-lowest border border-outline-variant rounded-lg p-md">
-          <summary class="font-label-md text-label-md text-on-surface cursor-pointer">Quand mon compteur se remet-il à zéro ?</summary>
-          <p class="font-body-sm text-body-sm text-secondary pt-sm">À chaque date de prélèvement, pas le 1er du mois. Si vous vous abonnez le 17, votre quota repart le 17 de chaque mois.</p>
+          <summary class="font-label-md text-label-md text-on-surface cursor-pointer py-md lg:py-0" data-i18n="pricing.faq.q2">Quand mon compteur se remet-il à zéro ?</summary>
+          <p class="font-body-sm text-body-sm text-secondary pt-sm" data-i18n="pricing.faq.a2">À chaque date de prélèvement, pas le 1er du mois. Si vous vous abonnez le 17, votre quota repart le 17 de chaque mois.</p>
         </details>
         <details class="bg-surface-container-lowest border border-outline-variant rounded-lg p-md">
-          <summary class="font-label-md text-label-md text-on-surface cursor-pointer">Les générations non utilisées sont-elles reportées ?</summary>
-          <p class="font-body-sm text-body-sm text-secondary pt-sm">Non. En revanche, les packs de générations achetés à l'unité n'expirent pas et se consomment une fois le quota mensuel épuisé.</p>
+          <summary class="font-label-md text-label-md text-on-surface cursor-pointer py-md lg:py-0" data-i18n="pricing.faq.q3">Les générations non utilisées sont-elles reportées ?</summary>
+          <p class="font-body-sm text-body-sm text-secondary pt-sm" data-i18n="pricing.faq.a3">Non. En revanche, les packs de générations achetés à l'unité n'expirent pas et se consomment une fois le quota mensuel épuisé.</p>
         </details>
         <details class="bg-surface-container-lowest border border-outline-variant rounded-lg p-md">
-          <summary class="font-label-md text-label-md text-on-surface cursor-pointer">Puis-je changer de formule ou résilier ?</summary>
-          <p class="font-body-sm text-body-sm text-secondary pt-sm">À tout moment depuis « Gérer mon abonnement ». Le changement est proratisé, la résiliation prend effet à la fin de la période déjà payée.</p>
+          <summary class="font-label-md text-label-md text-on-surface cursor-pointer py-md lg:py-0" data-i18n="pricing.faq.q4">Puis-je changer de formule ou résilier ?</summary>
+          <p class="font-body-sm text-body-sm text-secondary pt-sm" data-i18n="pricing.faq.a4">À tout moment depuis « Gérer mon abonnement ». Le changement est proratisé, la résiliation prend effet à la fin de la période déjà payée.</p>
+        </details>
+        <details class="bg-surface-container-lowest border border-outline-variant rounded-lg p-md">
+          <summary class="font-label-md text-label-md text-on-surface cursor-pointer py-md lg:py-0" data-i18n="pricing.faq.q5">Et le droit de rétractation de 14 jours ?</summary>
+          <p class="font-body-sm text-body-sm text-secondary pt-sm" data-i18n-html="pricing.faq.a5_html">Vous en disposez pendant 14 jours après votre souscription. Comme le service démarre immédiatement à votre demande, vous ne payez que la part déjà utilisée : le solde vous est remboursé. Détail et formulaire : <a href="/legal.html#retractation" class="text-primary-container underline">section Rétractation</a>.</p>
         </details>
       </section>
+
+      <!-- Votre compte. Il n'existe pas de page « réglages » : les actions qui
+           portent sur le compte lui-même vivent ici, à côté de l'abonnement,
+           plutôt que dans une page de plus à traduire et à référencer.
+           Masqué tant que le visiteur n'est pas connecté. -->
+      <section id="account" class="hidden"></section>
     </main>
 
     <footer id="site-footer" class="bg-surface"></footer>

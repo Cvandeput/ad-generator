@@ -1,5 +1,21 @@
 // Couche d'accès API : un seul endroit pour fetch, gestion d'erreur et la
 // redirection sur 401. Le DOM ne parle qu'à ce module (pas de fetch éparpillé).
+import { t, has, currentLang, DEFAULT_LANG } from './i18n.js';
+
+// --- Messages d'erreur ------------------------------------------------------
+// Le backend est francophone : ses messages (`data.error`) ne sont pas
+// traduits et ne peuvent pas l'être depuis le front. Politique retenue :
+//   · en français, on garde le message du serveur — plus précis que le nôtre ;
+//   · dans les autres langues, on affiche notre message localisé, choisi par
+//     `data.code` quand le serveur en fournit un, sinon par le code HTTP.
+// Ajouter un nouveau code métier = ajouter une clé `errors.code.<CODE>`.
+function localizedMessage(status, code, serverMessage) {
+  if (currentLang() === DEFAULT_LANG && serverMessage) return serverMessage;
+  if (code && has(`errors.code.${code}`)) return t(`errors.code.${code}`);
+  if (has(`errors.status.${status}`)) return t(`errors.status.${status}`);
+  if (status >= 500) return t('errors.status.500');
+  return t('errors.generic');
+}
 
 export class ApiError extends Error {
   constructor(message, status, data) {
@@ -7,6 +23,8 @@ export class ApiError extends Error {
     this.name = 'ApiError';
     this.status = status;
     this.data = data;
+    this.code = (data && data.code) || null;
+    this.serverMessage = (data && data.error) || null;
   }
 }
 
@@ -20,7 +38,7 @@ async function request(path, opts = {}, { redirectOn401 = true } = {}) {
     res = await fetch(path, { credentials: 'same-origin', ...opts });
   } catch {
     // Réseau injoignable (offline, backend down).
-    throw new ApiError('Connexion au serveur impossible', 0);
+    throw new ApiError(t('errors.network'), 0);
   }
 
   if (res.status === 401 && redirectOn401 && !onLoginPage()) {
@@ -31,7 +49,7 @@ async function request(path, opts = {}, { redirectOn401 = true } = {}) {
   const data = ct.includes('application/json') ? await res.json().catch(() => null) : null;
 
   if (!res.ok) {
-    throw new ApiError((data && data.error) || `Erreur ${res.status}`, res.status, data);
+    throw new ApiError(localizedMessage(res.status, data && data.code, data && data.error), res.status, data);
   }
   return data;
 }
@@ -59,17 +77,41 @@ export const api = {
   billing: {
     plans: () => request('/api/billing/plans', {}, { redirectOn401: false }),
     subscription: () => request('/api/billing/subscription', {}, { redirectOn401: false }),
-    checkout: (plan) => request('/api/billing/checkout', json({ plan })),
-    pack: () => request('/api/billing/pack', { method: 'POST' }),
+    // `withdrawalConsent` est obligatoire : le serveur refuse l'achat sans lui
+    // (sans consentement exprès, une rétractation donnerait droit au
+    // remboursement intégral). Ce n'est pas une option d'appel.
+    checkout: (plan, withdrawalConsent) => request('/api/billing/checkout', json({ plan, withdrawalConsent })),
+    pack: (withdrawalConsent) => request('/api/billing/pack', json({ withdrawalConsent })),
     portal: () => request('/api/billing/portal', { method: 'POST' }),
     cancel: () => request('/api/billing/cancel', { method: 'POST' }),
+    // Rétractation : lecture (éligibilité + montant exact) puis exécution.
+    withdrawal: () => request('/api/billing/withdrawal', {}, { redirectOn401: false }),
+    withdraw: (kind, expectedRefundCents) =>
+      request('/api/billing/withdrawal', json({ kind, expectedRefundCents })),
+  },
+
+  // Compte : suppression par l'utilisateur lui-même (art. 17).
+  account: {
+    // Aperçu : un 401 ici est une vraie session expirée → redirection normale.
+    deletionPreview: () => request('/api/account/deletion-preview'),
+    // Pas de redirection automatique : un mauvais mot de passe répond 401
+    // BAD_PASSWORD et doit s'afficher dans la page. L'appelant (tarifs.js)
+    // renvoie lui-même vers /login pour un 401 sans ce code (session expirée).
+    remove: (password, reason) => request('/api/account/delete', json({ password, reason }), { redirectOn401: false }),
   },
 
   // Administration. 404 pour un compte non admin : l'existence des routes
   // n'est pas observable depuis le navigateur.
   admin: {
     overview: () => request('/api/admin/overview'),
-    users: (q) => request(`/api/admin/users${q ? `?q=${encodeURIComponent(q)}` : ''}`),
+    // `deleted` : liste les comptes DÉSACTIVÉS au lieu des comptes actifs.
+    users: (q, deleted) => {
+      const p = new URLSearchParams();
+      if (q) p.set('q', q);
+      if (deleted) p.set('deleted', '1');
+      const qs = p.toString();
+      return request(`/api/admin/users${qs ? `?${qs}` : ''}`);
+    },
     generations: (status) => request(`/api/admin/generations${status ? `?status=${encodeURIComponent(status)}` : ''}`),
     credits: (id, credits) => request(`/api/admin/users/${id}/credits`, json({ credits })),
     verifyUser: (id) => request(`/api/admin/users/${id}/verify`, { method: 'POST' }),
