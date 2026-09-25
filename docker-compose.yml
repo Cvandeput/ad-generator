@@ -52,6 +52,11 @@ services:
     volumes:
       - ./nginx/default.conf:/etc/nginx/conf.d/default.conf:ro
       - ./nginx/snippets/adcraft-security.conf:/etc/nginx/snippets/adcraft-security.conf:ro
+      # Pages d'erreur (404 / 50x) + reponse JSON quand le backend est a l'arret.
+      # adcraft-error-pages.conf inclut adcraft-headers.conf : les deux ensemble,
+      # sinon nginx refuse de demarrer.
+      - ./nginx/snippets/adcraft-error-pages.conf:/etc/nginx/snippets/adcraft-error-pages.conf:ro
+      - ./nginx/snippets/adcraft-headers.conf:/etc/nginx/snippets/adcraft-headers.conf:ro
       - ./frontend:/usr/share/nginx/html:ro
       - ./certbot/www:/var/www/certbot
       - ./certbot/conf:/etc/letsencrypt
