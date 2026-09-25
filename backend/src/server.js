@@ -18,6 +18,7 @@ import { purgeExpiredTokens } from './tokens.js';
 import requireVerified from './middleware/requireVerified.js';
 import requireAdmin from './middleware/requireAdmin.js';
 import adminRoutes from './routes/admin.js';
+import accountRoutes from './routes/account.js';
 import { syncAdmins } from './admin.js';
 import { RETIRED, normalizeModel } from './pricing.js';
 
@@ -120,13 +121,18 @@ if (retiredOn) {
 app.get('/api/health', (_req, res) => res.json({ ok: true }));
 
 // Adresse non confirmée = pas de génération. Monté devant /api/generate, donc
-// indépendant de la facturation (routes/generate.js n'est pas modifié).
+// indépendant de la facturation.
+// La relance passe par la MÊME chaîne : elle rappelle n8n et coûte autant
+// qu'une génération. Sans ces lignes, elle contournait vérification et quota.
+const RETRY = '/api/generation/:id/retry';
 app.use('/api/generate', requireVerified);
+app.post(RETRY, requireVerified);
 
-// Quota d'abonnement : middleware monté DEVANT les routes de génération
-// (routes/generate.js n'est pas modifié). Refuse avant l'upload des photos.
+// Quota d'abonnement : middleware monté DEVANT les routes de génération.
+// Refuse avant l'upload des photos.
 if (BILLING) {
   app.use('/api/generate', billingQuota.requireQuota);
+  app.post(RETRY, billingQuota.requireQuota);
   app.use('/api/billing', billing.default);
   console.log(`💳 Facturation activée (mode ${billing.MODE})`);
 }
@@ -134,15 +140,35 @@ if (BILLING) {
 // l'existence de ces routes n'est pas observable.
 app.use('/api/admin', requireAdmin, adminRoutes);
 app.use('/api/auth', authRoutes);
+// Suppression de compte (art. 17). Hors de /api/auth : ce n'est pas de
+// l'authentification, et la route mérite d'être trouvable telle quelle.
+app.use('/api/account', accountRoutes);
 app.use('/api', generateRoutes);
 app.use('/api', notFound);
 
 // Front statique (dev : le backend sert les fichiers ; prod : nginx). Les
 // fichiers d'outillage du dossier frontend ne sont jamais servis.
 const FRONTEND_DIR = path.join(__dirname, '..', '..', 'frontend');
-const BLOCKED_STATIC = /^\/(package(-lock)?\.json|tailwind\.config\.js|node_modules(\/|$)|_tmp_shots(\/|$)|css\/input\.css|\.[^/]*)/;
+const BLOCKED_STATIC = /^\/(package(-lock)?\.json|tailwind\.config\.js|node_modules(\/|$)|_tmp_shots(\/|$)|tools(\/|$)|css\/input\.css|\.[^/]*)/;
 app.use((req, res, next) => (BLOCKED_STATIC.test(req.path) ? res.status(404).end() : next()));
 app.use(express.static(FRONTEND_DIR, { dotfiles: 'deny', index: 'index.html' }));
+
+// 404 du front. En production c'est nginx qui sert cette page (error_page), mais
+// en dev le backend sert aussi le statique : sans ce handler on tomberait sur la
+// page HTML par défaut d'Express, qui fuit le nom du framework.
+//
+// Les routes /api/ ne passent JAMAIS ici : `app.use('/api', notFound)` plus haut
+// les a déjà closes en JSON. Un client d'API qui reçoit du HTML casse — c'est le
+// piège classique d'un error_page posé trop large.
+app.use((req, res, next) => {
+  if (req.method !== 'GET' && req.method !== 'HEAD') return next();
+  if (!String(req.get('accept') || '').includes('text/html')) {
+    return res.status(404).json({ error: 'Introuvable' });
+  }
+  res.status(404).sendFile(path.join(FRONTEND_DIR, '404.html'), (err) => {
+    if (err) res.status(404).type('txt').send('404');
+  });
+});
 
 app.use(errorHandler);
 

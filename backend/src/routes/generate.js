@@ -7,6 +7,7 @@ import requireAuth from '../middleware/requireAuth.js';
 import db, { OUTPUTS_DIR, UPLOADS_DIR } from '../db.js';
 import { config } from '../config.js';
 import { costForModel } from '../pricing.js';
+import { purgeGenerationFiles } from '../storage.js';
 import { THEMES, CATEGORIES, MAX_PRODUCTS } from '../../../shared/prompt.mjs';
 
 const router = Router();
@@ -121,13 +122,27 @@ async function performGeneration(genId, params, images) {
     const outPath = path.join(OUTPUTS_DIR, `${genId}.${ext}`);
     fs.writeFileSync(outPath, buf);
 
-    db.prepare(
+    // Garde « compte encore actif » : l'appel à n8n dure de longues secondes, et
+    // le compte a pu être supprimé entre-temps. Sans elle, on réécrirait
+    // `output_path`/`prompt_used` sur la ligne pseudonymisée et l'image
+    // resterait sur le disque. Aucune ligne touchée (compte supprimé, ou
+    // génération effacée pendant l'appel) → on efface ce qu'on vient d'écrire.
+    const info = db.prepare(
       `UPDATE generations SET status='done', output_path=?, mime_type=?, prompt_used=?, art_direction_source=?,
-       cost_usd=?, model=?, image_size=? WHERE id=?`
+       cost_usd=?, model=?, image_size=? WHERE id=? AND user_id IN (SELECT id FROM users WHERE deleted_at IS NULL)`
     ).run(outPath, mimeType, promptUsed, artDirectionSource, cost.usd, cost.model, cost.imageSize, genId);
+    if (info.changes === 0) {
+      purgeGenerationFiles(genId, outPath);
+      const gone = new Error('Non authentifié');
+      gone.status = 401;
+      gone.genId = genId;
+      gone.accountGone = true;
+      throw gone;
+    }
 
     return { id: genId, status: 'done', url: `/api/image/${genId}`, costUsd: cost.usd, costEur: cost.usd * config.usdToEur, model: cost.model };
   } catch (err) {
+    if (err.accountGone) throw err; // rien à écrire sur une ligne pseudonymisée
     const message = err.name === 'AbortError' ? 'Délai dépassé (n8n/Gemini)' : err.message;
     db.prepare(`UPDATE generations SET status='error', error=? WHERE id=?`).run(message, genId);
     const wrapped = new Error(message);
@@ -137,13 +152,16 @@ async function performGeneration(genId, params, images) {
   }
 }
 
+// Même garde que la mise à jour finale : une requête partie avant la
+// suppression du compte (upload en cours) n'insère rien. Retourne null alors.
 function insertPending(p) {
-  return db
+  const info = db
     .prepare(
       `INSERT INTO generations (user_id, brand, category, flavor, theme, description, art_direction, product_count, input_count, status)
-       VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, 'pending')`
+       SELECT ?, ?, ?, ?, ?, ?, ?, ?, ?, 'pending' WHERE EXISTS (SELECT 1 FROM users WHERE id = ? AND deleted_at IS NULL)`
     )
-    .run(p.userId, p.brand, p.category, p.flavor || null, p.theme, p.description || null, p.artDirection || null, p.productCount || null, p.inputCount).lastInsertRowid;
+    .run(p.userId, p.brand, p.category, p.flavor || null, p.theme, p.description || null, p.artDirection || null, p.productCount || null, p.inputCount, p.userId);
+  return info.changes ? info.lastInsertRowid : null;
 }
 
 router.post('/generate', requireAuth, hourly, daily, upload.array('images', MAX_IMAGES), async (req, res) => {
@@ -171,6 +189,7 @@ router.post('/generate', requireAuth, hourly, daily, upload.array('images', MAX_
   if (sniffed.some((m) => !m)) return res.status(400).json({ error: 'Un des fichiers n’est pas une image JPEG/PNG/WebP valide' });
 
   const genId = insertPending({ userId: req.session.userId, brand, category, flavor, theme, description, artDirection, productCount, inputCount: files.length });
+  if (!genId) return res.status(401).json({ error: 'Non authentifié' });
 
   // Persiste les images d'entrée (réutilisées par une éventuelle relance).
   const inputDir = path.join(UPLOADS_DIR, String(genId));
@@ -211,6 +230,7 @@ router.post('/generation/:id/retry', requireAuth, hourly, daily, async (req, res
     productCount: orig.product_count || null,
   };
   const genId = insertPending({ ...params, inputCount: images.length });
+  if (!genId) return res.status(401).json({ error: 'Non authentifié' });
 
   const srcDir = path.join(UPLOADS_DIR, String(orig.id));
   const dstDir = path.join(UPLOADS_DIR, String(genId));

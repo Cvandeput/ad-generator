@@ -10,6 +10,7 @@ import { destroyUserSessions } from '../sessions.js';
 import { createToken, consumeToken } from '../tokens.js';
 import { roleFor } from '../admin.js';
 import { sendMail, verificationEmail } from '../mail.js';
+import { emailHash, wasDeleted, isReservedEmail } from '../identity.js';
 
 const router = Router();
 
@@ -121,18 +122,33 @@ router.post('/register', registerLimiter, async (req, res, next) => {
         return res.status(403).json({ error: "Code d'invitation invalide" });
       }
     }
-    if (email.length > MAX_EMAIL || !EMAIL_RE.test(email)) return res.status(400).json({ error: 'Email invalide' });
+    // isReservedEmail : `.invalid` est le domaine des adresses neutres des
+    // comptes supprimés (cf. identity.js) — même réponse qu'une adresse mal formée.
+    if (email.length > MAX_EMAIL || !EMAIL_RE.test(email) || isReservedEmail(email)) return res.status(400).json({ error: 'Email invalide' });
     const issues = passwordIssues(password, email);
     if (issues.length) return res.status(400).json({ error: 'Mot de passe refusé : ' + issues.join(' ; '), issues });
     if (!acceptTerms) return res.status(400).json({ error: 'Vous devez accepter les mentions légales et la politique de confidentialité' });
 
     // Réponse identique que l'email existe ou non : pas d'énumération de comptes.
     // (En mode invite, le détenteur du code est de confiance ; on reste neutre.)
+    // `deleted_at IS NULL` n'est PAS nécessaire ici — l'adresse d'un compte
+    // supprimé a été neutralisée, donc elle est libre et la personne a le droit
+    // de revenir. Ce qu'elle ne récupère pas, c'est le quota gratuit : voir
+    // juste en dessous.
     const existing = db.prepare('SELECT id FROM users WHERE email = ?').get(email);
     if (existing) {
       audit('register.duplicate', req, { email });
       return res.status(202).json({ ok: true, message: 'Si cette adresse est disponible, le compte a été créé. Connectez-vous.' });
     }
+
+    // Cette adresse a-t-elle déjà eu un compte supprimé ? On ne conserve pas
+    // l'adresse des comptes supprimés, seulement son empreinte : elle suffit à
+    // répondre oui/non sans rien garder d'identifiant. Si oui, le compte est
+    // créé normalement mais SANS générations offertes — sinon « supprimer puis
+    // recréer » devient une machine à quotas gratuits, l'abus exact que
+    // config.js documente pour REGISTER_MODE=open.
+    const forfeited = wasDeleted(email);
+    if (forfeited) audit('register.returning_deleted', req, {});
 
     const hash = await bcrypt.hash(password, 12);
     const now = new Date().toISOString();
@@ -140,12 +156,12 @@ router.post('/register', registerLimiter, async (req, res, next) => {
     // tant que l'adresse n'est pas confirmée (anti-comptes en série).
     const info = db
       .prepare(
-        `INSERT INTO users (email, password_hash, terms_version, terms_accepted_at, password_changed_at, email_verified, email_verified_at, role)
-         VALUES (?, ?, ?, ?, ?, ?, ?, ?)`
+        `INSERT INTO users (email, password_hash, terms_version, terms_accepted_at, password_changed_at, email_verified, email_verified_at, role, email_hash, free_quota_forfeited)
+         VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`
       )
       // roleFor : une adresse listée dans ADMIN_EMAILS est admin dès la
       // création, sans attendre un redémarrage du serveur.
-      .run(email, hash, config.termsVersion, now, now, config.emailVerification ? 0 : 1, config.emailVerification ? null : now, roleFor(email));
+      .run(email, hash, config.termsVersion, now, now, config.emailVerification ? 0 : 1, config.emailVerification ? null : now, roleFor(email), emailHash(email), forfeited ? 1 : 0);
     const user = db.prepare('SELECT * FROM users WHERE id = ?').get(info.lastInsertRowid);
     audit('register.ok', req, { userId: user.id, verification: config.emailVerification });
 
@@ -168,7 +184,12 @@ router.post('/login', loginLimiter, async (req, res, next) => {
       return res.status(400).json({ error: 'Email ou mot de passe incorrect' });
     }
 
-    const user = db.prepare('SELECT * FROM users WHERE email = ?').get(email);
+    // deleted_at IS NULL : c'est LE filtre à ne pas oublier. L'adresse d'un
+    // compte supprimé est neutralisée, donc elle ne devrait déjà plus
+    // correspondre — mais si une seule ligne échappait à la pseudonymisation
+    // (migration partielle, restauration de sauvegarde), le compte se
+    // reconnecterait comme si de rien n'était.
+    const user = db.prepare('SELECT * FROM users WHERE email = ? AND deleted_at IS NULL').get(email);
 
     if (user && user.locked_until && new Date(user.locked_until) > new Date()) {
       audit('login.locked', req, { userId: user.id });
@@ -229,7 +250,7 @@ router.post('/password', requireAuth, loginLimiter, async (req, res, next) => {
   try {
     const current = String(req.body.currentPassword || '');
     const fresh = String(req.body.newPassword || '');
-    const user = db.prepare('SELECT * FROM users WHERE id = ?').get(req.session.userId);
+    const user = db.prepare('SELECT * FROM users WHERE id = ? AND deleted_at IS NULL').get(req.session.userId);
     if (!user || !(await bcrypt.compare(current, user.password_hash))) {
       return res.status(401).json({ error: 'Mot de passe actuel incorrect' });
     }
@@ -256,7 +277,7 @@ router.post('/password', requireAuth, loginLimiter, async (req, res, next) => {
 router.post('/accept-terms', requireAuth, (req, res) => {
   const accept = req.body.acceptTerms === true || req.body.acceptTerms === 'true';
   if (!accept) return res.status(400).json({ error: 'Acceptation requise' });
-  db.prepare('UPDATE users SET terms_version = ?, terms_accepted_at = ? WHERE id = ?')
+  db.prepare('UPDATE users SET terms_version = ?, terms_accepted_at = ? WHERE id = ? AND deleted_at IS NULL')
     .run(config.termsVersion, new Date().toISOString(), req.session.userId);
   audit('terms.accepted', req, { userId: req.session.userId, version: config.termsVersion });
   res.json({ ok: true, termsVersion: config.termsVersion });
@@ -271,9 +292,11 @@ router.post('/verify-email', verifyLimiter, (req, res) => {
     audit('verify.failed', req, {});
     return res.status(400).json({ error: 'Lien invalide ou expiré. Demandez-en un nouveau.', code: 'INVALID_TOKEN' });
   }
-  db.prepare('UPDATE users SET email_verified = 1, email_verified_at = ? WHERE id = ?').run(new Date().toISOString(), userId);
+  db.prepare('UPDATE users SET email_verified = 1, email_verified_at = ? WHERE id = ? AND deleted_at IS NULL')
+    .run(new Date().toISOString(), userId);
+  const user = db.prepare('SELECT * FROM users WHERE id = ? AND deleted_at IS NULL').get(userId);
+  if (!user) return res.status(400).json({ error: 'Lien invalide ou expiré.', code: 'INVALID_TOKEN' });
   audit('verify.ok', req, { userId });
-  const user = db.prepare('SELECT * FROM users WHERE id = ?').get(userId);
   res.json({ ok: true, user: publicUser(user) });
 });
 
@@ -285,11 +308,11 @@ router.post('/resend-verification', resendLimiter, async (req, res, next) => {
 
     // Soit l'utilisateur est connecté, soit il fournit son adresse.
     const email = req.session?.userId
-      ? db.prepare('SELECT email FROM users WHERE id = ?').get(req.session.userId)?.email
+      ? db.prepare('SELECT email FROM users WHERE id = ? AND deleted_at IS NULL').get(req.session.userId)?.email
       : String(req.body.email || '').trim().toLowerCase();
     if (!email) return res.status(202).json(neutral);
 
-    const user = db.prepare('SELECT * FROM users WHERE email = ?').get(email);
+    const user = db.prepare('SELECT * FROM users WHERE email = ? AND deleted_at IS NULL').get(email);
     if (!user || user.email_verified) return res.status(202).json(neutral);
 
     await sendVerification(user, req);
@@ -305,7 +328,10 @@ router.get('/config', (_req, res) => {
 });
 
 router.get('/me', requireAuth, (req, res) => {
-  const user = db.prepare('SELECT * FROM users WHERE id = ?').get(req.session.userId);
+  // Un compte supprimé n'apparaît plus ici : la session éventuellement
+  // survivante est détruite au passage, ce qui referme la porte au lieu de
+  // renvoyer un 401 en boucle.
+  const user = db.prepare('SELECT * FROM users WHERE id = ? AND deleted_at IS NULL').get(req.session.userId);
   if (!user) {
     return req.session.destroy(() => res.status(401).json({ error: 'Non authentifié' }));
   }

@@ -29,6 +29,14 @@ export const PLANS = {
 // Pack de dépassement (paiement unique, crédits qui ne expirent pas).
 export const PACK = { key: 'pack20', label: '20 générations', credits: 20, eur: 6, priceId: process.env.STRIPE_PRICE_PACK20 };
 
+// Prix en CENTIMES entiers. Tout calcul de remboursement passe par ici : en
+// flottants, 24.9 * 0.4 vaut 9.959999999999999 et l'arrondi part au hasard
+// selon l'ordre des opérations. Un centime d'écart sur un remboursement, c'est
+// une réclamation ; sur une comptabilité, c'est une ligne qui ne tombe pas juste.
+export const toCents = (eur) => Math.round(Number(eur) * 100);
+export const planCents = (key) => toCents((PLANS[key] || PLANS.free).eur);
+export const PACK_CENTS = toCents(PACK.eur);
+
 export const PAID_KEYS = ['starter', 'pro', 'studio'];
 
 // Price ID Stripe → formule (utilisé par le webhook).

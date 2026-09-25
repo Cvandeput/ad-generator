@@ -1,5 +1,6 @@
 import bcrypt from 'bcryptjs';
 import db from './db.js';
+import { isReservedEmail } from './identity.js';
 
 // Comptes pré-créés depuis la variable d'env SEED_USERS.
 // Format : "email:motdepasse,email2:$2a$12$hashBcrypt"  (pas de virgule dans un mot de passe)
@@ -22,6 +23,13 @@ export function seedUsers() {
     const email = e.slice(0, idx).trim().toLowerCase();
     let secret = e.slice(idx + 1);
     if (!email || !secret) continue;
+    // Domaine `.invalid` : réservé aux adresses neutres des comptes supprimés
+    // (cf. identity.js). Une entrée seed ne doit ni en créer une, ni en
+    // retrouver une — SEED_FORCE_PASSWORD rendrait un mot de passe à la ligne.
+    if (isReservedEmail(email)) {
+      console.warn(`⚠️  ${email} : adresse invalide (domaine .invalid réservé), compte ignoré.`);
+      continue;
+    }
     // Forme "b64:<base64 du hash>" : évite les `$` du hash bcrypt, que docker
     // compose (env_file) interpole comme des variables et corrompt.
     if (secret.startsWith('b64:')) secret = Buffer.from(secret.slice(4), 'base64').toString('utf8');
