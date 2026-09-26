@@ -11,6 +11,10 @@ import { createToken, consumeToken } from '../tokens.js';
 import { roleFor } from '../admin.js';
 import { sendMail, verificationEmail } from '../mail.js';
 import { emailHash, wasDeleted, isReservedEmail } from '../identity.js';
+// Lecture seule de la grille (aucun effet de bord, aucune dépendance Stripe) :
+// le quota gratuit affiché par le front doit être celui que billing/quota.js
+// applique réellement, donc la même source (FREE_PLAN_QUOTA).
+import { PLANS } from '../billing/plans.js';
 
 const router = Router();
 
@@ -323,8 +327,14 @@ router.post('/resend-verification', resendLimiter, async (req, res, next) => {
 });
 
 // Configuration publique (le front adapte la page de connexion / inscription).
+// freeQuota : générations offertes à l'inscription (« 5 visuels offerts »).
 router.get('/config', (_req, res) => {
-  res.json({ registerMode: config.registerMode, termsVersion: config.termsVersion, emailVerification: config.emailVerification });
+  res.json({
+    registerMode: config.registerMode,
+    termsVersion: config.termsVersion,
+    emailVerification: config.emailVerification,
+    freeQuota: PLANS.free.quota,
+  });
 });
 
 router.get('/me', requireAuth, (req, res) => {

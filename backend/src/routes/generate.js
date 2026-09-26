@@ -8,7 +8,15 @@ import db, { OUTPUTS_DIR, UPLOADS_DIR } from '../db.js';
 import { config } from '../config.js';
 import { costForModel } from '../pricing.js';
 import { purgeGenerationFiles } from '../storage.js';
+import { isAdmin } from '../admin.js';
 import { THEMES, CATEGORIES, MAX_PRODUCTS } from '../../../shared/prompt.mjs';
+
+// Facturation optionnelle, chargée comme dans server.js : BILLING_ENABLED=false
+// → aucun module de facturation importé, /api/usage répond sans état de quota.
+// quotaState() ne sert qu'à la requête, donc après la migration faite par
+// billing/routes.js (importé par server.js).
+const BILLING = process.env.BILLING_ENABLED === 'true';
+const billingQuota = BILLING ? await import('../billing/quota.js') : null;
 
 const router = Router();
 
@@ -152,6 +160,14 @@ async function performGeneration(genId, params, images) {
   }
 }
 
+// Le coût interne (fournisseur, modèle, montant) ne sort que vers un admin : le
+// client paie un prix de formule, pas le prix de revient.
+function publicResult(result, userId) {
+  if (isAdmin(userId)) return result;
+  const { costUsd, costEur, model, ...rest } = result;
+  return rest;
+}
+
 // Même garde que la mise à jour finale : une requête partie avant la
 // suppression du compte (upload en cours) n'insère rien. Retourne null alors.
 function insertPending(p) {
@@ -202,7 +218,7 @@ router.post('/generate', requireAuth, hourly, daily, upload.array('images', MAX_
 
   try {
     const result = await performGeneration(genId, { userId: req.session.userId, brand, category, flavor, theme, description, artDirection, productCount }, images);
-    res.json(result);
+    res.json(publicResult(result, req.session.userId));
   } catch (err) {
     res.status(err.status || 502).json({ id: err.genId || genId, status: 'error', error: err.message });
   }
@@ -238,7 +254,7 @@ router.post('/generation/:id/retry', requireAuth, hourly, daily, async (req, res
   for (const name of fs.readdirSync(srcDir)) fs.copyFileSync(path.join(srcDir, name), path.join(dstDir, name));
 
   try {
-    res.json(await performGeneration(genId, params, images));
+    res.json(publicResult(await performGeneration(genId, params, images), req.session.userId));
   } catch (err) {
     res.status(err.status || 502).json({ id: err.genId || genId, status: 'error', error: err.message });
   }
@@ -284,6 +300,9 @@ router.get('/history', requireAuth, (req, res) => {
     if (r.status in counts) counts[r.status] = r.n;
   }
 
+  // Coût et modèle : réservés aux admins (cf. publicResult). L'historique
+  // client ne les affiche pas.
+  const admin = isAdmin(uid);
   res.json({
     items: rows.map((r) => ({
       id: r.id,
@@ -294,8 +313,7 @@ router.get('/history', requireAuth, (req, res) => {
       description: r.description,
       status: r.status,
       error: r.error,
-      costEur: r.cost_usd * config.usdToEur,
-      model: r.model,
+      ...(admin ? { costEur: r.cost_usd * config.usdToEur, model: r.model } : {}),
       createdAt: r.created_at,
       url: r.status === 'done' ? `/api/image/${r.id}` : null,
     })),
@@ -303,9 +321,34 @@ router.get('/history', requireAuth, (req, res) => {
   });
 });
 
-// Suivi de consommation : ce mois, tout-temps, 6 derniers mois + prix unitaire courant.
+// État du quota d'abonnement (facturation active uniquement). Un admin n'a pas
+// de décompte : quotaState renvoie Infinity, que JSON sérialiserait en null.
+function billingState(uid) {
+  if (!billingQuota) return null;
+  try {
+    const s = billingQuota.quotaState(uid);
+    if (s.unlimited) return { plan: s.planKey, used: s.used, unlimited: true };
+    return {
+      plan: s.planKey,
+      used: s.used,
+      quota: s.quota,
+      remaining: s.remaining,
+      credits: s.credits,
+      lifetime: s.lifetime, // formule gratuite : quota « à vie », pas mensuel
+      periodEnd: s.periodEnd,
+    };
+  } catch (err) {
+    // Le compteur d'en-tête ne doit pas tomber avec la facturation.
+    console.warn(`[usage] état du quota indisponible : ${err.message}`);
+    return null;
+  }
+}
+
+// Suivi de consommation : ce mois, tout-temps, 6 derniers mois, état du quota.
+// Montants et prix unitaire (prix de revient) : admins seulement.
 router.get('/usage', requireAuth, (req, res) => {
   const uid = req.session.userId;
+  const admin = isAdmin(uid);
   const month = new Date().toISOString().slice(0, 7); // YYYY-MM (UTC)
   const cur = db
     .prepare(
@@ -323,17 +366,23 @@ router.get('/usage', requireAuth, (req, res) => {
     )
     .all(uid);
 
-  const withEur = (r) => ({ count: r.n, usd: r.usd, eur: r.usd * config.usdToEur });
-  const unit = unitCost();
-  res.json({
+  const withEur = (r) => (admin ? { count: r.n, usd: r.usd, eur: r.usd * config.usdToEur } : { count: r.n });
+  const body = {
     month,
-    rate: config.usdToEur,
-    unit: { usd: unit.usd, eur: unit.usd * config.usdToEur, model: unit.model, imageSize: unit.imageSize },
+    isAdmin: admin,
     quota: { perHour: config.genPerHour, perDay: config.genPerDay },
     currentMonth: withEur(cur),
     allTime: withEur(all),
     months: months.map((r) => ({ month: r.m, ...withEur(r) })),
-  });
+  };
+  if (admin) {
+    const unit = unitCost();
+    body.rate = config.usdToEur;
+    body.unit = { usd: unit.usd, eur: unit.usd * config.usdToEur, model: unit.model, imageSize: unit.imageSize };
+  }
+  const billing = billingState(uid);
+  if (billing) body.billing = billing;
+  res.json(body);
 });
 
 // Sert l'image générée. Vérifie l'appartenance au compte.
