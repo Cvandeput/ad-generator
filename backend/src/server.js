@@ -56,9 +56,10 @@ app.use(
       directives: {
         'default-src': ["'self'"],
         'script-src': ["'self'"],
-        'style-src': ["'self'", 'https://fonts.googleapis.com'],
+        // Polices auto-hébergées (frontend/fonts) : plus aucune origine Google.
+        'style-src': ["'self'"],
         'style-src-attr': ["'unsafe-inline'"], // style="background:…" des tuiles de thème
-        'font-src': ["'self'", 'https://fonts.gstatic.com'],
+        'font-src': ["'self'"],
         'img-src': ["'self'", 'blob:', 'data:'],
         'connect-src': ["'self'"],
         'frame-ancestors': ["'none'"],

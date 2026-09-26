@@ -2,16 +2,78 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Base : Inter + fond neutre du design system AdCraft Studio. */
+/* --- Polices auto-hébergées (/fonts) ----------------------------------------
+   Plus aucune requête vers Google Fonts : chaque visite leur transmettait
+   l'adresse IP du visiteur sans base légale (RGPD). Inter et Space Grotesk sont
+   des polices VARIABLES : un seul fichier par sous-ensemble couvre toutes les
+   graisses. latin + latin-ext suffisent pour FR/EN/NL ; `unicode-range` fait
+   que le navigateur ne télécharge latin-ext qu'en cas de besoin. */
+@font-face {
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 400 700;
+  font-display: swap;
+  src: url('/fonts/inter-latin.woff2') format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+@font-face {
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 400 700;
+  font-display: swap;
+  src: url('/fonts/inter-latin-ext.woff2') format('woff2');
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+@font-face {
+  font-family: 'Space Grotesk';
+  font-style: normal;
+  font-weight: 500 700;
+  font-display: swap;
+  src: url('/fonts/space-grotesk-latin.woff2') format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+@font-face {
+  font-family: 'Space Grotesk';
+  font-style: normal;
+  font-weight: 500 700;
+  font-display: swap;
+  src: url('/fonts/space-grotesk-latin-ext.woff2') format('woff2');
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+/* Icônes : instance STATIQUE (FILL 0, wght 400, GRAD 0, opsz 24), la seule
+   que le site utilise — 316 Ko au lieu de la police variable complète.
+   `block` : sans police, une icône s'afficherait en toutes lettres
+   (« visibility_off ») le temps du chargement. */
+@font-face {
+  font-family: 'Material Symbols Outlined';
+  font-style: normal;
+  font-weight: 400;
+  font-display: block;
+  src: url('/fonts/material-symbols-outlined.woff2') format('woff2');
+}
+
+/* Base : Inter + fond du design system. */
 @layer base {
   body {
     font-family: 'Inter', sans-serif;
     background-color: theme('colors.background');
     color: theme('colors.on-surface');
   }
-  /* Icônes Material Symbols (police chargée via Google Fonts dans le <head>). */
+  /* Icônes Material Symbols. Les déclarations de police et de ligature
+     venaient jusqu'ici de la feuille Google Fonts : elles vivent désormais ici. */
   .material-symbols-outlined {
-    font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+    font-family: 'Material Symbols Outlined';
+    font-weight: normal;
+    font-style: normal;
+    font-size: 24px;
+    letter-spacing: normal;
+    text-transform: none;
+    display: inline-block;
+    white-space: nowrap;
+    word-wrap: normal;
+    direction: ltr;
+    font-feature-settings: 'liga';
+    -webkit-font-smoothing: antialiased;
     line-height: 1;
     user-select: none;
   }
@@ -118,15 +180,15 @@
   background: transparent;
 }
 ::-webkit-scrollbar-thumb {
-  background: #dadad9;
+  background: theme('colors.surface-dim');
   border-radius: 4px;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: #c4c5d7;
+  background: theme('colors.outline-variant');
 }
 
 /* Dropzone en survol de drag. */
 .drag-over {
-  border-color: #1d4ed8 !important;
-  background-color: #f3f4f3 !important;
+  border-color: theme('colors.primary-container') !important;
+  background-color: theme('colors.surface-container-low') !important;
 }
