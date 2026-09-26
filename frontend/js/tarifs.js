@@ -8,6 +8,7 @@
 import { api, ApiError } from './api.js';
 import { escapeHtml } from './components.js';
 import { mountChrome } from './nav.js';
+import { openModal, BTN_DANGER } from './modal.js';
 import { t, tList, has, money, date } from './i18n.js';
 
 // Montants : le serveur ne parle qu'en CENTIMES ENTIERS, l'affichage passe par
@@ -157,77 +158,6 @@ function renderPack() {
     </div>`;
 }
 
-// --- Modale réutilisable ------------------------------------------------------
-// Même squelette que la modale de ré-acceptation des CGU (js/nav.js) : dialog
-// modal, focus au clavier, fermeture par Échap. `confirm()` natif ne convient
-// pas ici — il n'affiche ni case à cocher, ni champ de mot de passe, ni montant
-// mis en forme, et il n'est pas traduisible.
-const BTN_DANGER = `${BTN} bg-error text-on-error hover:opacity-90 disabled:opacity-60`;
-
-function openModal({ title, bodyHtml, checkLabel, passwordLabel, confirmLabel, confirmClass = BTN_PRIMARY }) {
-  return new Promise((resolve) => {
-    const el = document.createElement('div');
-    el.className = 'fixed inset-0 z-[70] bg-[rgba(26,28,28,0.55)] flex items-center justify-center p-lg overflow-y-auto';
-    el.setAttribute('role', 'dialog');
-    el.setAttribute('aria-modal', 'true');
-    el.setAttribute('aria-labelledby', 'modal-title');
-    el.innerHTML = `
-      <div class="w-full max-w-[520px] my-auto bg-surface-container-lowest border border-outline-variant rounded-xl p-lg flex flex-col gap-md">
-        <h2 id="modal-title" class="font-headline-md text-headline-md text-on-surface">${escapeHtml(title)}</h2>
-        <div class="font-body-base text-body-base text-on-surface-variant flex flex-col gap-sm">${bodyHtml}</div>
-        ${checkLabel ? `
-          <label class="flex items-start gap-sm cursor-pointer py-sm min-h-[44px]">
-            <input type="checkbox" class="js-check mt-[2px] w-5 h-5 rounded border-outline text-primary-container focus:ring-primary-container" />
-            <span class="font-body-sm text-body-sm text-on-surface">${escapeHtml(checkLabel)}</span>
-          </label>` : ''}
-        ${passwordLabel ? `
-          <label class="flex flex-col gap-xs">
-            <span class="font-label-md text-label-md text-on-surface">${escapeHtml(passwordLabel)}</span>
-            <input type="password" autocomplete="current-password" class="js-password h-11 px-md rounded border border-outline-variant bg-surface-container-lowest text-on-surface font-body-base focus:outline-none focus-visible:ring-2 focus-visible:ring-primary-container" />
-          </label>` : ''}
-        <p class="js-error font-body-sm text-body-sm text-error hidden"></p>
-        <div class="flex justify-end gap-sm flex-wrap">
-          <button type="button" class="js-modal-cancel ${BTN_GHOST}">${escapeHtml(t('common.cancel'))}</button>
-          <button type="button" class="js-confirm ${confirmClass}"${checkLabel ? ' disabled' : ''}>${escapeHtml(confirmLabel)}</button>
-        </div>
-      </div>`;
-
-    const check = el.querySelector('.js-check');
-    const password = el.querySelector('.js-password');
-    const confirm = el.querySelector('.js-confirm');
-    const error = el.querySelector('.js-error');
-
-    // La case n'est JAMAIS pré-cochée : un consentement pré-coché n'est pas un
-    // consentement (art. 22 de la directive 2011/83, et bon sens).
-    check?.addEventListener('change', () => (confirm.disabled = !check.checked));
-
-    const close = (value) => {
-      document.removeEventListener('keydown', onKey);
-      el.remove();
-      resolve(value);
-    };
-    const onKey = (e) => { if (e.key === 'Escape') close(null); };
-    document.addEventListener('keydown', onKey);
-
-    // `.js-modal-cancel` et non `.js-cancel` : cette dernière est interceptée par
-    // l'écouteur global de la page, qui propose de RÉSILIER l'abonnement.
-    el.querySelector('.js-modal-cancel').addEventListener('click', () => close(null));
-    el.addEventListener('click', (e) => { if (e.target === el) close(null); });
-    confirm.addEventListener('click', () => {
-      if (passwordLabel && !password.value) {
-        error.textContent = t('account.delete.passwordRequired');
-        error.classList.remove('hidden');
-        password.focus();
-        return;
-      }
-      close({ password: password ? password.value : null });
-    });
-
-    document.body.appendChild(el);
-    (password || check || confirm).focus();
-  });
-}
-
 // --- Consentement exprès à l'exécution immédiate ------------------------------
 // Sans cette étape, pas de prorata possible : la rétractation donnerait droit au
 // remboursement intégral. Le serveur refuse d'ailleurs le paiement sans elle.
@@ -328,70 +258,17 @@ async function doWithdraw(btn) {
   }
 }
 
-// --- Votre compte : suppression (art. 17) -------------------------------------
-function renderAccount() {
+// --- Lien vers « Mon compte » -------------------------------------------------
+// La suppression du compte (et le mot de passe, la langue, les sessions) vit
+// désormais sur /account.html. Ici, un simple lien discret pour qui est connecté.
+function renderAccountLink() {
   if (!state.user) { accountEl.classList.add('hidden'); return; }
   accountEl.classList.remove('hidden');
   accountEl.innerHTML = `
-    <div class="border border-outline-variant rounded-xl p-lg flex flex-col gap-sm bg-surface-container-lowest">
-      <h2 class="font-headline-md text-headline-md text-on-surface">${escapeHtml(t('account.title'))}</h2>
-      <p class="font-body-sm text-body-sm text-secondary">${escapeHtml(t('account.delete.teaser'))}</p>
-      <div class="flex justify-start pt-xs">
-        <button type="button" class="js-delete-account ${BTN_GHOST}">${escapeHtml(t('account.delete.cta'))}</button>
-      </div>
-    </div>`;
-}
-
-async function doDeleteAccount(btn) {
-  let preview = { generations: 0, images: 0 };
-  try { preview = await api.account.deletionPreview(); } catch { /* valeurs par défaut */ }
-
-  const res = await openModal({
-    title: t('account.delete.title'),
-    // Trois blocs, dans cet ordre : ce qui est effacé, ce qui est conservé, et
-    // POURQUOI. Une confirmation qui n'annonce que « êtes-vous sûr ? » ne permet
-    // pas un consentement éclairé — et c'est précisément le reproche fait aux
-    // suppressions de compte qui n'en sont pas.
-    bodyHtml: `
-      <p>${escapeHtml(t('account.delete.intro'))}</p>
-      <p class="font-label-md text-label-md text-on-surface">${escapeHtml(t('account.delete.erasedTitle'))}</p>
-      <ul class="list-disc pl-lg font-body-sm text-body-sm text-on-surface-variant flex flex-col gap-xs">
-        ${tList('account.delete.erased', { count: preview.images })
-          .map((li) => `<li>${escapeHtml(li)}</li>`).join('')}
-      </ul>
-      <p class="font-label-md text-label-md text-on-surface">${escapeHtml(t('account.delete.keptTitle'))}</p>
-      <ul class="list-disc pl-lg font-body-sm text-body-sm text-on-surface-variant flex flex-col gap-xs">
-        ${tList('account.delete.kept', { generations: preview.generations, years: preview.accountingYears ?? 7 })
-          .map((li) => `<li>${escapeHtml(li)}</li>`).join('')}
-      </ul>
-      <p class="font-body-sm text-body-sm text-secondary">${escapeHtml(t('account.delete.why'))}</p>`,
-    checkLabel: t('account.delete.checkbox'),
-    passwordLabel: t('account.delete.password'),
-    confirmLabel: t('account.delete.confirm'),
-    confirmClass: BTN_DANGER,
-  });
-  if (!res) return;
-
-  btn.disabled = true;
-  btn.textContent = t('common.loading');
-  try {
-    await api.account.remove(res.password, null);
-    // Pas de message sur cette page : le compte n'existe plus, la session est
-    // détruite. On renvoie vers l'accueil avec un accusé.
-    location.href = '/?compte=supprime';
-  } catch (err) {
-    // 401 sans BAD_PASSWORD : la session a expiré entre-temps (api.js ne
-    // redirige pas sur cet appel, pour laisser afficher le mauvais mot de passe).
-    if (err instanceof ApiError && err.status === 401 && err.code !== 'BAD_PASSWORD') {
-      location.href = '/login.html';
-      return;
-    }
-    btn.disabled = false;
-    btn.textContent = t('account.delete.cta');
-    // err.message est déjà localisé par api.js (errors.code.BAD_PASSWORD hors FR).
-    bannerEl.innerHTML = notice('err', escapeHtml(err.message || t('pricing.errors.operationFailed')));
-    bannerEl.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-  }
+    <p class="font-body-sm text-body-sm text-secondary text-center">
+      ${escapeHtml(t('pricing.manageAccountHint'))}
+      <a href="/account.html" class="inline-flex items-center gap-[2px] min-h-[44px] lg:min-h-0 text-primary-container hover:text-primary"><span class="underline underline-offset-2">${escapeHtml(t('pricing.manageAccount'))}</span><span class="material-symbols-outlined text-[16px]" aria-hidden="true">arrow_forward</span></a>
+    </p>`;
 }
 
 async function go(promise, btn) {
@@ -430,8 +307,6 @@ document.addEventListener('click', async (e) => {
   if (cancel && confirm(t('pricing.current.cancelConfirm'))) return go(api.billing.cancel(), cancel);
   const withdraw = e.target.closest('.js-withdraw');
   if (withdraw) return doWithdraw(withdraw);
-  const del = e.target.closest('.js-delete-account');
-  if (del) return doDeleteAccount(del);
 });
 
 // Messages de retour (Checkout / démo). Le webhook fait foi : on ne provisionne
@@ -491,5 +366,5 @@ function renderHeading() {
   renderWithdrawal();
   renderPlans();
   renderPack();
-  renderAccount();
+  renderAccountLink();
 })();

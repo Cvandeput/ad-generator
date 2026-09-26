@@ -3,12 +3,13 @@
 // d'adresse pour qu'il ne traîne pas dans l'historique.
 import { api, ApiError } from './api.js';
 import { escapeHtml } from './components.js';
-import { t, currentLang, DEFAULT_LANG, renderLanguageSwitch, wireLanguageSwitch } from './i18n.js';
+import { t, currentLang, DEFAULT_LANG } from './i18n.js';
+import { renderLangCompact, wireLangLinks } from './nav.js';
 
 const slot = document.getElementById('lang-slot');
 if (slot) {
-  slot.innerHTML = renderLanguageSwitch({ id: 'lang-verify' });
-  wireLanguageSwitch(slot);
+  slot.innerHTML = renderLangCompact();
+  wireLangLinks(slot);
 }
 
 const panel = document.getElementById('panel');

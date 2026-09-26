@@ -23,7 +23,41 @@
       "title": "Uw account verwijderen",
       "why": "Het bewaren van factuurgegevens beantwoordt aan een boekhoudkundige verplichting; het dekt noch uw profiel, noch uw foto’s, die wel degelijk worden verwijderd."
     },
-    "title": "Uw account"
+    "title": "Uw account",
+    "signedInAs": "Aangemeld met het adres {{email}}.",
+    "plan": {
+      "seePlans": "Formules bekijken"
+    },
+    "password": {
+      "title": "Wachtwoord",
+      "intro": "Kies een wachtwoord dat u nergens anders gebruikt.",
+      "current": "Huidig wachtwoord",
+      "new": "Nieuw wachtwoord",
+      "show": "Wachtwoord tonen",
+      "rules": {
+        "different": "Verschilt van uw huidige wachtwoord"
+      },
+      "submit": "Wachtwoord wijzigen",
+      "saving": "Opslaan…",
+      "success": "Wachtwoord gewijzigd. Voor uw veiligheid zijn uw andere toestellen afgemeld; hier blijft u aangemeld.",
+      "errors": {
+        "badCurrent": "Uw huidige wachtwoord is onjuist.",
+        "rejected": "Dit wachtwoord wordt niet aanvaard: vermijd veelgebruikte wachtwoorden, voorspelbare reeksen en herhaalde tekens.",
+        "same": "Uw nieuwe wachtwoord moet verschillen van het huidige."
+      }
+    },
+    "language": {
+      "title": "Taal",
+      "hint": "Taal van de interface. Uw keuze wordt in deze browser bewaard."
+    },
+    "sessions": {
+      "title": "Sessies",
+      "text": "Een gedeeld toestel gebruikt of een telefoon verloren? Sluit al uw sessies in één keer.",
+      "logoutAll": "Afmelden op alle toestellen",
+      "confirmTitle": "Afmelden op alle toestellen?",
+      "confirmText": "Al uw sessies worden gesloten, ook deze. U moet zich op elk toestel opnieuw aanmelden.",
+      "confirm": "Overal afmelden"
+    }
   },
   "admin": {
     "gens": {
@@ -142,9 +176,10 @@
     "skipToContent": "Naar de inhoud"
   },
   "cookies": {
-    "ok": "Begrepen",
     "region": "Cookiemelding",
-    "text_html": "{{brand}} gebruikt alleen een technische sessiecookie, die nodig is om u aangemeld te houden. Geen reclame- of trackingcookies. <a href=\"/legal.html#cookies\" class=\"text-primary-container underline\">Meer weten</a>"
+    "short": "{{brand}} gebruikt slechts één technische cookie, om u aangemeld te houden. Geen tracking.",
+    "more": "Meer weten",
+    "close": "Cookiemelding sluiten"
   },
   "errors": {
     "code": {
@@ -191,7 +226,11 @@
     "empty": {
       "none": "Nog geen visual gegenereerd. Start een generatie en uw werk verschijnt hier.",
       "title": "Geen resultaten",
-      "withFailures": "Geen geslaagde generatie voor deze selectie — klap de mislukkingen hierboven open om te zien waarom."
+      "firstTitle": "Nog geen visuals",
+      "firstCta": "Mijn eerste visual maken",
+      "onlyFailures": "Nog geen enkele generatie is gelukt. Klap de mislukkingen hierboven open om te zien waarom en start ze opnieuw.",
+      "filtered": "Geen enkele visual past bij deze filters.",
+      "resetCta": "Filters wissen"
     },
     "failureReason": "Reden: {{message}}",
     "failuresCount_one": "{{count}} mislukte generatie",
@@ -264,6 +303,67 @@
         "text": "Merk, categorie, variant. Vermeld de echte vorm — blikje, zakje, pot — zodat het decor klopt.",
         "title": "Beschrijf het product"
       }
+    },
+    "cta": {
+      "try": "Gratis uitproberen",
+      "signup": "Account aanmaken",
+      "login": "Aanmelden",
+      "offer_one": "{{count}} gratis visual, zonder bankkaart",
+      "offer_other": "{{count}} gratis visuals, zonder bankkaart",
+      "haveAccount_html": "Al een account? <a href=\"/login.html\" class=\"text-primary-container underline\">Aanmelden</a>",
+      "invite_html": "Hebt u een uitnodigingscode? <a href=\"/register.html\" class=\"text-primary-container underline\">Account aanmaken</a>"
+    },
+    "audience": {
+      "title": "Voor iedereen die een product verkoopt",
+      "subtitle": "Van de buurtwinkel tot het bureau, dezelfde behoefte: verzorgde visuals, snel, zonder een fotoshoot te organiseren.",
+      "shops": {
+        "title": "Webshops",
+        "text": "Geef elk product uit uw catalogus een campagnevisual, zonder fotoshoot. De verpakking blijft precies wat uw klant ontvangt."
+      },
+      "local": {
+        "title": "Lokale handelaars en producenten",
+        "text": "Fotografeer uw pot, fles of geschenkdoos aan de toonbank en post de visual dezelfde dag nog op uw sociale media."
+      },
+      "restaurants": {
+        "title": "Restaurants",
+        "text": "Kondig de zomerkaart, een avondevenement of de feestdagen aan met een visual in thema, op basis van een foto van uw flessen of afhaalproducten."
+      },
+      "agencies": {
+        "title": "Bureaus en communitymanagers",
+        "text": "Werk voor meerdere merken zonder telkens opnieuw te beginnen: zeven thema’s of een vrij decor, tot zes producten per visual, en een geschiedenis om elke creatie terug te vinden."
+      }
+    },
+    "pricing": {
+      "title": "Gratis uitproberen, daarna vanaf {{price}}/maand",
+      "subtitle": "Zonder verbintenis, op elk moment opzegbaar. Herroepingsrecht van 14 dagen.",
+      "free": "Gratis",
+      "perMonth": "/maand",
+      "quotaLifetime_one": "{{count}} visual in totaal",
+      "quotaLifetime_other": "{{count}} visuals in totaal",
+      "quotaMonthly_one": "{{count}} visual per maand",
+      "quotaMonthly_other": "{{count}} visuals per maand",
+      "pack_one": "Even meer nodig? Een pakket van {{count}} visual voor {{amount}}, zonder abonnement.",
+      "pack_other": "Even meer nodig? Een pakket van {{count}} visuals voor {{amount}}, zonder abonnement.",
+      "seeAll": "Alle formules bekijken"
+    },
+    "faq": {
+      "title": "Veelgestelde vragen",
+      "subtitle": "Wat u moet weten voor u een account aanmaakt.",
+      "q1": "Is een bankkaart nodig om het uit te proberen?",
+      "a1_one": "Nee. Een account aanmaken is gratis en omvat {{count}} gratis visual. Een bankkaart wordt pas gevraagd als u een abonnement of een pakket kiest.",
+      "a1_other": "Nee. Een account aanmaken is gratis en omvat {{count}} gratis visuals. Een bankkaart wordt pas gevraagd als u een abonnement of een pakket kiest.",
+      "q2": "Hoelang duurt het om een visual te krijgen?",
+      "a2": "Tussen 30 seconden en twee minuten. U krijgt een beeld in formaat 4:5, klaar om te posten op sociale media.",
+      "q3": "Wat gebeurt er met mijn foto’s?",
+      "a3_html": "Ze worden naar Google Cloud (Vertex AI) gestuurd voor de duur van de generatie en daarna bewaard in uw geschiedenis tot u ze verwijdert. Ze worden nooit verkocht of voor reclamedoeleinden gebruikt. <a href=\"/legal.html#confidentialite\" class=\"text-primary-container underline\">Privacybeleid</a>.",
+      "q4": "Mag ik de gegenereerde visuals gebruiken?",
+      "a4_html": "Ja. De gebruiksvoorwaarden geven u gebruiksrechten op visuals die op basis van uw eigen foto’s zijn gegenereerd, binnen de grenzen van de voorwaarden van Google Cloud. U moet de rechten hebben op de foto’s die u uploadt en elke visual nakijken voor u hem verspreidt: de AI kan een detail wijzigen, zoals de tekst op een verpakking. <a href=\"/legal.html#cgu\" class=\"text-primary-container underline\">Gebruiksvoorwaarden</a>.",
+      "q5": "Kan ik op elk moment opzeggen?",
+      "a5_html": "Ja. Abonnementen zijn zonder verbintenis: u zegt op via de pagina Tarieven, en de opzegging gaat in aan het einde van de reeds betaalde periode. Als consument hebt u bovendien een <a href=\"/legal.html#retractation\" class=\"text-primary-container underline\">herroepingsrecht van 14 dagen</a>."
+    },
+    "final": {
+      "title": "Probeer het met uw eigen producten",
+      "text": "Een foto met uw smartphone volstaat. Uw visual is klaar in minder dan twee minuten."
     }
   },
   "legal": {
@@ -413,27 +513,34 @@
     },
     "verify": {
       "title": "Bevestiging van uw e-mailadres — {{brand}}"
+    },
+    "account": {
+      "title": "Mijn account — {{brand}}",
+      "description": "Formule, wachtwoord, taal en verwijdering van uw {{brand}}-account."
     }
   },
   "nav": {
-    "admin": "Beheer",
+    "admin": "Beheerconsole",
     "examples": "Voorbeelden",
     "generate": "Genereren",
     "history": "Geschiedenis",
-    "home": "Start",
     "homeAria": "{{brand}} — startpagina",
     "howItWorks": "Hoe het werkt",
     "language": "Taal",
     "login": "Aanmelden",
     "logoAlt": "{{brand}}",
     "logout": "Afmelden",
-    "logoutTitle": "Afmelden ({{email}})",
     "mainNav": "Hoofdnavigatie",
     "menu": "Menu",
     "mobileNav": "Mobiele navigatie",
     "pricing": "Tarieven",
     "signup": "Account aanmaken",
-    "studio": "Studio"
+    "studio": "Studio",
+    "account": "Mijn account",
+    "accountMenu": "Accountmenu",
+    "signedInAs": "Aangemeld als",
+    "tryFree": "Gratis proberen",
+    "faq": "FAQ"
   },
   "notFound": {
     "code": "Fout 404",
@@ -555,13 +662,13 @@
     "redirecting": "Doorsturen…",
     "subtitle": "Elke formule bevat een aantal generaties per maand. De teller start opnieuw op uw afrekendatum. Zonder verbintenis, in één klik opzegbaar.",
     "title": "Visuals, geen ingewikkelde abonnementen",
-    "unitPrice": "oftewel {{amount}} per visual"
+    "unitPrice": "oftewel {{amount}} per visual",
+    "manageAccountHint": "Wachtwoord, taal of account verwijderen:",
+    "manageAccount": "Mijn account beheren"
   },
   "register": {
-    "confirmPassword": "Wachtwoord bevestigen",
     "consent_html": "Ik heb de <a href=\"/legal.html#mentions\" target=\"_blank\" rel=\"noopener\" class=\"text-primary-container underline\">wettelijke vermeldingen</a>, het <a href=\"/legal.html#confidentialite\" target=\"_blank\" rel=\"noopener\" class=\"text-primary-container underline\">privacybeleid</a> en de <a href=\"/legal.html#cgu\" target=\"_blank\" rel=\"noopener\" class=\"text-primary-container underline\">gebruiksvoorwaarden</a> gelezen en aanvaard ze. Ik bevestig dat ik de rechten bezit op de foto’s die ik zal uploaden.",
     "created": "Als dit adres beschikbaar is, is uw account aangemaakt. Meld u aan.",
-    "freeStart": "U start op de gratis formule, zonder bankkaart. Daarna kiest u een abonnement.",
     "haveAccount": "Al een account? Aanmelden",
     "inviteCode": "Uitnodigingscode",
     "modeClosed": "De registraties zijn gesloten: de toegang verloopt op uitnodiging. Neem contact op met de beheerder.",
@@ -570,12 +677,18 @@
     "rules": {
       "classes": "3 soorten uit: kleine letter, hoofdletter, cijfer, symbool",
       "email": "Bevat uw e-mailadres niet",
-      "length": "Minstens 12 tekens",
-      "match": "Beide invoervelden komen overeen"
+      "length": "Minstens 12 tekens"
     },
     "submit": "Mijn account aanmaken",
     "title": "Account aanmaken",
-    "unavailable": "Dienst niet beschikbaar, probeer het later opnieuw."
+    "unavailable": "Dienst niet beschikbaar, probeer het later opnieuw.",
+    "pitchTitle": "Uw eerste visual in minder dan twee minuten.",
+    "pitchText": "Upload een foto van uw product en kies een thema: het decor wordt errond opgebouwd, de verpakking blijft de uwe.",
+    "points": {
+      "format": "Formaat 4:5, klaar om te posten op sociale media",
+      "noCommitment": "Geen abonnement nodig om te starten"
+    },
+    "showPassword": "Wachtwoord tonen"
   },
   "serverError": {
     "code": "Serverfout",
@@ -592,8 +705,13 @@
       "summary": "Beschrijf het gewenste decor"
     },
     "empty": {
-      "text": "Stel uw parameters in en klik op ‘Genereren’ om het resultaat te zien.",
-      "title": "Uw canvas"
+      "text": "Doorloop de drie stappen en klik dan op ‘Visual genereren’. Reken op 30 tot 120 seconden.",
+      "title": "Uw visual verschijnt hier",
+      "example": "Voorbeeld",
+      "before": "Uw foto",
+      "after": "De visual",
+      "beforeAlt": "Voorbeeld: ruwe productfoto, genomen met een smartphone",
+      "afterAlt": "Voorbeeld: hetzelfde product in scène gezet in een reclamevisual"
     },
     "error": {
       "title": "Generatie mislukt"
@@ -609,8 +727,13 @@
     "photos": {
       "add": "Toevoegen",
       "count": "{{n}} / {{max}}",
-      "help": "Upload 1 tot 14 foto’s. Eén product per foto, of meerdere producten op dezelfde foto: ze komen allemaal in de visual. Meerdere hoeken van hetzelfde product tellen als één.",
-      "title": "Productfoto’s"
+      "help": "Eén of meerdere producten per foto: ze komen allemaal in de visual. Meerdere hoeken van hetzelfde product tellen als één.",
+      "drop": "Sleep uw foto’s hierheen of klik om te kiezen",
+      "dropTouch": "Tik om uw foto’s te kiezen",
+      "formats": "JPG, PNG, WebP · 1 tot 14 foto’s",
+      "addLabel": "Foto’s toevoegen",
+      "skipped_one": "{{count}} bestand genegeerd: alleen JPG, PNG of WebP, maximaal 14 foto’s.",
+      "skipped_other": "{{count}} bestanden genegeerd: alleen JPG, PNG of WebP, maximaal 14 foto’s."
     },
     "preview": {
       "open": "‘{{name}}’ op ware grootte openen",
@@ -630,12 +753,13 @@
       "flavor": "Smaak",
       "flavorPlaceholder": "Bv. perzik",
       "optional": "(optioneel)",
-      "title": "Product"
+      "more": "Meer opties",
+      "moreHint": "smaak, vorm, aantal producten"
     },
     "progress": {
       "cancel": "Annuleren",
       "step1": "Afbeeldingen versturen",
-      "step2": "Visual samenstellen (Gemini)",
+      "step2": "Visual samenstellen",
       "step3": "Rendering in hoge resolutie",
       "text": "Dit kan tot ~2 minuten duren. Houd de pagina open.",
       "title": "Bezig met genereren…"
@@ -650,14 +774,38 @@
     },
     "srTitle": "Studio voor het genereren van visuals",
     "terms": "Gebruiksvoorwaarden",
-    "theme": {
-      "one": "1 thema",
-      "title": "Decorthema"
-    },
     "unitCost": "≈ {{amount}} per visual ({{model}}{{size}}) · {{perHour}}/u, {{perDay}}/dag · 30 tot 120 s",
-    "unitCostLoading": "Kostprijs per visual: laden…",
     "unverified": {
       "title": "Bevestig uw e-mailadres"
+    },
+    "steps": {
+      "one": {
+        "title": "Upload uw foto’s"
+      },
+      "two": {
+        "title": "Beschrijf het product"
+      },
+      "three": {
+        "title": "Kies een thema"
+      },
+      "short": {
+        "photos": "Foto’s",
+        "product": "Product",
+        "scene": "Decor"
+      },
+      "done": "stap voltooid"
+    },
+    "usage": {
+      "duration": "30 tot 120 s per visual",
+      "trialLeft_one": "U hebt nog {{count}} gratis generatie",
+      "trialLeft_other": "U hebt nog {{count}} gratis generaties",
+      "periodLeft_one": "U hebt deze maand nog {{count}} generatie",
+      "periodLeft_other": "U hebt deze maand nog {{count}} generaties",
+      "none": "U hebt al uw generaties gebruikt",
+      "monthCount_one": "{{count}} visual gegenereerd deze maand",
+      "monthCount_other": "{{count}} visuals gegenereerd deze maand",
+      "left_one": "U hebt nog {{count}} generatie",
+      "left_other": "U hebt nog {{count}} generaties"
     }
   },
   "terms": {
@@ -691,7 +839,12 @@
   },
   "usage": {
     "header_one": "{{count}} afbeelding · {{amount}} deze maand",
-    "header_other": "{{count}} afbeeldingen · {{amount}} deze maand"
+    "header_other": "{{count}} afbeeldingen · {{amount}} deze maand",
+    "remaining_one": "Nog {{count}} generatie",
+    "remaining_other": "Nog {{count}} generaties",
+    "remainingNone": "Geen generaties meer",
+    "month_one": "{{count}} visual deze maand",
+    "month_other": "{{count}} visuals deze maand"
   },
   "verify": {
     "askEmail": "Uw e-mailadres:",

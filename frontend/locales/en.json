@@ -23,7 +23,41 @@
       "title": "Delete your account",
       "why": "Keeping billing data answers an accounting obligation; it covers neither your profile nor your photos, which are genuinely deleted."
     },
-    "title": "Your account"
+    "title": "Your account",
+    "signedInAs": "Signed in as {{email}}.",
+    "plan": {
+      "seePlans": "See plans"
+    },
+    "password": {
+      "title": "Password",
+      "intro": "Choose a password you don't use anywhere else.",
+      "current": "Current password",
+      "new": "New password",
+      "show": "Show password",
+      "rules": {
+        "different": "Different from your current password"
+      },
+      "submit": "Change password",
+      "saving": "Saving…",
+      "success": "Password changed. For your security, your other devices have been signed out; you remain signed in here.",
+      "errors": {
+        "badCurrent": "Your current password is incorrect.",
+        "rejected": "This password isn't accepted: avoid common passwords, predictable sequences and repeated characters.",
+        "same": "Your new password must be different from your current one."
+      }
+    },
+    "language": {
+      "title": "Language",
+      "hint": "Interface language. Your choice is saved in this browser."
+    },
+    "sessions": {
+      "title": "Sessions",
+      "text": "Used a shared device or lost a phone? Close all your sessions in one go.",
+      "logoutAll": "Sign out of all devices",
+      "confirmTitle": "Sign out of all devices?",
+      "confirmText": "All your sessions will be closed, including this one. You will need to sign in again on each device.",
+      "confirm": "Sign out everywhere"
+    }
   },
   "admin": {
     "gens": {
@@ -142,9 +176,10 @@
     "skipToContent": "Skip to content"
   },
   "cookies": {
-    "ok": "Got it",
     "region": "Cookie notice",
-    "text_html": "{{brand}} only uses a technical session cookie, which is what keeps you signed in. No advertising or tracking cookies. <a href=\"/legal.html#cookies\" class=\"text-primary-container underline\">Learn more</a>"
+    "short": "{{brand}} only uses one technical cookie, to keep you signed in. No tracking.",
+    "more": "Learn more",
+    "close": "Dismiss the cookie notice"
   },
   "errors": {
     "code": {
@@ -191,7 +226,11 @@
     "empty": {
       "none": "No visual generated yet. Run a generation to see your work here.",
       "title": "No results",
-      "withFailures": "No successful generation for this selection — open the failures above to see why."
+      "firstTitle": "No visuals yet",
+      "firstCta": "Create my first visual",
+      "onlyFailures": "No generation has succeeded yet. Open the failures above to see why and retry them.",
+      "filtered": "No visual matches these filters.",
+      "resetCta": "Reset filters"
     },
     "failureReason": "Reason: {{message}}",
     "failuresCount_one": "{{count}} failed generation",
@@ -264,6 +303,67 @@
         "text": "Brand, category, variant. Say what shape it really is — can, pouch, jar — so the scene lands right.",
         "title": "Describe the product"
       }
+    },
+    "cta": {
+      "try": "Try it free",
+      "signup": "Create an account",
+      "login": "Sign in",
+      "offer_one": "{{count}} free visual, no card required",
+      "offer_other": "{{count}} free visuals, no card required",
+      "haveAccount_html": "Already have an account? <a href=\"/login.html\" class=\"text-primary-container underline\">Sign in</a>",
+      "invite_html": "Have an invitation code? <a href=\"/register.html\" class=\"text-primary-container underline\">Create an account</a>"
+    },
+    "audience": {
+      "title": "For anyone who sells a product",
+      "subtitle": "From the corner shop to the agency, the need is the same: polished visuals, fast, without organising a photo shoot.",
+      "shops": {
+        "title": "Online shops",
+        "text": "Give every product in your catalogue a campaign visual, without a photo shoot. The packaging stays exactly what your customer will receive."
+      },
+      "local": {
+        "title": "Local shops and producers",
+        "text": "Photograph your jar, bottle or gift box on the counter, and post the visual on your social accounts the same day."
+      },
+      "restaurants": {
+        "title": "Restaurants",
+        "text": "Announce the summer menu, a special evening or the festive season with a themed visual, from a photo of your bottles or takeaway products."
+      },
+      "agencies": {
+        "title": "Agencies and community managers",
+        "text": "Produce for several brands without starting from scratch: seven themes or a custom scene, up to six products per visual, and a history to find every creation."
+      }
+    },
+    "pricing": {
+      "title": "Free to try, then from {{price}}/month",
+      "subtitle": "No commitment, cancel at any time. 14-day right of withdrawal.",
+      "free": "Free",
+      "perMonth": "/month",
+      "quotaLifetime_one": "{{count}} visual in total",
+      "quotaLifetime_other": "{{count}} visuals in total",
+      "quotaMonthly_one": "{{count}} visual a month",
+      "quotaMonthly_other": "{{count}} visuals a month",
+      "pack_one": "Need a top-up? A pack of {{count}} visual for {{amount}}, no subscription.",
+      "pack_other": "Need a top-up? A pack of {{count}} visuals for {{amount}}, no subscription.",
+      "seeAll": "See plan details"
+    },
+    "faq": {
+      "title": "Frequently asked questions",
+      "subtitle": "What to know before you create your account.",
+      "q1": "Do I need a card to try it?",
+      "a1_one": "No. Creating an account is free and includes {{count}} free visual. You are only asked for a card if you choose a subscription or a pack.",
+      "a1_other": "No. Creating an account is free and includes {{count}} free visuals. You are only asked for a card if you choose a subscription or a pack.",
+      "q2": "How long does a visual take?",
+      "a2": "Between 30 seconds and two minutes. You get a 4:5 image, ready to post on social media.",
+      "q3": "What happens to my photos?",
+      "a3_html": "They are sent to Google Cloud (Vertex AI) for the duration of the generation, then kept in your history until you delete them. They are never sold or used for advertising. <a href=\"/legal.html#confidentialite\" class=\"text-primary-container underline\">Privacy policy</a>.",
+      "q4": "Can I use the generated visuals?",
+      "a4_html": "Yes. The terms of use grant you usage rights over visuals generated from your own photos, within the limits of Google Cloud's terms. You must hold the rights to the photos you upload and check each visual before publishing it: the AI can alter a detail, such as the text on a pack. <a href=\"/legal.html#cgu\" class=\"text-primary-container underline\">Terms of use</a>.",
+      "q5": "Can I cancel at any time?",
+      "a5_html": "Yes. Subscriptions carry no commitment: you cancel from the Pricing page, and cancellation takes effect at the end of the period already paid. If you are a consumer, you also have a <a href=\"/legal.html#retractation\" class=\"text-primary-container underline\">14-day right of withdrawal</a>."
+    },
+    "final": {
+      "title": "Try it on your own products",
+      "text": "A smartphone photo is enough. Your visual is ready in under two minutes."
     }
   },
   "legal": {
@@ -413,27 +513,34 @@
     },
     "verify": {
       "title": "Confirm your email address — {{brand}}"
+    },
+    "account": {
+      "title": "My account — {{brand}}",
+      "description": "Plan, password, language and deletion of your {{brand}} account."
     }
   },
   "nav": {
-    "admin": "Admin",
+    "admin": "Admin console",
     "examples": "Examples",
     "generate": "Generate",
     "history": "History",
-    "home": "Home",
     "homeAria": "{{brand}} — home",
     "howItWorks": "How it works",
     "language": "Language",
     "login": "Sign in",
     "logoAlt": "{{brand}}",
     "logout": "Sign out",
-    "logoutTitle": "Sign out ({{email}})",
     "mainNav": "Main navigation",
     "menu": "Menu",
     "mobileNav": "Mobile navigation",
     "pricing": "Pricing",
     "signup": "Create account",
-    "studio": "Studio"
+    "studio": "Studio",
+    "account": "My account",
+    "accountMenu": "Account menu",
+    "signedInAs": "Signed in as",
+    "tryFree": "Try it free",
+    "faq": "FAQ"
   },
   "notFound": {
     "code": "Error 404",
@@ -555,13 +662,13 @@
     "redirecting": "Redirecting…",
     "subtitle": "Every plan includes a number of generations per month. The counter resets on your billing date. No commitment, cancel in one click.",
     "title": "Visuals, not complicated plans",
-    "unitPrice": "that is {{amount}} per visual"
+    "unitPrice": "that is {{amount}} per visual",
+    "manageAccountHint": "Password, language or account deletion:",
+    "manageAccount": "Manage my account"
   },
   "register": {
-    "confirmPassword": "Confirm password",
     "consent_html": "I have read and accept the <a href=\"/legal.html#mentions\" target=\"_blank\" rel=\"noopener\" class=\"text-primary-container underline\">legal notice</a>, the <a href=\"/legal.html#confidentialite\" target=\"_blank\" rel=\"noopener\" class=\"text-primary-container underline\">privacy policy</a> and the <a href=\"/legal.html#cgu\" target=\"_blank\" rel=\"noopener\" class=\"text-primary-container underline\">terms of use</a>. I certify that I hold the rights to the photos I upload.",
     "created": "If this address is available, your account has been created. Please sign in.",
-    "freeStart": "You start on the free plan, no card required. You will pick a subscription right after.",
     "haveAccount": "Already have an account? Sign in",
     "inviteCode": "Invitation code",
     "modeClosed": "Sign-ups are closed: access is by invitation. Contact the administrator.",
@@ -570,12 +677,18 @@
     "rules": {
       "classes": "3 types out of: lowercase, uppercase, digit, symbol",
       "email": "Does not contain your email address",
-      "length": "12 characters minimum",
-      "match": "Both entries match"
+      "length": "12 characters minimum"
     },
     "submit": "Create my account",
     "title": "Create an account",
-    "unavailable": "Service unavailable, try again later."
+    "unavailable": "Service unavailable, try again later.",
+    "pitchTitle": "Your first visual in under two minutes.",
+    "pitchText": "Upload a photo of your product and pick a theme: the scene is built around it, and the packaging stays yours.",
+    "points": {
+      "format": "4:5 format, ready to post on social media",
+      "noCommitment": "No subscription needed to get started"
+    },
+    "showPassword": "Show password"
   },
   "serverError": {
     "code": "Server error",
@@ -592,8 +705,13 @@
       "summary": "Describe the scene you want"
     },
     "empty": {
-      "text": "Set your options, then click “Generate” to see the result.",
-      "title": "Your canvas"
+      "text": "Complete the three steps, then click “Generate the visual”. It takes 30 to 120 seconds.",
+      "title": "Your visual will appear here",
+      "example": "Example",
+      "before": "Your photo",
+      "after": "The visual",
+      "beforeAlt": "Example: raw product photo taken on a phone",
+      "afterAlt": "Example: the same product staged in an advertising visual"
     },
     "error": {
       "title": "Generation failed"
@@ -609,8 +727,13 @@
     "photos": {
       "add": "Add",
       "count": "{{n}} / {{max}}",
-      "help": "Upload 1 to 14 photos. One product per photo, or several products in the same photo: they will all show up in the visual. Several angles of the same product count as one.",
-      "title": "Product photos"
+      "help": "One or more products per photo: they will all show up in the visual. Several angles of the same product count as one.",
+      "drop": "Drag your photos here or click to browse",
+      "dropTouch": "Tap to choose your photos",
+      "formats": "JPG, PNG, WebP · 1 to 14 photos",
+      "addLabel": "Add photos",
+      "skipped_one": "{{count}} file skipped: JPG, PNG or WebP only, 14 photos at most.",
+      "skipped_other": "{{count}} files skipped: JPG, PNG or WebP only, 14 photos at most."
     },
     "preview": {
       "open": "Open “{{name}}” full size",
@@ -630,12 +753,13 @@
       "flavor": "Flavour",
       "flavorPlaceholder": "e.g. peach",
       "optional": "(optional)",
-      "title": "Product"
+      "more": "More options",
+      "moreHint": "flavour, shape, number of products"
     },
     "progress": {
       "cancel": "Cancel",
       "step1": "Uploading the images",
-      "step2": "Composing the visual (Gemini)",
+      "step2": "Composing the visual",
       "step3": "High-definition render",
       "text": "This can take up to ~2 minutes. Keep the page open.",
       "title": "Generating…"
@@ -650,14 +774,38 @@
     },
     "srTitle": "Visual generation studio",
     "terms": "Terms of use",
-    "theme": {
-      "one": "1 theme",
-      "title": "Scene theme"
-    },
     "unitCost": "≈ {{amount}} per visual ({{model}}{{size}}) · {{perHour}}/hour, {{perDay}}/day · 30 to 120 s",
-    "unitCostLoading": "Cost per visual: loading…",
     "unverified": {
       "title": "Confirm your email address"
+    },
+    "steps": {
+      "one": {
+        "title": "Upload your photos"
+      },
+      "two": {
+        "title": "Describe the product"
+      },
+      "three": {
+        "title": "Pick a theme"
+      },
+      "short": {
+        "photos": "Photos",
+        "product": "Product",
+        "scene": "Scene"
+      },
+      "done": "step complete"
+    },
+    "usage": {
+      "duration": "30 to 120 s per visual",
+      "trialLeft_one": "You have {{count}} trial generation left",
+      "trialLeft_other": "You have {{count}} trial generations left",
+      "periodLeft_one": "You have {{count}} generation left this month",
+      "periodLeft_other": "You have {{count}} generations left this month",
+      "none": "You have used all your generations",
+      "monthCount_one": "{{count}} visual generated this month",
+      "monthCount_other": "{{count}} visuals generated this month",
+      "left_one": "You have {{count}} generation left",
+      "left_other": "You have {{count}} generations left"
     }
   },
   "terms": {
@@ -691,7 +839,12 @@
   },
   "usage": {
     "header_one": "{{count}} image · {{amount}} this month",
-    "header_other": "{{count}} images · {{amount}} this month"
+    "header_other": "{{count}} images · {{amount}} this month",
+    "remaining_one": "{{count}} generation left",
+    "remaining_other": "{{count}} generations left",
+    "remainingNone": "No generations left",
+    "month_one": "{{count}} visual this month",
+    "month_other": "{{count}} visuals this month"
   },
   "verify": {
     "askEmail": "Your email address:",

@@ -39,8 +39,9 @@
         </div>
       </div>
 
-      <!-- Barre d'outils : recherche & filtres -->
-      <div class="flex flex-col lg:flex-row gap-sm justify-between items-stretch lg:items-center bg-surface-container-lowest p-sm border border-outline-variant rounded-xl">
+      <!-- Barre d'outils : recherche & filtres. Masquée tant que le compte n'a
+           AUCUN visuel (rien à filtrer) ; js/history.js la révèle ensuite. -->
+      <div id="toolbar" class="hidden flex flex-col lg:flex-row gap-sm justify-between items-stretch lg:items-center bg-surface-container-lowest p-sm border border-outline-variant rounded-xl">
         <div class="relative w-full lg:flex-1">
           <span class="material-symbols-outlined absolute left-md top-1/2 -translate-y-1/2 text-outline text-[18px]" aria-hidden="true">search</span>
           <input id="f-brand" type="text" aria-label="Rechercher une marque" placeholder="Rechercher une marque…" data-i18n-attr="aria-label:history.filters.brandAria;placeholder:history.filters.brandPlaceholder"
@@ -58,7 +59,7 @@
             <option value="date-asc" data-i18n="history.filters.sortOldest">Plus ancien</option>
             <option value="brand-asc" data-i18n="history.filters.sortBrand">Marque (A → Z)</option>
           </select>
-          <button id="reset" class="px-md h-11 lg:h-[34px] text-outline font-label-md text-label-md hover:text-on-surface transition-colors" data-i18n="history.filters.reset">Réinitialiser</button>
+          <button id="reset" type="button" class="px-md h-11 lg:h-[34px] text-outline font-label-md text-label-md hover:text-on-surface transition-colors" data-i18n="history.filters.reset">Réinitialiser</button>
         </div>
       </div>
 

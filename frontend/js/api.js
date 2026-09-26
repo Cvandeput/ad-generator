@@ -68,7 +68,10 @@ export const api = {
   register: (payload) => request('/api/auth/register', json(payload)),
   logout: () => request('/api/auth/logout', { method: 'POST' }),
   logoutAll: () => request('/api/auth/logout-all', { method: 'POST' }),
-  changePassword: (currentPassword, newPassword) => request('/api/auth/password', json({ currentPassword, newPassword })),
+  // Pas de redirection : un mot de passe actuel erroné répond 401 et doit
+  // s'afficher dans la page (account.js distingue la vraie session expirée).
+  changePassword: (currentPassword, newPassword) =>
+    request('/api/auth/password', json({ currentPassword, newPassword }), { redirectOn401: false }),
   acceptTerms: () => request('/api/auth/accept-terms', json({ acceptTerms: true })),
   verifyEmail: (token) => request('/api/auth/verify-email', json({ token }), { redirectOn401: false }),
   resendVerification: (email) => request('/api/auth/resend-verification', json(email ? { email } : {}), { redirectOn401: false }),

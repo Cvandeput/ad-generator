@@ -63,7 +63,7 @@
         "description": "Générateur de visuels publicitaires : déposez une photo produit, choisissez un thème, obtenez un visuel 4:5 avec le packaging conservé à l'identique.",
         "image": "https://ads.devwork.cloud/img/site/og-image.jpg",
         "inLanguage": "fr",
-        "offers": { "@type": "Offer", "availability": "https://schema.org/LimitedAvailability", "price": "0", "priceCurrency": "EUR", "description": "Accès sur invitation" }
+        "offers": { "@type": "Offer", "availability": "https://schema.org/InStock", "price": "0", "priceCurrency": "EUR", "description": "Formule Découverte gratuite, sans carte bancaire" }
       }
     </script>
   </head>
@@ -81,9 +81,19 @@
             <span class="font-label-sm text-label-sm font-semibold tracking-[0.10em] uppercase text-secondary" data-i18n="home.hero.eyebrow">Photographie produit générative</span>
             <h1 class="font-display-xl text-display-lg md:text-display-xl text-on-surface [text-wrap:pretty]" data-i18n="home.hero.title">Vos produits, mis en scène comme en studio.</h1>
             <p class="font-body-base text-body-base text-on-surface-variant max-w-[480px] leading-6" data-i18n="home.hero.text">Déposez une photo de votre produit. Notre outil compose un décor cohérent avec ce que vous vendez, sans jamais retoucher le packaging. Le visuel est prêt en moins de deux minutes.</p>
-            <div class="flex items-center gap-md flex-wrap">
-              <a href="/app.html" class="h-11 px-lg rounded bg-primary-container text-on-primary flex items-center font-label-md text-label-md hover:bg-primary transition-colors" data-cta="studio" data-i18n="home.hero.ctaStudio">Ouvrir le studio</a>
-              <a href="#galerie" class="h-11 px-lg rounded border border-outline-variant bg-surface-container-lowest text-on-surface-variant flex items-center font-label-md text-label-md hover:bg-surface-container transition-colors" data-i18n="home.hero.ctaExamples">Voir des exemples</a>
+            <!-- Appel à l'action : l'état par défaut est celui du visiteur sans
+                 compte, inscription ouverte. js/home.js l'ajuste (connecté,
+                 inscription sur invitation ou fermée, quota offert réel). -->
+            <div class="flex flex-col gap-sm">
+              <div class="flex items-center gap-md flex-wrap">
+                <a href="/register.html" class="h-11 px-lg rounded bg-primary-container text-on-primary flex items-center font-label-md text-label-md hover:bg-primary transition-colors" data-cta="primary" data-i18n="home.cta.try">Essayer gratuitement</a>
+                <a href="#galerie" class="h-11 px-lg rounded border border-outline-variant bg-surface-container-lowest text-on-surface-variant flex items-center font-label-md text-label-md hover:bg-surface-container transition-colors" data-i18n="home.hero.ctaExamples">Voir des exemples</a>
+              </div>
+              <p class="flex flex-wrap items-center gap-x-md gap-y-xs font-body-sm text-body-sm text-on-surface-variant" data-cta-notes>
+                <span class="inline-flex items-center gap-xs" data-cta-offer><span class="material-symbols-outlined text-[16px] text-primary-container" aria-hidden="true">check_circle</span><span data-quota-i18n="home.cta.offer">5 visuels offerts, sans carte bancaire</span></span>
+                <span class="text-secondary" data-cta-login data-i18n-html="home.cta.haveAccount_html">Déjà un compte ? <a href="/login.html" class="text-primary-container underline">Se connecter</a></span>
+                <span class="text-secondary hidden" data-cta-invite data-i18n-html="home.cta.invite_html">Vous avez un code d'invitation ? <a href="/register.html" class="text-primary-container underline">Créer un compte</a></span>
+              </p>
             </div>
             <span class="font-label-sm text-label-sm text-outline" data-i18n="home.hero.bullets">Sept thèmes de mise en scène · format 4:5 prêt pour les réseaux · packaging conservé à l'identique · plusieurs produits par visuel</span>
           </div>
@@ -192,6 +202,110 @@
               </div>
               <figcaption class="font-label-sm text-label-sm font-semibold tracking-[0.08em] uppercase text-primary-container" data-i18n="home.labels.generated">Visuel généré</figcaption>
             </figure>
+          </div>
+        </div>
+      </section>
+
+      <!-- Pour qui -->
+      <section id="pour-qui" class="bg-surface-container-lowest border-b border-outline-variant scroll-mt-[60px]" aria-labelledby="pour-qui-titre">
+        <div class="w-full max-w-container-max mx-auto px-lg py-16 lg:py-24 flex flex-col gap-xl">
+          <div class="flex flex-col gap-sm">
+            <h2 id="pour-qui-titre" class="font-display-lg text-display-lg text-on-surface" data-i18n="home.audience.title">Pour tous ceux qui vendent un produit</h2>
+            <p class="font-body-base text-body-base text-secondary max-w-[560px]" data-i18n="home.audience.subtitle">Du commerce de quartier à l'agence, le même besoin : des visuels soignés, vite, sans organiser de séance photo.</p>
+          </div>
+          <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-lg">
+            <article class="bg-surface-container-low border border-outline-variant rounded-xl p-lg flex flex-col gap-sm">
+              <span class="material-symbols-outlined text-primary-container text-[24px]" aria-hidden="true">shopping_bag</span>
+              <h3 class="font-headline-md text-headline-md text-on-surface" data-i18n="home.audience.shops.title">Boutiques en ligne</h3>
+              <p class="font-body-base text-body-base text-on-surface-variant" data-i18n="home.audience.shops.text">Donnez à chaque produit de votre catalogue un visuel de campagne, sans séance photo. Le packaging reste celui que le client recevra.</p>
+            </article>
+            <article class="bg-surface-container-low border border-outline-variant rounded-xl p-lg flex flex-col gap-sm">
+              <span class="material-symbols-outlined text-primary-container text-[24px]" aria-hidden="true">storefront</span>
+              <h3 class="font-headline-md text-headline-md text-on-surface" data-i18n="home.audience.local.title">Commerces et producteurs locaux</h3>
+              <p class="font-body-base text-body-base text-on-surface-variant" data-i18n="home.audience.local.text">Photographiez votre bocal, votre bouteille ou votre coffret au comptoir, et publiez le visuel sur vos réseaux le jour même.</p>
+            </article>
+            <article class="bg-surface-container-low border border-outline-variant rounded-xl p-lg flex flex-col gap-sm">
+              <span class="material-symbols-outlined text-primary-container text-[24px]" aria-hidden="true">restaurant</span>
+              <h3 class="font-headline-md text-headline-md text-on-surface" data-i18n="home.audience.restaurants.title">Restaurateurs</h3>
+              <p class="font-body-base text-body-base text-on-surface-variant" data-i18n="home.audience.restaurants.text">Annoncez la carte d'été, une soirée ou les fêtes avec un visuel à thème, à partir d'une photo de vos bouteilles ou de vos produits à emporter.</p>
+            </article>
+            <article class="bg-surface-container-low border border-outline-variant rounded-xl p-lg flex flex-col gap-sm">
+              <span class="material-symbols-outlined text-primary-container text-[24px]" aria-hidden="true">groups</span>
+              <h3 class="font-headline-md text-headline-md text-on-surface" data-i18n="home.audience.agencies.title">Agences et community managers</h3>
+              <p class="font-body-base text-body-base text-on-surface-variant" data-i18n="home.audience.agencies.text">Produisez pour plusieurs marques sans repartir de zéro : sept thèmes ou un décor libre, jusqu'à six produits par visuel, et un historique pour retrouver chaque création.</p>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <!-- Aperçu des tarifs : masqué tant que GET /api/billing/plans n'a pas
+           répondu, et définitivement si la facturation est désactivée (404).
+           Les chiffres viennent du serveur (js/home.js), jamais du HTML. -->
+      <section id="tarifs" class="border-b border-outline-variant scroll-mt-[60px] hidden" aria-labelledby="tarifs-titre">
+        <div class="w-full max-w-container-max mx-auto px-lg py-16 lg:py-24 flex flex-col gap-xl">
+          <div class="flex flex-col gap-sm">
+            <h2 id="tarifs-titre" class="font-display-lg text-display-lg text-on-surface">Gratuit pour essayer, puis dès 9,90 €/mois</h2>
+            <p class="font-body-base text-body-base text-secondary max-w-[560px]" data-i18n="home.pricing.subtitle">Sans engagement, résiliable à tout moment. Droit de rétractation de 14 jours.</p>
+          </div>
+          <div id="home-plans" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-lg"></div>
+          <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-md">
+            <p id="home-pack" class="font-body-sm text-body-sm text-secondary hidden"></p>
+            <a href="/tarifs.html" class="h-11 px-lg rounded border border-outline-variant bg-surface-container-lowest text-on-surface-variant inline-flex items-center justify-center gap-xs self-start md:self-auto shrink-0 font-label-md text-label-md hover:bg-surface-container transition-colors">
+              <span data-i18n="home.pricing.seeAll">Voir le détail des formules</span>
+              <span class="material-symbols-outlined text-[18px]" aria-hidden="true">arrow_forward</span>
+            </a>
+          </div>
+        </div>
+      </section>
+
+      <!-- FAQ -->
+      <section id="faq" class="bg-surface-container-lowest border-b border-outline-variant scroll-mt-[60px]" aria-labelledby="faq-titre">
+        <div class="w-full max-w-container-max mx-auto px-lg py-16 lg:py-24 flex flex-col lg:flex-row gap-xl">
+          <div class="lg:w-[360px] flex-shrink-0 flex flex-col gap-sm">
+            <h2 id="faq-titre" class="font-display-lg text-display-lg text-on-surface" data-i18n="home.faq.title">Questions fréquentes</h2>
+            <p class="font-body-base text-body-base text-secondary" data-i18n="home.faq.subtitle">L'essentiel à savoir avant de créer votre compte.</p>
+          </div>
+          <div class="flex-1 min-w-0 flex flex-col gap-md">
+            <details class="bg-surface-container-low border border-outline-variant rounded-lg p-md" data-needs="trial">
+              <summary class="font-label-md text-label-md text-on-surface cursor-pointer py-md lg:py-0" data-i18n="home.faq.q1">Faut-il une carte bancaire pour essayer ?</summary>
+              <p class="font-body-sm text-body-sm text-secondary pt-sm" data-quota-i18n="home.faq.a1">Non. La création du compte est gratuite et inclut 5 visuels offerts. Une carte ne vous est demandée que si vous choisissez un abonnement ou un pack.</p>
+            </details>
+            <details class="bg-surface-container-low border border-outline-variant rounded-lg p-md">
+              <summary class="font-label-md text-label-md text-on-surface cursor-pointer py-md lg:py-0" data-i18n="home.faq.q2">Combien de temps faut-il pour obtenir un visuel ?</summary>
+              <p class="font-body-sm text-body-sm text-secondary pt-sm" data-i18n="home.faq.a2">Entre 30 secondes et deux minutes. Vous obtenez une image au format 4:5, prête à publier sur les réseaux sociaux.</p>
+            </details>
+            <details class="bg-surface-container-low border border-outline-variant rounded-lg p-md">
+              <summary class="font-label-md text-label-md text-on-surface cursor-pointer py-md lg:py-0" data-i18n="home.faq.q3">Que deviennent mes photos ?</summary>
+              <p class="font-body-sm text-body-sm text-secondary pt-sm" data-i18n-html="home.faq.a3_html">Elles sont transmises à Google Cloud (Vertex AI) le temps de la génération, puis conservées dans votre historique jusqu'à ce que vous les supprimiez. Elles ne sont ni vendues ni utilisées à des fins publicitaires. <a href="/legal.html#confidentialite" class="text-primary-container underline">Politique de confidentialité</a>.</p>
+            </details>
+            <details class="bg-surface-container-low border border-outline-variant rounded-lg p-md">
+              <summary class="font-label-md text-label-md text-on-surface cursor-pointer py-md lg:py-0" data-i18n="home.faq.q4">Puis-je utiliser les visuels générés ?</summary>
+              <p class="font-body-sm text-body-sm text-secondary pt-sm" data-i18n-html="home.faq.a4_html">Oui. Les conditions d'utilisation vous accordent les droits d'usage sur les visuels générés à partir de vos propres photos, dans les limites des conditions de Google Cloud. Vous devez détenir les droits sur les photos déposées et relire chaque visuel avant de le diffuser : l'IA peut altérer un détail, comme un texte d'emballage. <a href="/legal.html#cgu" class="text-primary-container underline">Conditions d'utilisation</a>.</p>
+            </details>
+            <details class="bg-surface-container-low border border-outline-variant rounded-lg p-md" data-needs="billing">
+              <summary class="font-label-md text-label-md text-on-surface cursor-pointer py-md lg:py-0" data-i18n="home.faq.q5">Puis-je résilier à tout moment ?</summary>
+              <p class="font-body-sm text-body-sm text-secondary pt-sm" data-i18n-html="home.faq.a5_html">Oui. Les abonnements sont sans engagement : vous résiliez depuis la page Tarifs, et la résiliation prend effet à la fin de la période déjà payée. Si vous êtes un consommateur, vous disposez aussi d'un <a href="/legal.html#retractation" class="text-primary-container underline">droit de rétractation de 14 jours</a>.</p>
+            </details>
+          </div>
+        </div>
+      </section>
+
+      <!-- Appel à l'action final -->
+      <section aria-labelledby="final-titre">
+        <div class="w-full max-w-container-max mx-auto px-lg py-16 lg:py-24">
+          <div class="bg-surface-container-lowest border border-outline-variant rounded-xl p-lg md:p-xl shadow-[0_12px_32px_rgba(26,28,28,0.08)] flex flex-col lg:flex-row lg:items-center lg:justify-between gap-lg">
+            <div class="flex flex-col gap-sm">
+              <h2 id="final-titre" class="font-display-lg text-display-lg text-on-surface" data-i18n="home.final.title">Essayez sur vos propres produits</h2>
+              <p class="font-body-base text-body-base text-on-surface-variant max-w-[520px]" data-i18n="home.final.text">Une photo prise au smartphone suffit. Votre visuel est prêt en moins de deux minutes.</p>
+            </div>
+            <div class="flex flex-col gap-sm lg:items-end flex-shrink-0">
+              <a href="/register.html" class="h-11 px-lg rounded bg-primary-container text-on-primary flex items-center justify-center self-start lg:self-end font-label-md text-label-md hover:bg-primary transition-colors" data-cta="primary" data-i18n="home.cta.try">Essayer gratuitement</a>
+              <p class="flex flex-wrap items-center lg:justify-end gap-x-md gap-y-xs font-body-sm text-body-sm text-on-surface-variant" data-cta-notes>
+                <span class="inline-flex items-center gap-xs" data-cta-offer><span class="material-symbols-outlined text-[16px] text-primary-container" aria-hidden="true">check_circle</span><span data-quota-i18n="home.cta.offer">5 visuels offerts, sans carte bancaire</span></span>
+                <span class="text-secondary" data-cta-login data-i18n-html="home.cta.haveAccount_html">Déjà un compte ? <a href="/login.html" class="text-primary-container underline">Se connecter</a></span>
+                <span class="text-secondary hidden" data-cta-invite data-i18n-html="home.cta.invite_html">Vous avez un code d'invitation ? <a href="/register.html" class="text-primary-container underline">Créer un compte</a></span>
+              </p>
+            </div>
           </div>
         </div>
       </section>

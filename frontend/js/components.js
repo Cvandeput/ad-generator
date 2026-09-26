@@ -66,12 +66,21 @@ export function productLabel(g) {
   return [g.brand, g.flavor].filter(Boolean).join(' · ') || g.brand || '—';
 }
 
-// En-tête d'usage : consommation du mois courant. Accord singulier/pluriel par
-// Intl.PluralRules, montant par Intl.NumberFormat (virgule en fr-BE et nl-BE,
-// point en anglais). Ex : « 1 image · 0,04 € ce mois ».
+// En-tête d'usage. Le client ne voit jamais de montant (c'est notre prix de
+// revient, pas son prix) : générations restantes quand la facturation est
+// active (« 3 générations restantes »), sinon le nombre de visuels du mois.
+// L'admin garde la conso chiffrée : « 1 image · 0,04 € ce mois ». Accord
+// singulier/pluriel par Intl.PluralRules, montant par Intl.NumberFormat.
 export function usageLabel(u) {
   const count = u.currentMonth.count;
-  return t('usage.header', { count, amount: money(u.currentMonth.eur) });
+  if (u.isAdmin && typeof u.currentMonth.eur === 'number') {
+    return t('usage.header', { count, amount: money(u.currentMonth.eur) });
+  }
+  const b = u.billing;
+  if (b && !b.unlimited && typeof b.remaining === 'number') {
+    return b.remaining > 0 ? t('usage.remaining', { count: b.remaining }) : t('usage.remainingNone');
+  }
+  return t('usage.month', { count });
 }
 
 // Vignette cassée (404, image corrompue) OU sortie dégénérée 1×1 (n8n/Gemini) :
@@ -120,7 +129,7 @@ export function renderThemeButtons() {
   return THEMES.map(
     (th) => `
       <button type="button" data-theme="${th.value}" class="theme-btn flex flex-col gap-[5px] text-left rounded-lg outline-none focus-visible:ring-2 focus-visible:ring-primary-container focus-visible:ring-offset-2">
-        <div class="theme-preview h-[52px] rounded-lg border border-outline-variant flex items-end justify-end p-[5px]" style="background:${th.gradient}">
+        <div class="theme-preview h-[52px] lg:h-[44px] rounded-lg border border-outline-variant flex items-end justify-end p-[5px]" style="background:${th.gradient}">
           <span class="theme-check w-[14px] h-[14px] rounded-full bg-primary-container hidden items-center justify-center">
             <span class="material-symbols-outlined text-on-primary text-[9px]">check</span>
           </span>

@@ -23,7 +23,41 @@
       "title": "Supprimer votre compte",
       "why": "La conservation des données de facturation répond à une obligation comptable ; elle ne couvre ni votre profil, ni vos photos, qui sont bien supprimés."
     },
-    "title": "Votre compte"
+    "title": "Votre compte",
+    "signedInAs": "Connecté avec l'adresse {{email}}.",
+    "plan": {
+      "seePlans": "Voir les formules"
+    },
+    "password": {
+      "title": "Mot de passe",
+      "intro": "Choisissez un mot de passe que vous n'utilisez nulle part ailleurs.",
+      "current": "Mot de passe actuel",
+      "new": "Nouveau mot de passe",
+      "show": "Afficher le mot de passe",
+      "rules": {
+        "different": "Différent du mot de passe actuel"
+      },
+      "submit": "Changer le mot de passe",
+      "saving": "Enregistrement…",
+      "success": "Mot de passe modifié. Par sécurité, vos autres appareils ont été déconnectés ; vous restez connecté ici.",
+      "errors": {
+        "badCurrent": "Le mot de passe actuel est incorrect.",
+        "rejected": "Ce mot de passe n'est pas accepté : évitez les mots de passe courants, les suites prévisibles et les caractères répétés.",
+        "same": "Le nouveau mot de passe doit être différent de l'actuel."
+      }
+    },
+    "language": {
+      "title": "Langue",
+      "hint": "Langue de l'interface. Ce choix est enregistré dans ce navigateur."
+    },
+    "sessions": {
+      "title": "Sessions",
+      "text": "Vous avez utilisé un appareil partagé ou perdu un téléphone ? Fermez toutes vos sessions d'un coup.",
+      "logoutAll": "Se déconnecter de tous les appareils",
+      "confirmTitle": "Déconnecter tous les appareils ?",
+      "confirmText": "Toutes vos sessions seront fermées, y compris celle-ci. Vous devrez vous reconnecter sur chaque appareil.",
+      "confirm": "Tout déconnecter"
+    }
   },
   "admin": {
     "gens": {
@@ -142,9 +176,10 @@
     "skipToContent": "Aller au contenu"
   },
   "cookies": {
-    "ok": "J'ai compris",
     "region": "Information cookies",
-    "text_html": "{{brand}} n'utilise qu'un cookie technique de session, indispensable pour vous garder connecté. Aucun cookie publicitaire ni de suivi. <a href=\"/legal.html#cookies\" class=\"text-primary-container underline\">En savoir plus</a>"
+    "short": "{{brand}} n'utilise qu'un cookie technique, pour vous garder connecté. Aucun suivi.",
+    "more": "En savoir plus",
+    "close": "Fermer l'information sur les cookies"
   },
   "errors": {
     "code": {
@@ -191,7 +226,11 @@
     "empty": {
       "none": "Aucun visuel généré pour le moment. Lancez une génération pour voir vos créations ici.",
       "title": "Aucun résultat",
-      "withFailures": "Aucune génération réussie pour cette sélection — dépliez les échecs ci-dessus pour comprendre."
+      "firstTitle": "Pas encore de visuel",
+      "firstCta": "Créer mon premier visuel",
+      "onlyFailures": "Aucune génération n'a encore abouti. Dépliez les échecs ci-dessus pour en voir la raison et les relancer.",
+      "filtered": "Aucun visuel ne correspond à ces filtres.",
+      "resetCta": "Réinitialiser les filtres"
     },
     "failureReason": "Raison : {{message}}",
     "failuresCount_one": "{{count}} génération échouée",
@@ -264,6 +303,67 @@
         "text": "Marque, catégorie, variante. Précisez la forme réelle — canette, sachet, pot — pour que le décor tombe juste.",
         "title": "Décrivez le produit"
       }
+    },
+    "cta": {
+      "try": "Essayer gratuitement",
+      "signup": "Créer un compte",
+      "login": "Se connecter",
+      "offer_one": "{{count}} visuel offert, sans carte bancaire",
+      "offer_other": "{{count}} visuels offerts, sans carte bancaire",
+      "haveAccount_html": "Déjà un compte ? <a href=\"/login.html\" class=\"text-primary-container underline\">Se connecter</a>",
+      "invite_html": "Vous avez un code d'invitation ? <a href=\"/register.html\" class=\"text-primary-container underline\">Créer un compte</a>"
+    },
+    "audience": {
+      "title": "Pour tous ceux qui vendent un produit",
+      "subtitle": "Du commerce de quartier à l'agence, le même besoin : des visuels soignés, vite, sans organiser de séance photo.",
+      "shops": {
+        "title": "Boutiques en ligne",
+        "text": "Donnez à chaque produit de votre catalogue un visuel de campagne, sans séance photo. Le packaging reste celui que le client recevra."
+      },
+      "local": {
+        "title": "Commerces et producteurs locaux",
+        "text": "Photographiez votre bocal, votre bouteille ou votre coffret au comptoir, et publiez le visuel sur vos réseaux le jour même."
+      },
+      "restaurants": {
+        "title": "Restaurateurs",
+        "text": "Annoncez la carte d'été, une soirée ou les fêtes avec un visuel à thème, à partir d'une photo de vos bouteilles ou de vos produits à emporter."
+      },
+      "agencies": {
+        "title": "Agences et community managers",
+        "text": "Produisez pour plusieurs marques sans repartir de zéro : sept thèmes ou un décor libre, jusqu'à six produits par visuel, et un historique pour retrouver chaque création."
+      }
+    },
+    "pricing": {
+      "title": "Gratuit pour essayer, puis dès {{price}}/mois",
+      "subtitle": "Sans engagement, résiliable à tout moment. Droit de rétractation de 14 jours.",
+      "free": "Gratuit",
+      "perMonth": "/mois",
+      "quotaLifetime_one": "{{count}} visuel au total",
+      "quotaLifetime_other": "{{count}} visuels au total",
+      "quotaMonthly_one": "{{count}} visuel par mois",
+      "quotaMonthly_other": "{{count}} visuels par mois",
+      "pack_one": "Besoin d'un appoint ? Pack de {{count}} visuel à {{amount}}, sans abonnement.",
+      "pack_other": "Besoin d'un appoint ? Pack de {{count}} visuels à {{amount}}, sans abonnement.",
+      "seeAll": "Voir le détail des formules"
+    },
+    "faq": {
+      "title": "Questions fréquentes",
+      "subtitle": "L'essentiel à savoir avant de créer votre compte.",
+      "q1": "Faut-il une carte bancaire pour essayer ?",
+      "a1_one": "Non. La création du compte est gratuite et inclut {{count}} visuel offert. Une carte ne vous est demandée que si vous choisissez un abonnement ou un pack.",
+      "a1_other": "Non. La création du compte est gratuite et inclut {{count}} visuels offerts. Une carte ne vous est demandée que si vous choisissez un abonnement ou un pack.",
+      "q2": "Combien de temps faut-il pour obtenir un visuel ?",
+      "a2": "Entre 30 secondes et deux minutes. Vous obtenez une image au format 4:5, prête à publier sur les réseaux sociaux.",
+      "q3": "Que deviennent mes photos ?",
+      "a3_html": "Elles sont transmises à Google Cloud (Vertex AI) le temps de la génération, puis conservées dans votre historique jusqu'à ce que vous les supprimiez. Elles ne sont ni vendues ni utilisées à des fins publicitaires. <a href=\"/legal.html#confidentialite\" class=\"text-primary-container underline\">Politique de confidentialité</a>.",
+      "q4": "Puis-je utiliser les visuels générés ?",
+      "a4_html": "Oui. Les conditions d'utilisation vous accordent les droits d'usage sur les visuels générés à partir de vos propres photos, dans les limites des conditions de Google Cloud. Vous devez détenir les droits sur les photos déposées et relire chaque visuel avant de le diffuser : l'IA peut altérer un détail, comme un texte d'emballage. <a href=\"/legal.html#cgu\" class=\"text-primary-container underline\">Conditions d'utilisation</a>.",
+      "q5": "Puis-je résilier à tout moment ?",
+      "a5_html": "Oui. Les abonnements sont sans engagement : vous résiliez depuis la page Tarifs, et la résiliation prend effet à la fin de la période déjà payée. Si vous êtes un consommateur, vous disposez aussi d'un <a href=\"/legal.html#retractation\" class=\"text-primary-container underline\">droit de rétractation de 14 jours</a>."
+    },
+    "final": {
+      "title": "Essayez sur vos propres produits",
+      "text": "Une photo prise au smartphone suffit. Votre visuel est prêt en moins de deux minutes."
     }
   },
   "legal": {
@@ -413,27 +513,34 @@
     },
     "verify": {
       "title": "Confirmation de votre adresse — {{brand}}"
+    },
+    "account": {
+      "title": "Mon compte — {{brand}}",
+      "description": "Formule, mot de passe, langue et suppression de votre compte {{brand}}."
     }
   },
   "nav": {
-    "admin": "Admin",
+    "admin": "Console admin",
     "examples": "Exemples",
     "generate": "Générer",
     "history": "Historique",
-    "home": "Accueil",
     "homeAria": "{{brand}} — accueil",
     "howItWorks": "Fonctionnement",
     "language": "Langue",
     "login": "Se connecter",
     "logoAlt": "{{brand}}",
-    "logout": "Déconnexion",
-    "logoutTitle": "Déconnexion ({{email}})",
+    "logout": "Se déconnecter",
     "mainNav": "Navigation principale",
     "menu": "Menu",
     "mobileNav": "Navigation mobile",
     "pricing": "Tarifs",
     "signup": "Créer un compte",
-    "studio": "Studio"
+    "studio": "Studio",
+    "account": "Mon compte",
+    "accountMenu": "Menu du compte",
+    "signedInAs": "Connecté en tant que",
+    "tryFree": "Essayer gratuitement",
+    "faq": "FAQ"
   },
   "notFound": {
     "code": "Erreur 404",
@@ -555,13 +662,13 @@
     "redirecting": "Redirection…",
     "subtitle": "Chaque formule inclut un nombre de générations par mois. Le compteur repart à la date de votre prélèvement. Sans engagement, résiliable en un clic.",
     "title": "Des visuels, pas des abonnements compliqués",
-    "unitPrice": "soit {{amount}} par visuel"
+    "unitPrice": "soit {{amount}} par visuel",
+    "manageAccountHint": "Mot de passe, langue ou suppression du compte :",
+    "manageAccount": "Gérer mon compte"
   },
   "register": {
-    "confirmPassword": "Confirmer le mot de passe",
     "consent_html": "J'ai lu et j'accepte les <a class=\"text-primary-container underline\" href=\"/legal.html#mentions\" rel=\"noopener\" target=\"_blank\">mentions légales</a>, la <a class=\"text-primary-container underline\" href=\"/legal.html#confidentialite\" rel=\"noopener\" target=\"_blank\">politique de confidentialité</a> et les <a class=\"text-primary-container underline\" href=\"/legal.html#cgu\" rel=\"noopener\" target=\"_blank\">conditions d'utilisation</a>. Je certifie détenir les droits sur les photos que je déposerai.",
     "created": "Si cette adresse est disponible, votre compte a été créé. Connectez-vous.",
-    "freeStart": "Vous démarrez sur la formule gratuite, sans carte bancaire. Vous choisirez un abonnement juste après.",
     "haveAccount": "Déjà un compte ? Se connecter",
     "inviteCode": "Code d'invitation",
     "modeClosed": "Les inscriptions sont fermées : l'accès se fait sur invitation. Contactez l'administrateur.",
@@ -570,12 +677,18 @@
     "rules": {
       "classes": "3 types parmi : minuscule, majuscule, chiffre, symbole",
       "email": "Ne contient pas votre e-mail",
-      "length": "12 caractères minimum",
-      "match": "Les deux saisies correspondent"
+      "length": "12 caractères minimum"
     },
     "submit": "Créer mon compte",
     "title": "Créer un compte",
-    "unavailable": "Service indisponible, réessayez plus tard."
+    "unavailable": "Service indisponible, réessayez plus tard.",
+    "pitchTitle": "Votre premier visuel en moins de deux minutes.",
+    "pitchText": "Déposez une photo de votre produit, choisissez un thème : le décor est composé, le packaging reste le vôtre.",
+    "points": {
+      "format": "Format 4:5, prêt à publier sur les réseaux",
+      "noCommitment": "Aucun abonnement requis pour démarrer"
+    },
+    "showPassword": "Afficher le mot de passe"
   },
   "serverError": {
     "code": "Erreur serveur",
@@ -592,8 +705,13 @@
       "summary": "Précisez le décor souhaité"
     },
     "empty": {
-      "text": "Configurez vos paramètres puis cliquez sur « Générer » pour visualiser le résultat.",
-      "title": "Toile de création"
+      "text": "Suivez les trois étapes, puis cliquez sur « Générer le visuel ». Comptez 30 à 120 secondes.",
+      "title": "Votre visuel apparaîtra ici",
+      "example": "Exemple",
+      "before": "Votre photo",
+      "after": "Le visuel",
+      "beforeAlt": "Exemple : photo brute d'un produit, prise au smartphone",
+      "afterAlt": "Exemple : le même produit mis en scène dans un visuel publicitaire"
     },
     "error": {
       "title": "Échec de la génération"
@@ -609,8 +727,13 @@
     "photos": {
       "add": "Ajouter",
       "count": "{{n}} / {{max}}",
-      "help": "Déposez de 1 à 14 photos. Un produit par photo, ou plusieurs produits sur une même photo : ils apparaîtront tous dans le visuel. Plusieurs angles du même produit comptent pour un seul.",
-      "title": "Photos du produit"
+      "help": "Un ou plusieurs produits par photo : tous apparaîtront dans le visuel. Plusieurs angles d'un même produit comptent pour un seul.",
+      "drop": "Glissez vos photos ici ou cliquez pour choisir",
+      "dropTouch": "Touchez pour choisir vos photos",
+      "formats": "JPG, PNG, WebP · 1 à 14 photos",
+      "addLabel": "Ajouter des photos",
+      "skipped_one": "{{count}} fichier ignoré : formats acceptés JPG, PNG ou WebP, 14 photos au maximum.",
+      "skipped_other": "{{count}} fichiers ignorés : formats acceptés JPG, PNG ou WebP, 14 photos au maximum."
     },
     "preview": {
       "open": "Ouvrir « {{name}} » en grand",
@@ -630,12 +753,13 @@
       "flavor": "Goût",
       "flavorPlaceholder": "Ex : pêche",
       "optional": "(optionnel)",
-      "title": "Produit"
+      "more": "Plus d'options",
+      "moreHint": "goût, forme, nombre de produits"
     },
     "progress": {
       "cancel": "Annuler",
       "step1": "Envoi des images",
-      "step2": "Composition du visuel (Gemini)",
+      "step2": "Composition du visuel",
       "step3": "Rendu haute définition",
       "text": "Cela peut prendre jusqu'à ~2 minutes. Gardez la page ouverte.",
       "title": "Génération en cours…"
@@ -650,14 +774,38 @@
     },
     "srTitle": "Studio de génération de visuels",
     "terms": "Conditions d'utilisation",
-    "theme": {
-      "one": "1 thème",
-      "title": "Thème de mise en scène"
-    },
     "unitCost": "≈ {{amount}} par visuel ({{model}}{{size}}) · {{perHour}}/h, {{perDay}}/jour · 30 à 120 s",
-    "unitCostLoading": "Coût par visuel : chargement…",
     "unverified": {
       "title": "Confirmez votre adresse"
+    },
+    "steps": {
+      "one": {
+        "title": "Déposez vos photos"
+      },
+      "two": {
+        "title": "Décrivez le produit"
+      },
+      "three": {
+        "title": "Choisissez un thème"
+      },
+      "short": {
+        "photos": "Photos",
+        "product": "Produit",
+        "scene": "Mise en scène"
+      },
+      "done": "étape terminée"
+    },
+    "usage": {
+      "duration": "30 à 120 s par visuel",
+      "trialLeft_one": "Il vous reste {{count}} génération d'essai",
+      "trialLeft_other": "Il vous reste {{count}} générations d'essai",
+      "periodLeft_one": "Il vous reste {{count}} génération ce mois-ci",
+      "periodLeft_other": "Il vous reste {{count}} générations ce mois-ci",
+      "none": "Vous avez utilisé toutes vos générations",
+      "monthCount_one": "{{count}} visuel généré ce mois-ci",
+      "monthCount_other": "{{count}} visuels générés ce mois-ci",
+      "left_one": "Il vous reste {{count}} génération",
+      "left_other": "Il vous reste {{count}} générations"
     }
   },
   "terms": {
@@ -691,7 +839,12 @@
   },
   "usage": {
     "header_one": "{{count}} image · {{amount}} ce mois",
-    "header_other": "{{count}} images · {{amount}} ce mois"
+    "header_other": "{{count}} images · {{amount}} ce mois",
+    "remaining_one": "{{count}} génération restante",
+    "remaining_other": "{{count}} générations restantes",
+    "remainingNone": "Plus de génération disponible",
+    "month_one": "{{count}} visuel ce mois",
+    "month_other": "{{count}} visuels ce mois"
   },
   "verify": {
     "askEmail": "Votre adresse e-mail :",

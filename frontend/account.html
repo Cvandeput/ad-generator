@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="fr">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <!-- i18n : masque le document le temps de l'hydratation (cf. js/i18n-boot.js). -->
+    <script src="/js/i18n-boot.js"></script>
+
+    <title data-i18n="meta.account.title">Mon compte</title>
+    <meta name="description" data-i18n-attr="content:meta.account.description" content="Formule, mot de passe, langue et suppression de votre compte." />
+    <!-- Page privée : ni indexée, ni dans sitemap.xml. -->
+    <meta name="robots" content="noindex, nofollow" />
+    <link rel="icon" href="/img/icons/favicon.ico" sizes="48x48" />
+    <link rel="icon" type="image/png" sizes="32x32" href="/img/icons/favicon-32.png" />
+    <link rel="icon" type="image/png" sizes="16x16" href="/img/icons/favicon-16.png" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/img/icons/apple-touch-icon.png" />
+    <link rel="manifest" href="/site.webmanifest" />
+    <meta name="theme-color" content="#1d4ed8" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="" />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&display=block"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="/css/app.css" />
+  </head>
+  <body class="bg-background text-on-surface font-body-base antialiased flex flex-col min-h-screen">
+    <!-- TopNavBar (rendue par js/nav.js) -->
+    <header id="site-header" data-page="account" class="bg-surface-container-lowest border-b border-outline-variant sticky top-0 z-50 w-full"></header>
+
+    <!-- Contenu : masqué tant que la session n'est pas confirmée (un visiteur
+         non connecté est renvoyé vers /login.html sans voir le formulaire). -->
+    <main id="account-main" class="hidden flex-grow w-full max-w-container-max mx-auto px-lg py-xl flex flex-col gap-lg">
+      <div class="flex flex-col gap-xs">
+        <h1 class="font-display-lg text-display-lg text-on-surface" data-i18n="account.title">Votre compte</h1>
+        <p id="signed-in" class="font-body-base text-body-base text-secondary break-words"></p>
+      </div>
+
+      <!-- (a) Formule et consommation : rempli par js/account.js si la
+           facturation répond, masqué sinon. -->
+      <section id="plan" class="hidden" aria-labelledby="plan-title"></section>
+
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-lg items-start">
+        <!-- (b) Mot de passe -->
+        <section aria-labelledby="pw-title" class="bg-surface-container-lowest border border-outline-variant rounded-xl p-lg flex flex-col gap-md">
+          <div class="flex flex-col gap-xs">
+            <h2 id="pw-title" class="font-headline-md text-headline-md text-on-surface" data-i18n="account.password.title">Mot de passe</h2>
+            <p class="font-body-sm text-body-sm text-secondary" data-i18n="account.password.intro">Choisissez un mot de passe que vous n'utilisez nulle part ailleurs.</p>
+          </div>
+          <form id="pw-form" class="flex flex-col gap-md" novalidate>
+            <!-- Identifiant pour les gestionnaires de mots de passe (non affiché). -->
+            <input id="pw-username" name="username" type="email" autocomplete="username" class="hidden" tabindex="-1" aria-hidden="true" readonly />
+
+            <div class="flex flex-col gap-xs">
+              <label class="font-label-md text-label-md text-on-surface" for="pw-current" data-i18n="account.password.current">Mot de passe actuel</label>
+              <div class="relative">
+                <input id="pw-current" name="current" type="password" required autocomplete="current-password" maxlength="128"
+                  class="w-full h-11 lg:h-[40px] pl-md pr-[52px] bg-surface-container-lowest border border-outline rounded font-body-base text-on-surface placeholder:text-outline focus:outline-none focus:border-primary-container focus:ring-1 focus:ring-primary-container transition-colors" />
+                <button type="button" class="js-toggle-pw absolute right-0 top-0 h-full w-11 flex items-center justify-center rounded-r text-outline hover:text-on-surface transition-colors outline-none focus-visible:ring-2 focus-visible:ring-primary-container"
+                  aria-controls="pw-current" aria-pressed="false" aria-label="Afficher le mot de passe" title="Afficher le mot de passe" data-i18n-attr="aria-label:account.password.show;title:account.password.show">
+                  <span class="material-symbols-outlined text-[20px]" aria-hidden="true">visibility</span>
+                </button>
+              </div>
+            </div>
+
+            <div class="flex flex-col gap-xs">
+              <label class="font-label-md text-label-md text-on-surface" for="pw-new" data-i18n="account.password.new">Nouveau mot de passe</label>
+              <div class="relative">
+                <input id="pw-new" name="fresh" type="password" required autocomplete="new-password" minlength="12" maxlength="128" aria-describedby="pw-rules"
+                  class="w-full h-11 lg:h-[40px] pl-md pr-[52px] bg-surface-container-lowest border border-outline rounded font-body-base text-on-surface placeholder:text-outline focus:outline-none focus:border-primary-container focus:ring-1 focus:ring-primary-container transition-colors" />
+                <button type="button" class="js-toggle-pw absolute right-0 top-0 h-full w-11 flex items-center justify-center rounded-r text-outline hover:text-on-surface transition-colors outline-none focus-visible:ring-2 focus-visible:ring-primary-container"
+                  aria-controls="pw-new" aria-pressed="false" aria-label="Afficher le mot de passe" title="Afficher le mot de passe" data-i18n-attr="aria-label:account.password.show;title:account.password.show">
+                  <span class="material-symbols-outlined text-[20px]" aria-hidden="true">visibility</span>
+                </button>
+              </div>
+              <!-- Miroir des règles de backend/src/password.js (le serveur fait foi). -->
+              <ul id="pw-rules" class="flex flex-col gap-[2px] font-body-sm text-body-sm text-secondary">
+                <li data-rule="length" class="flex items-center gap-xs"><span class="material-symbols-outlined text-[15px] text-outline" aria-hidden="true">radio_button_unchecked</span><span data-i18n="register.rules.length">12 caractères minimum</span></li>
+                <li data-rule="classes" class="flex items-center gap-xs"><span class="material-symbols-outlined text-[15px] text-outline" aria-hidden="true">radio_button_unchecked</span><span data-i18n="register.rules.classes">3 types parmi : minuscule, majuscule, chiffre, symbole</span></li>
+                <li data-rule="email" class="flex items-center gap-xs"><span class="material-symbols-outlined text-[15px] text-outline" aria-hidden="true">radio_button_unchecked</span><span data-i18n="register.rules.email">Ne contient pas votre e-mail</span></li>
+                <li data-rule="different" class="flex items-center gap-xs"><span class="material-symbols-outlined text-[15px] text-outline" aria-hidden="true">radio_button_unchecked</span><span data-i18n="account.password.rules.different">Différent du mot de passe actuel</span></li>
+              </ul>
+            </div>
+
+            <div id="pw-feedback" aria-live="polite"></div>
+
+            <div class="flex">
+              <button id="pw-submit" type="submit" disabled
+                class="min-h-[44px] lg:min-h-0 lg:h-9 py-xs px-lg rounded bg-primary-container text-on-primary font-label-md text-label-md inline-flex items-center justify-center gap-xs hover:bg-primary transition-colors disabled:opacity-60 disabled:cursor-not-allowed"
+                data-i18n="account.password.submit">Changer le mot de passe</button>
+            </div>
+          </form>
+        </section>
+
+        <div class="flex flex-col gap-lg">
+          <!-- (c) Langue : le sélecteur d'i18n (js/i18n.js), en pleine largeur. -->
+          <section aria-labelledby="lang-title" class="bg-surface-container-lowest border border-outline-variant rounded-xl p-lg flex flex-col gap-sm">
+            <h2 id="lang-title" class="font-headline-md text-headline-md text-on-surface" data-i18n="account.language.title">Langue</h2>
+            <p class="font-body-sm text-body-sm text-secondary" data-i18n="account.language.hint">Langue de l'interface. Ce choix est enregistré dans ce navigateur.</p>
+            <div id="lang-slot" class="max-w-[320px] pt-xs"></div>
+          </section>
+
+          <!-- (e) Sessions : déconnexion, et déconnexion de tous les appareils
+               (POST /api/auth/logout-all). -->
+          <section aria-labelledby="sessions-title" class="bg-surface-container-lowest border border-outline-variant rounded-xl p-lg flex flex-col gap-sm">
+            <h2 id="sessions-title" class="font-headline-md text-headline-md text-on-surface" data-i18n="account.sessions.title">Sessions</h2>
+            <p class="font-body-sm text-body-sm text-secondary" data-i18n="account.sessions.text">Vous avez utilisé un appareil partagé ou perdu un téléphone ? Fermez toutes vos sessions d'un coup.</p>
+            <div class="flex flex-wrap gap-sm pt-xs">
+              <button id="logout" type="button" class="min-h-[44px] lg:min-h-0 lg:h-9 py-xs px-lg rounded border border-outline-variant bg-surface-container-lowest text-on-surface-variant font-label-md text-label-md inline-flex items-center justify-center gap-xs hover:bg-surface-container transition-colors disabled:opacity-60">
+                <span class="material-symbols-outlined text-[16px]" aria-hidden="true">logout</span><span data-i18n="nav.logout">Se déconnecter</span>
+              </button>
+              <button id="logout-all" type="button" class="min-h-[44px] lg:min-h-0 lg:h-9 py-xs px-lg rounded border border-outline-variant bg-surface-container-lowest text-on-surface-variant font-label-md text-label-md inline-flex items-center justify-center gap-xs hover:bg-surface-container transition-colors disabled:opacity-60">
+                <span class="material-symbols-outlined text-[16px]" aria-hidden="true">devices</span><span data-i18n="account.sessions.logoutAll">Se déconnecter de tous les appareils</span>
+              </button>
+            </div>
+          </section>
+        </div>
+      </div>
+
+      <!-- (d) Suppression du compte (art. 17 RGPD) : déplacée depuis tarifs.html. -->
+      <section aria-labelledby="delete-title" class="bg-surface-container-lowest border border-outline-variant rounded-xl p-lg flex flex-col gap-sm">
+        <h2 id="delete-title" class="font-headline-md text-headline-md text-on-surface" data-i18n="account.delete.title">Supprimer votre compte</h2>
+        <p class="font-body-sm text-body-sm text-secondary" data-i18n="account.delete.teaser">Vous pouvez supprimer votre compte à tout moment. Nous vous expliquons avant ce qui est effacé et ce qui est conservé.</p>
+        <!-- Compte administrateur : le serveur refuse (409 ADMIN_ACCOUNT). -->
+        <p id="delete-admin" class="hidden font-body-sm text-body-sm text-on-surface-variant bg-surface-container-low border border-outline-variant rounded-lg px-md py-sm" data-i18n="errors.code.ADMIN_ACCOUNT">Un compte administrateur ne peut pas être supprimé depuis cette page.</p>
+        <div class="flex pt-xs">
+          <button id="delete-account" type="button"
+            class="min-h-[44px] lg:min-h-0 lg:h-9 py-xs px-lg rounded border border-outline-variant bg-surface-container-lowest text-error font-label-md text-label-md inline-flex items-center justify-center gap-xs hover:bg-error-container transition-colors disabled:opacity-60 disabled:cursor-not-allowed"
+            data-i18n="account.delete.cta">Supprimer mon compte</button>
+        </div>
+      </section>
+    </main>
+
+    <footer id="site-footer" class="bg-surface"></footer>
+
+    <script type="module" src="/js/account.js"></script>
+  </body>
+</html>

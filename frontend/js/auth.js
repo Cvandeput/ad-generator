@@ -1,7 +1,8 @@
 // Page de connexion. Le lien « Créer un compte » n'apparaît que si le backend
 // autorise l'inscription (REGISTER_MODE=invite|open).
 import { api, ApiError } from './api.js';
-import { t, currentLang, DEFAULT_LANG, renderLanguageSwitch, wireLanguageSwitch } from './i18n.js';
+import { t, currentLang, DEFAULT_LANG } from './i18n.js';
+import { renderLangCompact, wireLangLinks } from './nav.js';
 import { escapeHtml } from './components.js';
 
 // Ces pages hors chrome commun (pas de <header id="site-header">) portent tout
@@ -9,8 +10,8 @@ import { escapeHtml } from './components.js';
 // une fois arrivé directement sur /login.html.
 const slot = document.getElementById('lang-slot');
 if (slot) {
-  slot.innerHTML = renderLanguageSwitch({ id: 'lang-login' });
-  wireLanguageSwitch(slot);
+  slot.innerHTML = renderLangCompact();
+  wireLangLinks(slot);
 }
 
 const form = document.getElementById('auth-form');
