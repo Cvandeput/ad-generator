@@ -688,7 +688,13 @@
       "format": "Formaat 4:5, klaar om te posten op sociale media",
       "noCommitment": "Geen abonnement nodig om te starten"
     },
-    "showPassword": "Wachtwoord tonen"
+    "showPassword": "Wachtwoord tonen",
+    "errors": {
+      "email": "Vul een geldig e-mailadres in.",
+      "password": "Uw wachtwoord voldoet nog niet aan de regels hieronder.",
+      "invite": "Vul uw uitnodigingscode in.",
+      "terms": "Vink het vakje aan om de voorwaarden te aanvaarden voordat u uw account aanmaakt."
+    }
   },
   "serverError": {
     "code": "Serverfout",

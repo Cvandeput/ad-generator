@@ -688,7 +688,13 @@
       "format": "Format 4:5, prêt à publier sur les réseaux",
       "noCommitment": "Aucun abonnement requis pour démarrer"
     },
-    "showPassword": "Afficher le mot de passe"
+    "showPassword": "Afficher le mot de passe",
+    "errors": {
+      "email": "Saisissez une adresse e-mail valide.",
+      "password": "Le mot de passe ne respecte pas encore les règles ci-dessous.",
+      "invite": "Saisissez votre code d'invitation.",
+      "terms": "Cochez la case pour accepter les conditions avant de créer votre compte."
+    }
   },
   "serverError": {
     "code": "Erreur serveur",

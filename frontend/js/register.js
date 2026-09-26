@@ -66,6 +66,10 @@ function setRule(name, ok) {
   li.classList.toggle('text-on-surface', ok);
 }
 
+// Met à jour la liste des règles en direct et renvoie le premier champ à
+// corriger ({ field, message }), ou null si tout est bon. Le bouton reste ACTIF en
+// permanence : un bouton grisé ressemble à un bouton cassé et n'explique pas ce
+// qui manque. On vérifie à l'envoi et on dit précisément quoi corriger.
 function evaluate() {
   const email = form.email.value.trim().toLowerCase();
   const p = form.password.value;
@@ -77,16 +81,41 @@ function evaluate() {
     email: !(local.length >= 4 && p.toLowerCase().includes(local)),
   };
   for (const [k, v] of Object.entries(checks)) setRule(k, v);
-  const ok = Object.values(checks).every(Boolean) && form.email.checkValidity() && form.terms.checked && (mode !== 'invite' || form.invite.value.trim().length > 0);
-  submitBtn.disabled = !ok;
+  if (!email || !form.email.checkValidity()) return { field: form.email, message: t('register.errors.email') };
+  if (!Object.values(checks).every(Boolean)) return { field: form.password, message: t('register.errors.password') };
+  if (mode === 'invite' && !form.invite.value.trim()) return { field: form.invite, message: t('register.errors.invite') };
+  if (!form.terms.checked) return { field: form.terms, message: t('register.errors.terms') };
+  return null;
 }
 
-['input', 'change'].forEach((ev) => form.addEventListener(ev, evaluate));
+function clearInvalid() {
+  form.querySelectorAll('[aria-invalid="true"]').forEach((el) => el.removeAttribute('aria-invalid'));
+}
+
+['input', 'change'].forEach((ev) =>
+  form.addEventListener(ev, () => {
+    evaluate();
+    // Le message d'erreur date de l'envoi précédent : il disparaît dès qu'on corrige.
+    if (!errorEl.classList.contains('hidden')) {
+      errorEl.classList.add('hidden');
+      clearInvalid();
+    }
+  })
+);
 
 form.addEventListener('submit', async (e) => {
   e.preventDefault();
   errorEl.classList.add('hidden');
   successEl.classList.add('hidden');
+  clearInvalid();
+  const problem = evaluate();
+  if (problem) {
+    errorEl.textContent = problem.message;
+    errorEl.classList.remove('hidden');
+    problem.field.setAttribute('aria-invalid', 'true');
+    problem.field.focus();
+    return;
+  }
   submitBtn.disabled = true;
   // Remasqué à l'envoi : le mot de passe ne reste pas lisible à l'écran pendant
   // la redirection, et les gestionnaires de mots de passe le reconnaissent.
@@ -113,7 +142,7 @@ form.addEventListener('submit', async (e) => {
   } catch (err) {
     errorEl.textContent = err instanceof ApiError ? err.message : t('errors.generic');
     errorEl.classList.remove('hidden');
-    evaluate();
+    submitBtn.disabled = false;
   }
 });
 
@@ -141,6 +170,7 @@ api
     inviteField.classList.toggle('hidden', mode !== 'invite');
     form.invite.required = mode === 'invite';
     form.classList.remove('hidden');
+    submitBtn.disabled = false;
     evaluate();
   })
   .catch(() => {

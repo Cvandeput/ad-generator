@@ -688,7 +688,13 @@
       "format": "4:5 format, ready to post on social media",
       "noCommitment": "No subscription needed to get started"
     },
-    "showPassword": "Show password"
+    "showPassword": "Show password",
+    "errors": {
+      "email": "Enter a valid email address.",
+      "password": "Your password doesn't meet the rules below yet.",
+      "invite": "Enter your invitation code.",
+      "terms": "Tick the box to accept the terms before creating your account."
+    }
   },
   "serverError": {
     "code": "Server error",
