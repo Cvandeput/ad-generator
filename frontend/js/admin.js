@@ -26,7 +26,7 @@ function fail(err) {
 }
 
 const TH = 'text-left font-body-sm text-body-sm text-secondary font-semibold px-md py-sm';
-const TD = 'px-md py-sm font-body-sm text-body-sm border-t border-outline-variant align-middle';
+const TD = 'px-md py-sm font-body-sm text-body-sm border-t border-outline-soft align-middle';
 // 44 px minimum au doigt (tablette comprise), taille compacte sur desktop.
 const BTN = 'rounded-lg border border-outline-variant px-sm py-[2px] font-body-sm text-body-sm hover:bg-surface-container inline-flex items-center justify-center min-h-[44px] min-w-[44px] lg:min-h-0 lg:min-w-0';
 

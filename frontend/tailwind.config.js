@@ -1,5 +1,5 @@
 /** @type {import('tailwindcss').Config} */
-// Design system "AdCraft Studio" — tokens alignés sur les maquettes (new design/).
+// Design system AdCraft — identité « D » : papier, encre, accent terracotta.
 // Tokens repris tels quels du design pour que le rendu corresponde à la maquette.
 // Les classes vivent dans le HTML ET dans les gabarits JS (cartes en template
 // literals) : scanner les deux, sinon le JIT n'émet pas leurs utilitaires.
@@ -8,83 +8,85 @@ module.exports = {
   darkMode: 'class',
   theme: {
     extend: {
+      // Identité « D » (table ronde du 25/09/2026, docs locaux) : fond papier
+      // chaud, encre, UN seul accent terracotta réservé aux actions. La chaleur
+      // passe par la couleur, pas par la police (pas de titre à empattements).
+      // Ratios WCAG calculés (luminance relative) ; le grain de input.css
+      // (multiply, 12 %) en retire ~0.08 au rendu.
       colors: {
-        // Contraste WCAG AA (1.4.3). Ancienne valeur : #747686 — 4.49 sur
-        // surface-container-lowest (#ffffff), 4.26 sur background (#f9f9f8),
-        // 4.07 sur surface-container-low (#f3f4f3) et 3.87 sur
-        // surface-container (#eeeeed, panneau gauche de login.html) : sous
-        // 4.5 partout, alors que le token ne sert QUE de couleur de texte
-        // (text-outline : légendes, mentions, prix unitaires, icônes ;
-        // placeholder:text-outline) — jamais de fond ni de bordure, donc
-        // l'assombrir ne se propage nulle part ailleurs.
-        // Teinte et saturation d'origine conservées (HSL 233°/7 % -> 232°/7 %),
-        // seule la luminosité descend de 49 % à 42 % : le gris reste discret.
-        // Ratios CSS : 5.68 sur #ffffff · 5.40 sur #f9f9f8 · 5.15 sur #f3f4f3
-        // · 4.90 sur #eeeeed (le fond réel le plus sombre, relevé au rendu et
-        // non déduit du CSS).
-        // Mesuré AU PIXEL, grain compris : le calque body::before de
-        // css/input.css (opacity .12, mix-blend-mode: multiply) assombrit
-        // texte ET fond d'environ 1.4 % et coûte ~0.08 point de ratio — axe ne
-        // le voit pas, il ne lit que le CSS calculé. Ratios réellement rendus :
-        // 5.61 / 5.32 / 5.08 / 4.82. Quasi insensible à l'opacité du grain
-        // (les deux plans s'assombrissent ensemble) : ~4.8 de 10 % à 20 %.
-        // ⚠ Garde-fou : sur surface-container-highest / surface-variant
-        // (#e2e2e2) ce gris retombe à 4.29 rendu, et à 4.31 sur error-container
-        // (#ffdad6). Ces deux paires n'existent nulle part aujourd'hui ; ne pas
-        // poser de text-outline sur ces fonds sans réassombrir le token
-        // (#5f6170 les couvre, à 4.66 rendu).
-        outline: '#646674',
-        'surface-dim': '#dadad9',
-        'on-error': '#ffffff',
-        error: '#ba1a1a',
-        background: '#f9f9f8',
-        'surface-container': '#eeeeed',
-        'tertiary-fixed': '#ffdbcf',
-        'tertiary-container': '#a73400',
-        primary: '#0037b0',
+        // Surfaces : papier chaud ; les cartes restent blanches.
+        background: '#f6f3ee',
+        surface: '#f6f3ee',
+        'surface-bright': '#f6f3ee',
+        'surface-container-lowest': '#ffffff',
+        'surface-container-low': '#f0ebe3',
+        'surface-container': '#eae4da',
+        'surface-container-high': '#e3dcd0',
+        'surface-container-highest': '#dcd4c6',
+        'surface-variant': '#dcd4c6',
+        'surface-dim': '#d9d1c4',
+        'inverse-surface': '#2b2925',
+        'inverse-on-surface': '#f3efe8',
+
+        // Texte. on-surface : 15.7:1 sur papier.
+        'on-surface': '#1b1a17',
+        'on-background': '#1b1a17',
+        'on-surface-variant': '#4a463f', // 8.47 papier · 6.38 sur highest
+        secondary: '#5e5a52', // 6.20 papier · 4.66 sur highest
+        // text-outline (légendes, mentions, placeholders) : 5.79 blanc ·
+        // 5.23 papier · 4.88 low · 4.58 container.
+        // ⚠ Garde-fou : 4.25 sur surface-container-high et 3.93 sur highest,
+        // sous 4.5 — ne pas poser text-outline sur ces deux fonds.
+        outline: '#6a655c',
+
+        // Bordures — DEUX rôles distincts (WCAG 1.4.11 ne vise que le premier) :
+        // - outline-variant : contour des COMPOSANTS (champs, zone de dépôt,
+        //   vignettes, boutons secondaires, cartes). Minimum 3:1 sur leur fond :
+        //   3.94 blanc · 3.56 papier · 3.32 low · 3.11 container.
+        // - outline-soft : filets DÉCORATIFS (bas de l'en-tête, séparations de
+        //   sections, lignes de tableau), volontairement discrets.
+        'outline-variant': '#848077',
+        'outline-soft': '#e4ddd2',
+
+        // Accent unique : terracotta. primary-container = boutons (blanc dessus :
+        // 5.45:1), primary = liens et texte d'accent (6.43 papier).
+        primary: '#9c3614',
+        'primary-container': '#b8431a',
+        'on-primary': '#ffffff',
+        'surface-tint': '#b8431a',
+        'on-primary-container': '#ffe3d8',
+        'primary-fixed': '#f6ddd2',
+        'primary-fixed-dim': '#efc0ac',
+        'on-primary-fixed': '#3a1204',
+        'on-primary-fixed-variant': '#8a2e0e',
+        'inverse-primary': '#ffb59a',
+
+        'secondary-container': '#e9e1dd',
         'secondary-fixed': '#e9e1dd',
         'secondary-fixed-dim': '#ccc5c2',
-        'inverse-primary': '#b7c4ff',
-        'secondary-container': '#e9e1dd',
-        'on-error-container': '#93000a',
-        'inverse-on-surface': '#f1f1f0',
-        'inverse-surface': '#2f3130',
-        'on-surface-variant': '#434655',
-        'on-surface': '#1a1c1c',
-        secondary: '#625d5b',
-        surface: '#f9f9f8',
-        'on-secondary-container': '#686361',
-        'error-container': '#ffdad6',
-        'surface-container-low': '#f3f4f3',
         'on-secondary': '#ffffff',
-        'primary-container': '#1d4ed8',
+        'on-secondary-container': '#686361',
         'on-secondary-fixed': '#1e1b19',
-        tertiary: '#7f2500',
-        'on-tertiary-fixed': '#390c00',
-        'surface-tint': '#2151da',
-        'on-primary-container': '#cad3ff',
-        'surface-container-lowest': '#ffffff',
         'on-secondary-fixed-variant': '#4a4643',
-        'on-background': '#1a1c1c',
-        'on-tertiary-fixed-variant': '#832700',
-        'primary-fixed': '#dce1ff',
-        'on-primary-fixed-variant': '#0039b5',
-        'outline-variant': '#c4c5d7',
-        'on-tertiary-container': '#ffc9b7',
-        'on-tertiary': '#ffffff',
+
+        tertiary: '#7f2500',
+        'tertiary-container': '#a73400',
+        'tertiary-fixed': '#ffdbcf',
         'tertiary-fixed-dim': '#ffb59c',
-        'on-primary': '#ffffff',
-        'surface-variant': '#e2e2e2',
-        'surface-container-highest': '#e2e2e2',
-        'on-primary-fixed': '#001551',
-        'surface-bright': '#f9f9f8',
-        'surface-container-high': '#e8e8e7',
-        'primary-fixed-dim': '#b7c4ff',
+        'on-tertiary': '#ffffff',
+        'on-tertiary-container': '#ffc9b7',
+        'on-tertiary-fixed': '#390c00',
+        'on-tertiary-fixed-variant': '#832700',
+
+        error: '#ba1a1a',
+        'on-error': '#ffffff',
+        'error-container': '#ffdad6',
+        'on-error-container': '#93000a',
       },
       borderRadius: {
-        DEFAULT: '0.125rem',
-        lg: '0.25rem',
-        xl: '0.5rem',
+        DEFAULT: '0.375rem',
+        lg: '0.625rem',
+        xl: '0.875rem',
         // full = cercle réel (avatars, pastilles). DESIGN.md front-matter: 9999px.
         full: '9999px',
       },
@@ -99,24 +101,25 @@ module.exports = {
         xs: '4px',
       },
       fontFamily: {
-        // Titres : Space Grotesk (géométrique, du caractère). Corps/labels : Inter (lisible).
+        // Titres : Inter Tight serré (net à toutes les tailles, en FR/EN/NL).
+        // Corps et labels : Inter. Les deux sont auto-hébergées (css/input.css).
         sans: ['Inter', 'sans-serif'],
-        display: ['"Space Grotesk"', 'sans-serif'],
-        'display-xl': ['"Space Grotesk"', 'sans-serif'],
-        'display-lg': ['"Space Grotesk"', 'sans-serif'],
-        'display-lg-mobile': ['"Space Grotesk"', 'sans-serif'],
-        'headline-md': ['"Space Grotesk"', 'sans-serif'],
+        display: ['"Inter Tight"', 'Inter', 'sans-serif'],
+        'display-xl': ['"Inter Tight"', 'Inter', 'sans-serif'],
+        'display-lg': ['"Inter Tight"', 'Inter', 'sans-serif'],
+        'display-lg-mobile': ['"Inter Tight"', 'Inter', 'sans-serif'],
+        'headline-md': ['"Inter Tight"', 'Inter', 'sans-serif'],
         'body-base': ['Inter', 'sans-serif'],
         'body-sm': ['Inter', 'sans-serif'],
         'label-md': ['Inter', 'sans-serif'],
         'label-sm': ['Inter', 'sans-serif'],
       },
       fontSize: {
-        // Titre hero accueil (exception maquette : 52/58). Voir PROMPT-INTEGRATION.
-        'display-xl': ['52px', { lineHeight: '58px', letterSpacing: '-0.03em', fontWeight: '600' }],
-        'display-lg': ['32px', { lineHeight: '40px', letterSpacing: '-0.02em', fontWeight: '600' }],
-        'display-lg-mobile': ['24px', { lineHeight: '32px', letterSpacing: '-0.02em', fontWeight: '600' }],
-        'headline-md': ['20px', { lineHeight: '28px', letterSpacing: '-0.01em', fontWeight: '600' }],
+        // Titre hero accueil : 60/62, serré (Inter Tight à -0.035em).
+        'display-xl': ['60px', { lineHeight: '62px', letterSpacing: '-0.035em', fontWeight: '600' }],
+        'display-lg': ['36px', { lineHeight: '40px', letterSpacing: '-0.03em', fontWeight: '600' }],
+        'display-lg-mobile': ['28px', { lineHeight: '32px', letterSpacing: '-0.03em', fontWeight: '600' }],
+        'headline-md': ['21px', { lineHeight: '28px', letterSpacing: '-0.02em', fontWeight: '600' }],
         'body-base': ['14px', { lineHeight: '20px', fontWeight: '400' }],
         'body-sm': ['13px', { lineHeight: '18px', fontWeight: '400' }],
         'label-md': ['12px', { lineHeight: '16px', letterSpacing: '0.01em', fontWeight: '600' }],

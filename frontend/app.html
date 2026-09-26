@@ -15,16 +15,16 @@
     <link rel="icon" type="image/png" sizes="16x16" href="/img/icons/favicon-16.png" />
     <link rel="apple-touch-icon" sizes="180x180" href="/img/icons/apple-touch-icon.png" />
     <link rel="manifest" href="/site.webmanifest" />
-    <meta name="theme-color" content="#1d4ed8" />
+    <meta name="theme-color" content="#f6f3ee" />
     <!-- Polices auto-hébergées (/fonts) : aucune requête vers Google. -->
     <link rel="preload" href="/fonts/inter-latin.woff2" as="font" type="font/woff2" crossorigin />
-    <link rel="preload" href="/fonts/space-grotesk-latin.woff2" as="font" type="font/woff2" crossorigin />
+    <link rel="preload" href="/fonts/inter-tight-latin.woff2" as="font" type="font/woff2" crossorigin />
     <link rel="preload" href="/fonts/material-symbols-outlined.woff2" as="font" type="font/woff2" crossorigin />
     <link rel="stylesheet" href="/css/app.css" />
   </head>
   <body class="bg-background text-on-surface font-body-base min-h-screen lg:h-screen flex flex-col lg:overflow-hidden">
     <!-- TopNavBar (rendue par js/nav.js) -->
-    <header id="site-header" data-page="studio" class="bg-surface-container-lowest border-b border-outline-variant w-full flex-shrink-0 z-50"></header>
+    <header id="site-header" data-page="studio" class="bg-surface-container-lowest border-b border-outline-soft w-full flex-shrink-0 z-50"></header>
 
     <!-- Corps : panneau de réglages en trois étapes (celles de l'accueil) + toile.
          Le body ne scrolle jamais ; le panneau scrolle en interne, le pied
@@ -165,7 +165,7 @@
         </div>
 
         <!-- Pied de panneau : action primaire (fixe) -->
-        <div class="flex-shrink-0 border-t border-outline-variant bg-surface-container-lowest p-md flex flex-col gap-sm">
+        <div class="flex-shrink-0 border-t border-outline-soft bg-surface-container-lowest p-md flex flex-col gap-sm">
           <p id="form-error" class="hidden font-body-sm text-body-sm text-error text-center" role="alert"></p>
           <button id="generate" class="w-full h-11 lg:h-10 bg-primary-container text-on-primary rounded flex items-center justify-center gap-sm hover:bg-primary transition-colors disabled:opacity-60">
             <span class="material-symbols-outlined text-[16px]">auto_awesome</span>

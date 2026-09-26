@@ -27,14 +27,14 @@
     <link rel="icon" type="image/png" sizes="16x16" href="/img/icons/favicon-16.png" />
     <link rel="apple-touch-icon" sizes="180x180" href="/img/icons/apple-touch-icon.png" />
     <link rel="manifest" href="/site.webmanifest" />
-    <meta name="theme-color" content="#1d4ed8" />
+    <meta name="theme-color" content="#f6f3ee" />
     <!-- Polices auto-hébergées (/fonts) : aucune requête vers Google. -->
     <link rel="preload" href="/fonts/inter-latin.woff2" as="font" type="font/woff2" crossorigin />
-    <link rel="preload" href="/fonts/space-grotesk-latin.woff2" as="font" type="font/woff2" crossorigin />
+    <link rel="preload" href="/fonts/inter-tight-latin.woff2" as="font" type="font/woff2" crossorigin />
     <link rel="stylesheet" href="/css/app.css" />
   </head>
   <body class="bg-background text-on-surface font-body-base antialiased flex flex-col min-h-screen">
-    <header id="site-header" data-page="legal" class="bg-surface-container-lowest border-b border-outline-variant sticky top-0 z-50"></header>
+    <header id="site-header" data-page="legal" class="bg-surface-container-lowest border-b border-outline-soft sticky top-0 z-50"></header>
 
     <main class="flex-grow w-full max-w-[860px] mx-auto px-lg py-xl flex flex-col gap-xl">
       <div class="flex flex-col gap-xs">
@@ -101,12 +101,12 @@
           <div class="overflow-x-auto" tabindex="0" role="region" aria-label="Cookies et stockage local (tableau défilant horizontalement)" data-i18n-attr="aria-label:legal.s3.tableAria">
             <table class="w-full text-left font-body-sm text-body-sm border-collapse">
               <thead>
-                <tr class="border-b border-outline-variant text-on-surface">
+                <tr class="border-b border-outline-soft text-on-surface">
                   <th class="py-sm pr-md" data-i18n="legal.s3.thName">Nom</th><th class="py-sm pr-md" data-i18n="legal.s3.thType">Type</th><th class="py-sm pr-md" data-i18n="legal.s3.thPurpose">Finalité</th><th class="py-sm" data-i18n="legal.s3.thDuration">Durée</th>
                 </tr>
               </thead>
               <tbody>
-                <tr class="border-b border-outline-variant" data-i18n-html="legal.s3.rowSession_html"><td class="py-sm pr-md"><code>__Host-sid</code> (ou <code>sid</code> en local)</td><td class="py-sm pr-md">Cookie technique, strictement nécessaire</td><td class="py-sm pr-md">Maintien de votre session connectée</td><td class="py-sm">24 h d'inactivité, 7 jours maximum</td></tr>
+                <tr class="border-b border-outline-soft" data-i18n-html="legal.s3.rowSession_html"><td class="py-sm pr-md"><code>__Host-sid</code> (ou <code>sid</code> en local)</td><td class="py-sm pr-md">Cookie technique, strictement nécessaire</td><td class="py-sm pr-md">Maintien de votre session connectée</td><td class="py-sm">24 h d'inactivité, 7 jours maximum</td></tr>
                 <tr data-i18n-html="legal.s3.rowNotice_html"><td class="py-sm pr-md"><code>app.cookieNotice.v1</code></td><td class="py-sm pr-md">Stockage local du navigateur</td><td class="py-sm pr-md">Mémoriser que le bandeau d'information a été lu</td><td class="py-sm">Jusqu'à effacement des données du navigateur</td></tr>
               </tbody>
             </table>

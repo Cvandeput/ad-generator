@@ -4,8 +4,8 @@
   "description": "Vos produits, mis en scène comme en studio.",
   "start_url": "/app.html",
   "display": "standalone",
-  "background_color": "#f9f9f8",
-  "theme_color": "#1d4ed8",
+  "background_color": "#f6f3ee",
+  "theme_color": "#f6f3ee",
   "lang": "fr",
   "dir": "ltr",
   "icons": [

@@ -181,7 +181,7 @@ export function successCard(g) {
 export function failureRow(g, { withRetry = true } = {}) {
   const themeLabel = THEME_LABELS[g.theme] || g.theme;
   return `
-    <li class="js-failure flex flex-col sm:flex-row sm:justify-between sm:items-center gap-sm sm:gap-md py-sm border-b border-outline-variant last:border-0" data-id="${g.id}">
+    <li class="js-failure flex flex-col sm:flex-row sm:justify-between sm:items-center gap-sm sm:gap-md py-sm border-b border-outline-soft last:border-0" data-id="${g.id}">
       <div class="flex flex-col min-w-0">
         <span class="font-label-md text-label-md text-on-surface truncate">${escapeHtml(productLabel(g))} <span class="text-secondary font-body-sm">· ${escapeHtml(
     themeLabel
@@ -214,6 +214,6 @@ export function failuresBlock(errorCount) {
         </div>
         <span class="material-symbols-outlined text-outline transform group-open:rotate-180 transition-transform">expand_more</span>
       </summary>
-      <ul class="js-failures-list p-md border-t border-outline-variant flex flex-col"></ul>
+      <ul class="js-failures-list p-md border-t border-outline-soft flex flex-col"></ul>
     </details>`;
 }

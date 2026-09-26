@@ -1,5 +1,12 @@
 # Audit de contraste couleur — WCAG 2.2 AA
 
+> **Palette remplacée le 26/09/2026** (identité « D » : papier `#f6f3ee`, encre `#1b1a17`,
+> accent terracotta `#b8431a`). Les valeurs ci-dessous décrivent l'ancienne palette bleue et
+> restent comme historique. Les ratios à jour sont en commentaire dans
+> `frontend/tailwind.config.js`. Changement principal : les contours de composants passent de
+> `#c4c5d7` (1.71:1, sous le seuil 1.4.11) à `#848077` (≥ 3.11:1 sur tous les fonds de
+> composants), et les filets décoratifs ont leur propre token `outline-soft`.
+
 Objectif : tout texte ≥ 4.5:1 (3:1 toléré pour le texte large, ≥ 24 px ou ≥ 18.66 px en gras).
 Cible secondaire examinée : 1.4.11 (contraste non textuel, 3:1) sur les bordures de champs et
 les indicateurs de focus.

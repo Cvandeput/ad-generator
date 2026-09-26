@@ -56,13 +56,13 @@ export function verificationEmail(link, hours) {
     `Ce lien est valable ${hours} heures et ne fonctionne qu'une fois.`,
     "Si vous n'êtes pas à l'origine de cette inscription, ignorez ce message : aucun compte ne sera activé.",
   ].join('\n');
-  const html = `<!doctype html><html lang="fr"><body style="margin:0;background:#f9f9f8;font-family:Inter,Arial,sans-serif;color:#1a1c1c">
+  const html = `<!doctype html><html lang="fr"><body style="margin:0;background:#f6f3ee;font-family:Inter,Arial,sans-serif;color:#1b1a17">
   <div style="max-width:520px;margin:0 auto;padding:32px 24px">
     <h1 style="font-size:20px;margin:0 0 16px">Confirmez votre adresse e-mail</h1>
-    <p style="font-size:14px;line-height:20px;color:#434655;margin:0 0 24px">Une dernière étape pour activer vos générations offertes sur AdCraft.</p>
-    <p style="margin:0 0 24px"><a href="${esc(link)}" style="display:inline-block;background:#1d4ed8;color:#fff;text-decoration:none;padding:11px 22px;border-radius:4px;font-size:14px;font-weight:600">Confirmer mon adresse</a></p>
-    <p style="font-size:12px;line-height:18px;color:#625d5b;margin:0 0 8px">Si le bouton ne fonctionne pas, copiez ce lien :<br><span style="color:#1d4ed8;word-break:break-all">${esc(link)}</span></p>
-    <p style="font-size:12px;line-height:18px;color:#747686;margin:16px 0 0">Lien valable ${hours} heures, utilisable une seule fois. Si vous n'êtes pas à l'origine de cette inscription, ignorez ce message.</p>
+    <p style="font-size:14px;line-height:20px;color:#4a463f;margin:0 0 24px">Une dernière étape pour activer vos générations offertes sur AdCraft.</p>
+    <p style="margin:0 0 24px"><a href="${esc(link)}" style="display:inline-block;background:#b8431a;color:#fff;text-decoration:none;padding:11px 22px;border-radius:4px;font-size:14px;font-weight:600">Confirmer mon adresse</a></p>
+    <p style="font-size:12px;line-height:18px;color:#5e5a52;margin:0 0 8px">Si le bouton ne fonctionne pas, copiez ce lien :<br><span style="color:#b8431a;word-break:break-all">${esc(link)}</span></p>
+    <p style="font-size:12px;line-height:18px;color:#6a655c;margin:16px 0 0">Lien valable ${hours} heures, utilisable une seule fois. Si vous n'êtes pas à l'origine de cette inscription, ignorez ce message.</p>
   </div></body></html>`;
   return { subject, text, html };
 }

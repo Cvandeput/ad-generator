@@ -16,7 +16,7 @@ import { t, LOCALES, LANGS, currentLang, setLang } from './i18n.js';
 // Cibles tactiles : 44 px minimum tant qu'on est en mode tactile (< lg).
 const LINK = 'font-label-md text-label-md px-md py-sm rounded transition-colors flex items-center min-h-[44px]';
 const LINK_OFF = `${LINK} text-secondary hover:text-on-surface`;
-const LINK_ON = `${LINK} text-on-surface shadow-[inset_0_-2px_0_#1d4ed8]`;
+const LINK_ON = `${LINK} text-on-surface shadow-[inset_0_-2px_0_#b8431a]`;
 const LINK_VERTICAL = '';
 const BTN_PRIMARY = 'h-11 lg:h-8 px-md rounded bg-primary-container text-on-primary flex items-center justify-center gap-xs font-label-md text-label-md hover:bg-primary transition-colors';
 const BTN_GHOST = 'h-11 lg:h-8 px-md rounded border border-outline-variant bg-surface-container-lowest text-on-surface-variant flex items-center justify-center gap-xs font-label-md text-label-md hover:bg-surface-container transition-colors';
@@ -152,18 +152,18 @@ function renderAccountMenu(page, user, billing) {
       </button>
       <div id="account-menu" hidden
         class="absolute right-0 top-full mt-xs w-[280px] bg-surface-container-lowest border border-outline-variant rounded-lg shadow-[0_12px_32px_rgba(26,28,28,0.14)] py-xs z-[55]">
-        <div class="px-md pt-xs pb-sm mb-xs border-b border-outline-variant flex flex-col min-w-0">
+        <div class="px-md pt-xs pb-sm mb-xs border-b border-outline-soft flex flex-col min-w-0">
           <span class="font-label-sm text-label-sm text-secondary">${escapeHtml(t('nav.signedInAs'))}</span>
           <span class="font-body-sm text-body-sm text-on-surface truncate" title="${email}">${email}</span>
         </div>
         ${menuItem(page, '/account.html', 'account', 'manage_accounts', t('nav.account'))}
         ${billing ? menuItem(page, '/tarifs.html', 'tarifs', 'sell', t('nav.pricing')) : ''}
         ${user.isAdmin ? menuItem(page, '/admin.html', 'admin', 'admin_panel_settings', t('nav.admin')) : ''}
-        <div class="mt-xs px-md py-xs border-t border-outline-variant flex items-center justify-between gap-sm">
+        <div class="mt-xs px-md py-xs border-t border-outline-soft flex items-center justify-between gap-sm">
           <span class="font-label-sm text-label-sm text-secondary" aria-hidden="true">${escapeHtml(t('nav.language'))}</span>
           ${renderLangCompact()}
         </div>
-        <div class="pt-xs border-t border-outline-variant">
+        <div class="pt-xs border-t border-outline-soft">
           <button type="button" data-action="logout" class="${MENU_ITEM}">
             <span class="material-symbols-outlined text-[18px] text-outline" aria-hidden="true">logout</span><span>${escapeHtml(t('nav.logout'))}</span>
           </button>
@@ -177,7 +177,7 @@ function renderAccountMobile(page, user) {
   const link = (href, key, icon, label) =>
     `<a href="${href}" class="${page === key ? LINK_ON : LINK_OFF} gap-sm"${page === key ? ' aria-current="page"' : ''}><span class="material-symbols-outlined text-[18px] text-outline" aria-hidden="true">${icon}</span>${escapeHtml(label)}</a>`;
   return `
-    <div class="flex flex-col gap-xs pt-sm border-t border-outline-variant">
+    <div class="flex flex-col gap-xs pt-sm border-t border-outline-soft">
       <div class="flex items-center gap-sm px-md py-xs min-w-0">
         ${avatar(user, page === 'account' || page === 'admin')}
         <span class="flex flex-col min-w-0">
@@ -194,7 +194,7 @@ function renderAccountMobile(page, user) {
 }
 
 function renderActions(page, user, cfg, vertical = false, billing = false) {
-  const wrap = vertical ? 'flex flex-col gap-sm pt-sm border-t border-outline-variant' : 'flex items-center gap-md';
+  const wrap = vertical ? 'flex flex-col gap-sm pt-sm border-t border-outline-soft' : 'flex items-center gap-md';
   if (user) {
     return `
       <div class="${wrap}">
@@ -239,11 +239,11 @@ export function renderHeader(page, user, cfg, billing = false) {
         </button>
       </div>
     </div>
-    <div id="mobile-menu" hidden class="lg:hidden border-t border-outline-variant bg-surface-container-lowest">
+    <div id="mobile-menu" hidden class="lg:hidden border-t border-outline-soft bg-surface-container-lowest">
       <div class="px-lg py-md flex flex-col gap-xs">
         <nav class="flex flex-col" aria-label="${escapeHtml(t('nav.mobileNav'))}">${renderLinks(page, user, true, billing)}</nav>
         ${renderActions(page, user, cfg, true, billing)}
-        <div class="flex items-center justify-between gap-sm pt-sm border-t border-outline-variant">
+        <div class="flex items-center justify-between gap-sm pt-sm border-t border-outline-soft">
           <span class="px-md font-label-sm text-label-sm text-secondary" aria-hidden="true">${escapeHtml(t('nav.language'))}</span>
           ${renderLangCompact()}
         </div>
@@ -288,7 +288,7 @@ function cookieBanner() {
   el.id = 'cookie-banner';
   el.setAttribute('role', 'region');
   el.setAttribute('aria-label', t('cookies.region'));
-  el.className = 'fixed bottom-0 inset-x-0 z-[60] bg-surface-container-lowest border-t border-outline-variant shadow-[0_-4px_16px_rgba(26,28,28,0.06)]';
+  el.className = 'fixed bottom-0 inset-x-0 z-[60] bg-surface-container-lowest border-t border-outline-soft shadow-[0_-4px_16px_rgba(26,28,28,0.06)]';
   el.innerHTML = `
     <div class="w-full max-w-container-max mx-auto pl-lg pr-sm py-[2px] flex items-center gap-sm">
       <span class="material-symbols-outlined text-outline text-[16px] shrink-0" aria-hidden="true">cookie</span>
@@ -326,7 +326,7 @@ function verifyBanner(user) {
   if (!user || user.emailVerified !== false) return;
   const el = document.createElement('div');
   el.id = 'verify-banner';
-  el.className = 'bg-error-container border-b border-outline-variant';
+  el.className = 'bg-error-container border-b border-outline-soft';
   el.innerHTML = `
     <div class="w-full max-w-container-max mx-auto px-lg py-sm flex flex-wrap items-center gap-sm">
       <span class="material-symbols-outlined text-[18px] text-on-error-container">mark_email_unread</span>

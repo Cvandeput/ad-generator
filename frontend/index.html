@@ -16,7 +16,7 @@
     <link rel="alternate" hreflang="nl" href="https://ads.devwork.cloud/?lang=nl" />
     <link rel="alternate" hreflang="x-default" href="https://ads.devwork.cloud/" />
     <meta name="robots" content="index, follow" />
-    <meta name="theme-color" content="#1d4ed8" />
+    <meta name="theme-color" content="#f6f3ee" />
 
     <meta property="og:type" content="website" />
     <!-- og:site_name porte le nom du produit : il n'est pas écrit ici mais
@@ -45,7 +45,7 @@
 
     <!-- Polices auto-hébergées (/fonts) : aucune requête vers Google. -->
     <link rel="preload" href="/fonts/inter-latin.woff2" as="font" type="font/woff2" crossorigin />
-    <link rel="preload" href="/fonts/space-grotesk-latin.woff2" as="font" type="font/woff2" crossorigin />
+    <link rel="preload" href="/fonts/inter-tight-latin.woff2" as="font" type="font/woff2" crossorigin />
     <link rel="preload" href="/fonts/material-symbols-outlined.woff2" as="font" type="font/woff2" crossorigin />
     <link rel="stylesheet" href="/css/app.css" />
     <link rel="preload" as="image" href="/img/site/hero-apres.webp" />
@@ -71,11 +71,11 @@
     <a href="#contenu" class="sr-only focus:not-sr-only focus:absolute focus:top-sm focus:left-sm focus:z-[100] focus:bg-surface-container-lowest focus:px-md focus:py-sm focus:rounded focus:border focus:border-outline-variant" data-i18n="common.skipToContent">Aller au contenu</a>
 
     <!-- TopNavBar (rendue par js/nav.js : état connecté, menu mobile) -->
-    <header id="site-header" data-page="home" class="bg-surface-container-lowest border-b border-outline-variant sticky top-0 z-50"></header>
+    <header id="site-header" data-page="home" class="bg-surface-container-lowest border-b border-outline-soft sticky top-0 z-50"></header>
 
     <main id="contenu">
       <!-- Hero -->
-      <section class="bg-surface-container-lowest border-b border-outline-variant">
+      <section class="bg-surface-container-lowest border-b border-outline-soft">
         <div class="w-full max-w-container-max mx-auto px-lg py-16 lg:py-24 flex flex-col lg:flex-row items-center gap-12 xl:gap-16">
           <div class="flex-1 min-w-0 flex flex-col gap-lg">
             <span class="font-label-sm text-label-sm font-semibold tracking-[0.10em] uppercase text-secondary" data-i18n="home.hero.eyebrow">Photographie produit générative</span>
@@ -119,7 +119,7 @@
       </section>
 
       <!-- Fonctionnement -->
-      <section id="fonctionnement" class="border-b border-outline-variant scroll-mt-[60px]">
+      <section id="fonctionnement" class="border-b border-outline-soft scroll-mt-[60px]">
         <div class="w-full max-w-container-max mx-auto px-lg py-16 lg:py-24 flex flex-col gap-xl">
           <div class="flex flex-col gap-sm">
             <h2 class="font-display-lg text-display-lg text-on-surface" data-i18n="home.steps.title">Trois informations suffisent</h2>
@@ -146,7 +146,7 @@
       </section>
 
       <!-- Galerie -->
-      <section id="galerie" class="bg-surface-container-lowest border-b border-outline-variant scroll-mt-[60px]">
+      <section id="galerie" class="bg-surface-container-lowest border-b border-outline-soft scroll-mt-[60px]">
         <div class="w-full max-w-container-max mx-auto px-lg py-16 lg:py-24 flex flex-col gap-xl">
           <div class="flex flex-col gap-sm">
             <h2 class="font-display-lg text-display-lg text-on-surface" data-i18n="home.gallery.title">Exemples</h2>
@@ -182,7 +182,7 @@
       </section>
 
       <!-- Fidélité -->
-      <section class="border-b border-outline-variant">
+      <section class="border-b border-outline-soft">
         <div class="w-full max-w-container-max mx-auto px-lg py-16 lg:py-24 flex flex-col lg:flex-row items-center gap-12 xl:gap-16">
           <div class="flex-1 flex flex-col gap-md">
             <h2 class="font-display-lg text-display-lg text-on-surface" data-i18n="home.fidelity.title">Le packaging reste le vôtre</h2>
@@ -207,7 +207,7 @@
       </section>
 
       <!-- Pour qui -->
-      <section id="pour-qui" class="bg-surface-container-lowest border-b border-outline-variant scroll-mt-[60px]" aria-labelledby="pour-qui-titre">
+      <section id="pour-qui" class="bg-surface-container-lowest border-b border-outline-soft scroll-mt-[60px]" aria-labelledby="pour-qui-titre">
         <div class="w-full max-w-container-max mx-auto px-lg py-16 lg:py-24 flex flex-col gap-xl">
           <div class="flex flex-col gap-sm">
             <h2 id="pour-qui-titre" class="font-display-lg text-display-lg text-on-surface" data-i18n="home.audience.title">Pour tous ceux qui vendent un produit</h2>
@@ -241,7 +241,7 @@
       <!-- Aperçu des tarifs : masqué tant que GET /api/billing/plans n'a pas
            répondu, et définitivement si la facturation est désactivée (404).
            Les chiffres viennent du serveur (js/home.js), jamais du HTML. -->
-      <section id="tarifs" class="border-b border-outline-variant scroll-mt-[60px] hidden" aria-labelledby="tarifs-titre">
+      <section id="tarifs" class="border-b border-outline-soft scroll-mt-[60px] hidden" aria-labelledby="tarifs-titre">
         <div class="w-full max-w-container-max mx-auto px-lg py-16 lg:py-24 flex flex-col gap-xl">
           <div class="flex flex-col gap-sm">
             <h2 id="tarifs-titre" class="font-display-lg text-display-lg text-on-surface">Gratuit pour essayer, puis dès 9,90 €/mois</h2>
@@ -259,7 +259,7 @@
       </section>
 
       <!-- FAQ -->
-      <section id="faq" class="bg-surface-container-lowest border-b border-outline-variant scroll-mt-[60px]" aria-labelledby="faq-titre">
+      <section id="faq" class="bg-surface-container-lowest border-b border-outline-soft scroll-mt-[60px]" aria-labelledby="faq-titre">
         <div class="w-full max-w-container-max mx-auto px-lg py-16 lg:py-24 flex flex-col lg:flex-row gap-xl">
           <div class="lg:w-[360px] flex-shrink-0 flex flex-col gap-sm">
             <h2 id="faq-titre" class="font-display-lg text-display-lg text-on-surface" data-i18n="home.faq.title">Questions fréquentes</h2>
