@@ -24,6 +24,19 @@ function showError(msg) {
   errorEl.classList.remove('hidden');
 }
 
+// Déconnexion de sécurité : trop de mots de passe actuels erronés depuis
+// « Mon compte » (le serveur a fermé la session). On explique pourquoi, puis
+// on retire le paramètre de l'URL pour qu'un rechargement ne le répète pas.
+{
+  const params = new URLSearchParams(location.search);
+  if (params.get('motif') === 'securite') {
+    showError(t('login.securityLogout'));
+    params.delete('motif');
+    const q = params.toString();
+    history.replaceState(null, '', `${location.pathname}${q ? `?${q}` : ''}${location.hash}`);
+  }
+}
+
 form.addEventListener('submit', async (e) => {
   e.preventDefault();
   errorEl.classList.add('hidden');

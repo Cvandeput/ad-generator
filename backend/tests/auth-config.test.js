@@ -106,3 +106,45 @@ test('une adresse déjà inscrite est signalée clairement, sans ouvrir de sessi
   assert.equal(body.user, undefined);
   assert.equal(again.headers.get('set-cookie'), null, 'aucun cookie de session');
 });
+
+test('changer de mot de passe exige le mot de passe actuel ; 3 erreurs ferment la session', async () => {
+  const base = await startServer(3541, { BILLING_ENABLED: 'false' });
+  const post = (path, body, cookie) =>
+    fetch(`${base}${path}`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', Origin: base, ...(cookie ? { Cookie: cookie } : {}) },
+      body: JSON.stringify(body),
+    });
+  const sessionOf = (res) => (res.headers.get('set-cookie') || '').split(';')[0];
+  const me = async (cookie) => (await fetch(`${base}/api/auth/me`, { headers: { Cookie: cookie } })).status;
+
+  const reg = await post('/api/auth/register', { email: 'mdp@example.com', password: 'Actuel-Solide-2026!', acceptTerms: true });
+  assert.equal(reg.status, 201);
+  let cookie = sessionOf(reg);
+  assert.equal(await me(cookie), 200);
+
+  // Une session ouverte seule ne suffit pas : sans le bon mot de passe actuel,
+  // refus explicite avec le nombre d'essais restants.
+  for (const left of [2, 1]) {
+    const r = await post('/api/auth/password', { currentPassword: 'Mauvais-Essai-2026!', newPassword: 'Nouveau-Solide-2026!' }, cookie);
+    assert.equal(r.status, 401);
+    const b = await r.json();
+    assert.equal(b.code, 'BAD_CURRENT_PASSWORD');
+    assert.equal(b.attemptsLeft, left);
+    assert.equal(await me(cookie), 200, 'la session tient encore');
+  }
+  // Troisième erreur : la session est fermée.
+  const closed = await post('/api/auth/password', { currentPassword: 'Mauvais-Essai-2026!', newPassword: 'Nouveau-Solide-2026!' }, cookie);
+  assert.equal(closed.status, 401);
+  assert.equal((await closed.json()).code, 'SESSION_CLOSED');
+  assert.equal(await me(cookie), 401, 'session fermée après 3 erreurs');
+
+  // Le vrai titulaire n'est pas bloqué : il se reconnecte et change son mot de passe.
+  const login = await post('/api/auth/login', { email: 'mdp@example.com', password: 'Actuel-Solide-2026!' });
+  assert.equal(login.status, 200);
+  cookie = sessionOf(login);
+  const ok = await post('/api/auth/password', { currentPassword: 'Actuel-Solide-2026!', newPassword: 'Nouveau-Solide-2026!' }, cookie);
+  assert.equal(ok.status, 200);
+  const relog = await post('/api/auth/login', { email: 'mdp@example.com', password: 'Nouveau-Solide-2026!' });
+  assert.equal(relog.status, 200, 'le nouveau mot de passe fonctionne');
+});

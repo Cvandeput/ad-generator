@@ -254,13 +254,36 @@ router.post('/logout-all', requireAuth, (req, res) => {
 });
 
 // --- Changement de mot de passe (mot de passe actuel requis) ----------------
+// La session seule ne suffit pas : quelqu'un qui trouve une session ouverte
+// (poste partagé, ordinateur resté allumé) ne doit pas pouvoir s'approprier le
+// compte. D'où le mot de passe actuel, ET une limite par SESSION : au bout de
+// MAX_PASSWORD_CHANGE_FAILS erreurs, la session est fermée. Le loginLimiter
+// (par IP) ne suffirait pas à lui seul, et on ne verrouille pas le compte
+// lui-même : son vrai propriétaire doit pouvoir se reconnecter.
+const MAX_PASSWORD_CHANGE_FAILS = 3;
+
 router.post('/password', requireAuth, loginLimiter, async (req, res, next) => {
   try {
     const current = String(req.body.currentPassword || '');
     const fresh = String(req.body.newPassword || '');
     const user = db.prepare('SELECT * FROM users WHERE id = ? AND deleted_at IS NULL').get(req.session.userId);
     if (!user || !(await bcrypt.compare(current, user.password_hash))) {
-      return res.status(401).json({ error: 'Mot de passe actuel incorrect' });
+      const fails = (req.session.passwordChangeFails || 0) + 1;
+      req.session.passwordChangeFails = fails;
+      audit('password.change_refused', req, { userId: req.session.userId, fails });
+      if (fails >= MAX_PASSWORD_CHANGE_FAILS) {
+        const cookieName = req.app.get('sessionCookieName');
+        audit('password.change_session_closed', req, { userId: req.session.userId });
+        return req.session.destroy(() => {
+          res.clearCookie(cookieName, { path: '/', httpOnly: true, secure: config.cookieSecure, sameSite: 'lax' });
+          res.status(401).json({ code: 'SESSION_CLOSED', error: 'Trop de mots de passe incorrects : par sécurité, vous avez été déconnecté.' });
+        });
+      }
+      return res.status(401).json({
+        code: 'BAD_CURRENT_PASSWORD',
+        error: 'Mot de passe actuel incorrect.',
+        attemptsLeft: MAX_PASSWORD_CHANGE_FAILS - fails,
+      });
     }
     const issues = passwordIssues(fresh, user.email);
     if (issues.length) return res.status(400).json({ error: 'Mot de passe refusé : ' + issues.join(' ; '), issues });

@@ -68,6 +68,10 @@ const pwCurrent = document.getElementById('pw-current');
 const pwNew = document.getElementById('pw-new');
 const pwSubmit = document.getElementById('pw-submit');
 const pwFeedback = document.getElementById('pw-feedback');
+const pwOpen = document.getElementById('pw-open');
+const pwOpenRow = document.getElementById('pw-open-row');
+const pwCancel = document.getElementById('pw-cancel');
+const pwStatus = document.getElementById('pw-status');
 const rules = Object.fromEntries([...document.querySelectorAll('#pw-rules li')].map((li) => [li.dataset.rule, li]));
 
 function setRule(name, ok) {
@@ -127,6 +131,39 @@ function passwordError(err) {
   return fr ? err.serverMessage : err.status >= 500 ? t('errors.status.500') : t('errors.generic');
 }
 
+// Formulaire replié derrière le bouton « Changer de mot de passe » : il ne
+// s'ouvre que sur demande et demande d'abord le mot de passe actuel.
+function resetPasswordForm() {
+  pwForm.reset();
+  pwCurrent.type = 'password';
+  pwNew.type = 'password';
+  document.querySelectorAll('.js-toggle-pw').forEach((b) => {
+    b.setAttribute('aria-pressed', 'false');
+    b.querySelector('.material-symbols-outlined').textContent = 'visibility';
+  });
+  pwFeedback.innerHTML = '';
+  evaluate();
+}
+function openPasswordForm() {
+  pwStatus.innerHTML = '';
+  pwForm.classList.remove('hidden');
+  pwOpenRow.classList.add('hidden');
+  pwOpen.setAttribute('aria-expanded', 'true');
+  pwCurrent.focus();
+}
+function closePasswordForm() {
+  resetPasswordForm();
+  pwForm.classList.add('hidden');
+  pwOpenRow.classList.remove('hidden');
+  pwOpen.setAttribute('aria-expanded', 'false');
+  pwOpen.focus();
+}
+pwOpen.addEventListener('click', openPasswordForm);
+pwCancel.addEventListener('click', closePasswordForm);
+pwForm.addEventListener('keydown', (e) => {
+  if (e.key === 'Escape') closePasswordForm();
+});
+
 pwForm.addEventListener('input', () => {
   // Nouvelle saisie : le message précédent (erreur ou succès) n'a plus lieu d'être.
   pwFeedback.innerHTML = '';
@@ -143,24 +180,27 @@ pwForm.addEventListener('submit', async (e) => {
     await postPassword(pwCurrent.value, pwNew.value);
     // Le serveur a détruit TOUTES les sessions du compte puis rouvert
     // celle-ci : on le dit, les autres appareils vont se retrouver déconnectés.
-    pwForm.reset();
-    pwCurrent.type = 'password';
-    pwNew.type = 'password';
-    document.querySelectorAll('.js-toggle-pw').forEach((b) => {
-      b.setAttribute('aria-pressed', 'false');
-      b.querySelector('.material-symbols-outlined').textContent = 'visibility';
-    });
-    pwFeedback.innerHTML = notice('ok', escapeHtml(t('account.password.success')));
+    closePasswordForm();
+    pwStatus.innerHTML = notice('ok', escapeHtml(t('account.password.success')));
   } catch (err) {
-    if (err instanceof ApiError && err.status === 401) {
-      // Session encore valide → c'est bien le mot de passe actuel qui est faux.
+    // Trop d'essais : le serveur a fermé la session (quelqu'un d'autre que le
+    // titulaire devant une session ouverte, peut-être). Retour à la connexion.
+    if (err instanceof ApiError && err.code === 'SESSION_CLOSED') {
+      location.href = '/login.html?motif=securite';
+      return;
+    }
+    if (err instanceof ApiError && err.status === 401 && err.code !== 'BAD_CURRENT_PASSWORD') {
+      // 401 sans code : la session a expiré entre-temps.
       const still = await api.me({ silent: true }).catch(() => null);
       if (!still) {
         location.href = '/login.html';
         return;
       }
     }
-    pwFeedback.innerHTML = notice('err', escapeHtml(err instanceof ApiError ? passwordError(err) : t('errors.generic')));
+    let message = err instanceof ApiError ? passwordError(err) : t('errors.generic');
+    const left = err instanceof ApiError ? err.data?.attemptsLeft : undefined;
+    if (Number.isInteger(left) && left > 0) message += ` ${t('account.password.errors.attemptsLeft', { count: left })}`;
+    pwFeedback.innerHTML = notice('err', escapeHtml(message));
     if (err instanceof ApiError && err.status === 401) {
       pwCurrent.select();
       pwCurrent.focus();

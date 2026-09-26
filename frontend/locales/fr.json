@@ -37,14 +37,18 @@
       "rules": {
         "different": "Différent du mot de passe actuel"
       },
-      "submit": "Changer le mot de passe",
+      "submit": "Enregistrer le mot de passe",
       "saving": "Enregistrement…",
       "success": "Mot de passe modifié. Par sécurité, vos autres appareils ont été déconnectés ; vous restez connecté ici.",
       "errors": {
         "badCurrent": "Le mot de passe actuel est incorrect.",
         "rejected": "Ce mot de passe n'est pas accepté : évitez les mots de passe courants, les suites prévisibles et les caractères répétés.",
-        "same": "Le nouveau mot de passe doit être différent de l'actuel."
-      }
+        "same": "Le nouveau mot de passe doit être différent de l'actuel.",
+        "attemptsLeft_one": "Encore {{count}} essai avant la déconnexion de sécurité.",
+        "attemptsLeft_other": "Encore {{count}} essais avant la déconnexion de sécurité."
+      },
+      "open": "Changer de mot de passe",
+      "reauth": "Par sécurité, confirmez d'abord votre mot de passe actuel."
     },
     "language": {
       "title": "Langue",
@@ -196,7 +200,9 @@
       "SUBSCRIPTION_CANCEL_FAILED": "Votre abonnement n'a pas pu être résilié. Réessayez dans un instant.",
       "WINDOW_EXPIRED": "Le délai de rétractation de 14 jours est écoulé.",
       "WITHDRAWAL_CONSENT_REQUIRED": "Vous devez demander expressément le démarrage immédiat du service pour poursuivre.",
-      "EMAIL_TAKEN": "Un compte existe déjà avec cette adresse."
+      "EMAIL_TAKEN": "Un compte existe déjà avec cette adresse.",
+      "BAD_CURRENT_PASSWORD": "Le mot de passe actuel est incorrect.",
+      "SESSION_CLOSED": "Trop de mots de passe incorrects : par sécurité, vous avez été déconnecté."
     },
     "generic": "Une erreur est survenue. Réessayez.",
     "network": "Connexion au serveur impossible",
@@ -468,7 +474,8 @@
     "pitchText": "Une photo de produit, trois informations, un thème — et le visuel est prêt à publier.",
     "pitchTitle": "Le packaging ne bouge pas. Le décor, si.",
     "subtitle": "Accédez à votre studio et à vos visuels.",
-    "title": "Connexion"
+    "title": "Connexion",
+    "securityLogout": "Par sécurité, vous avez été déconnecté après plusieurs mots de passe incorrects. Reconnectez-vous."
   },
   "meta": {
     "admin": {

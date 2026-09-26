@@ -46,7 +46,24 @@
             <h2 id="pw-title" class="font-headline-md text-headline-md text-on-surface" data-i18n="account.password.title">Mot de passe</h2>
             <p class="font-body-sm text-body-sm text-secondary" data-i18n="account.password.intro">Choisissez un mot de passe que vous n'utilisez nulle part ailleurs.</p>
           </div>
-          <form id="pw-form" class="flex flex-col gap-md" novalidate>
+
+          <!-- Formulaire replié par défaut : il ne s'ouvre que sur demande, et
+               réclame le mot de passe actuel (une session laissée ouverte ne
+               suffit pas pour changer de mot de passe). -->
+          <div id="pw-status" aria-live="polite"></div>
+          <div id="pw-open-row" class="flex">
+            <button id="pw-open" type="button" aria-expanded="false" aria-controls="pw-form"
+              class="min-h-[44px] lg:min-h-0 lg:h-9 py-xs px-lg rounded border border-outline-variant bg-surface-container-lowest text-on-surface font-label-md text-label-md inline-flex items-center justify-center gap-xs hover:bg-surface-container transition-colors">
+              <span class="material-symbols-outlined text-[18px]" aria-hidden="true">lock_reset</span>
+              <span data-i18n="account.password.open">Changer de mot de passe</span>
+            </button>
+          </div>
+
+          <form id="pw-form" class="flex flex-col gap-md hidden" novalidate>
+            <p class="flex items-start gap-xs font-body-sm text-body-sm text-on-surface-variant bg-surface-container-low border border-outline-soft rounded-lg px-md py-sm">
+              <span class="material-symbols-outlined text-[18px] text-outline" aria-hidden="true">shield_lock</span>
+              <span data-i18n="account.password.reauth">Par sécurité, confirmez d'abord votre mot de passe actuel.</span>
+            </p>
             <!-- Identifiant pour les gestionnaires de mots de passe (non affiché). -->
             <input id="pw-username" name="username" type="email" autocomplete="username" class="hidden" tabindex="-1" aria-hidden="true" readonly />
 
@@ -83,10 +100,13 @@
 
             <div id="pw-feedback" aria-live="polite"></div>
 
-            <div class="flex">
+            <div class="flex flex-wrap gap-sm">
               <button id="pw-submit" type="submit" disabled
                 class="min-h-[44px] lg:min-h-0 lg:h-9 py-xs px-lg rounded bg-primary-container text-on-primary font-label-md text-label-md inline-flex items-center justify-center gap-xs hover:bg-primary transition-colors disabled:opacity-60 disabled:cursor-not-allowed"
                 data-i18n="account.password.submit">Changer le mot de passe</button>
+              <button id="pw-cancel" type="button"
+                class="min-h-[44px] lg:min-h-0 lg:h-9 py-xs px-lg rounded border border-outline-variant bg-surface-container-lowest text-on-surface-variant font-label-md text-label-md inline-flex items-center justify-center hover:bg-surface-container transition-colors"
+                data-i18n="common.cancel">Annuler</button>
             </div>
           </form>
         </section>

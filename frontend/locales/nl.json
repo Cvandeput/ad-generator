@@ -37,14 +37,18 @@
       "rules": {
         "different": "Verschilt van uw huidige wachtwoord"
       },
-      "submit": "Wachtwoord wijzigen",
+      "submit": "Wachtwoord opslaan",
       "saving": "Opslaan…",
       "success": "Wachtwoord gewijzigd. Voor uw veiligheid zijn uw andere toestellen afgemeld; hier blijft u aangemeld.",
       "errors": {
         "badCurrent": "Uw huidige wachtwoord is onjuist.",
         "rejected": "Dit wachtwoord wordt niet aanvaard: vermijd veelgebruikte wachtwoorden, voorspelbare reeksen en herhaalde tekens.",
-        "same": "Uw nieuwe wachtwoord moet verschillen van het huidige."
-      }
+        "same": "Uw nieuwe wachtwoord moet verschillen van het huidige.",
+        "attemptsLeft_one": "Nog {{count}} poging voordat u uit veiligheidsoverwegingen wordt afgemeld.",
+        "attemptsLeft_other": "Nog {{count}} pogingen voordat u uit veiligheidsoverwegingen wordt afgemeld."
+      },
+      "open": "Wachtwoord wijzigen",
+      "reauth": "Bevestig voor uw veiligheid eerst uw huidige wachtwoord."
     },
     "language": {
       "title": "Taal",
@@ -196,7 +200,9 @@
       "SUBSCRIPTION_CANCEL_FAILED": "Uw abonnement kon niet worden opgezegd. Probeer het zo meteen opnieuw.",
       "WINDOW_EXPIRED": "De herroepingstermijn van 14 dagen is verstreken.",
       "WITHDRAWAL_CONSENT_REQUIRED": "U moet uitdrukkelijk verzoeken dat de dienst onmiddellijk start om verder te gaan.",
-      "EMAIL_TAKEN": "Er bestaat al een account met dit e-mailadres."
+      "EMAIL_TAKEN": "Er bestaat al een account met dit e-mailadres.",
+      "BAD_CURRENT_PASSWORD": "Uw huidige wachtwoord is onjuist.",
+      "SESSION_CLOSED": "Te veel onjuiste wachtwoorden: voor uw veiligheid bent u afgemeld."
     },
     "generic": "Er liep iets mis. Probeer opnieuw.",
     "network": "Geen verbinding met de server",
@@ -468,7 +474,8 @@
     "pitchText": "Eén productfoto, drie gegevens, een thema — en de visual is klaar om te posten.",
     "pitchTitle": "De verpakking blijft. Het decor niet.",
     "subtitle": "Terug naar uw studio en uw visuals.",
-    "title": "Aanmelden"
+    "title": "Aanmelden",
+    "securityLogout": "Voor uw veiligheid bent u afgemeld na meerdere onjuiste wachtwoorden. Meld u opnieuw aan."
   },
   "meta": {
     "admin": {

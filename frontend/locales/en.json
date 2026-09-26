@@ -37,14 +37,18 @@
       "rules": {
         "different": "Different from your current password"
       },
-      "submit": "Change password",
+      "submit": "Save password",
       "saving": "Saving…",
       "success": "Password changed. For your security, your other devices have been signed out; you remain signed in here.",
       "errors": {
         "badCurrent": "Your current password is incorrect.",
         "rejected": "This password isn't accepted: avoid common passwords, predictable sequences and repeated characters.",
-        "same": "Your new password must be different from your current one."
-      }
+        "same": "Your new password must be different from your current one.",
+        "attemptsLeft_one": "{{count}} attempt left before you are signed out for security.",
+        "attemptsLeft_other": "{{count}} attempts left before you are signed out for security."
+      },
+      "open": "Change password",
+      "reauth": "For your security, first confirm your current password."
     },
     "language": {
       "title": "Language",
@@ -196,7 +200,9 @@
       "SUBSCRIPTION_CANCEL_FAILED": "Your subscription could not be cancelled. Please try again in a moment.",
       "WINDOW_EXPIRED": "The 14-day withdrawal period has expired.",
       "WITHDRAWAL_CONSENT_REQUIRED": "You must expressly request immediate performance of the service to continue.",
-      "EMAIL_TAKEN": "An account already exists with this email address."
+      "EMAIL_TAKEN": "An account already exists with this email address.",
+      "BAD_CURRENT_PASSWORD": "Your current password is incorrect.",
+      "SESSION_CLOSED": "Too many incorrect passwords: for your security, you have been signed out."
     },
     "generic": "Something went wrong. Try again.",
     "network": "Could not reach the server",
@@ -468,7 +474,8 @@
     "pitchText": "One product photo, three details, a theme — and the visual is ready to post.",
     "pitchTitle": "The packaging stays put. The scene does not.",
     "subtitle": "Get back to your studio and your visuals.",
-    "title": "Sign in"
+    "title": "Sign in",
+    "securityLogout": "For your security, you were signed out after several incorrect passwords. Please sign in again."
   },
   "meta": {
     "admin": {
