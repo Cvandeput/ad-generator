@@ -195,7 +195,8 @@
       "QUOTA_EXCEEDED": "Maandquotum bereikt. Verander van formule of koop een pakket.",
       "SUBSCRIPTION_CANCEL_FAILED": "Uw abonnement kon niet worden opgezegd. Probeer het zo meteen opnieuw.",
       "WINDOW_EXPIRED": "De herroepingstermijn van 14 dagen is verstreken.",
-      "WITHDRAWAL_CONSENT_REQUIRED": "U moet uitdrukkelijk verzoeken dat de dienst onmiddellijk start om verder te gaan."
+      "WITHDRAWAL_CONSENT_REQUIRED": "U moet uitdrukkelijk verzoeken dat de dienst onmiddellijk start om verder te gaan.",
+      "EMAIL_TAKEN": "Er bestaat al een account met dit e-mailadres."
     },
     "generic": "Er liep iets mis. Probeer opnieuw.",
     "network": "Geen verbinding met de server",
@@ -668,7 +669,6 @@
   },
   "register": {
     "consent_html": "Ik heb de <a href=\"/legal.html#mentions\" target=\"_blank\" rel=\"noopener\" class=\"text-primary-container underline\">wettelijke vermeldingen</a>, het <a href=\"/legal.html#confidentialite\" target=\"_blank\" rel=\"noopener\" class=\"text-primary-container underline\">privacybeleid</a> en de <a href=\"/legal.html#cgu\" target=\"_blank\" rel=\"noopener\" class=\"text-primary-container underline\">gebruiksvoorwaarden</a> gelezen en aanvaard ze. Ik bevestig dat ik de rechten bezit op de foto’s die ik zal uploaden.",
-    "created": "Als dit adres beschikbaar is, is uw account aangemaakt. Meld u aan.",
     "haveAccount": "Al een account? Aanmelden",
     "inviteCode": "Uitnodigingscode",
     "modeClosed": "De registraties zijn gesloten: de toegang verloopt op uitnodiging. Neem contact op met de beheerder.",

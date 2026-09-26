@@ -195,7 +195,8 @@
       "QUOTA_EXCEEDED": "Monthly quota reached. Switch plan or buy a pack.",
       "SUBSCRIPTION_CANCEL_FAILED": "Your subscription could not be cancelled. Please try again in a moment.",
       "WINDOW_EXPIRED": "The 14-day withdrawal period has expired.",
-      "WITHDRAWAL_CONSENT_REQUIRED": "You must expressly request immediate performance of the service to continue."
+      "WITHDRAWAL_CONSENT_REQUIRED": "You must expressly request immediate performance of the service to continue.",
+      "EMAIL_TAKEN": "An account already exists with this email address."
     },
     "generic": "Something went wrong. Try again.",
     "network": "Could not reach the server",
@@ -668,7 +669,6 @@
   },
   "register": {
     "consent_html": "I have read and accept the <a href=\"/legal.html#mentions\" target=\"_blank\" rel=\"noopener\" class=\"text-primary-container underline\">legal notice</a>, the <a href=\"/legal.html#confidentialite\" target=\"_blank\" rel=\"noopener\" class=\"text-primary-container underline\">privacy policy</a> and the <a href=\"/legal.html#cgu\" target=\"_blank\" rel=\"noopener\" class=\"text-primary-container underline\">terms of use</a>. I certify that I hold the rights to the photos I upload.",
-    "created": "If this address is available, your account has been created. Please sign in.",
     "haveAccount": "Already have an account? Sign in",
     "inviteCode": "Invitation code",
     "modeClosed": "Sign-ups are closed: access is by invitation. Contact the administrator.",

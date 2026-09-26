@@ -84,3 +84,25 @@ test('freeQuota vaut 5 par défaut, facturation désactivée comprise', async ()
   assert.equal(cfg.json.freeQuota, 5);
   assert.equal((await getJson(`${base}/api/billing/plans`)).status, 404, 'la facturation reste désactivée');
 });
+
+test('une adresse déjà inscrite est signalée clairement, sans ouvrir de session', async () => {
+  const base = await startServer(3539, { BILLING_ENABLED: 'false' });
+  const register = (password) =>
+    fetch(`${base}/api/auth/register`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', Origin: base },
+      body: JSON.stringify({ email: 'deja.inscrite@example.com', password, acceptTerms: true }),
+    });
+
+  const first = await register('Premier-Essai-2026!');
+  assert.equal(first.status, 201);
+
+  // Même adresse, autre mot de passe : 409 explicite (plus de 202 « neutre »
+  // qui renvoyait vers la connexion), et surtout aucune session ouverte.
+  const again = await register('Second-Essai-2026!');
+  assert.equal(again.status, 409);
+  const body = await again.json();
+  assert.equal(body.code, 'EMAIL_TAKEN');
+  assert.equal(body.user, undefined);
+  assert.equal(again.headers.get('set-cookie'), null, 'aucun cookie de session');
+});

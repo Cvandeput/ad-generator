@@ -2,7 +2,7 @@
 // le serveur reste l'autorité), code d'invitation selon REGISTER_MODE, CGU,
 // offre d'essai (quota gratuit servi par /api/auth/config).
 import { api, ApiError } from './api.js';
-import { t, currentLang, DEFAULT_LANG } from './i18n.js';
+import { t } from './i18n.js';
 import { renderLangCompact, wireLangLinks } from './nav.js';
 
 const slot = document.getElementById('lang-slot');
@@ -16,7 +16,6 @@ const modeHint = document.getElementById('mode-hint');
 const inviteField = document.getElementById('invite-field');
 const submitBtn = document.getElementById('submit-btn');
 const errorEl = document.getElementById('error');
-const successEl = document.getElementById('success');
 const pwToggle = document.getElementById('pw-toggle');
 const rules = Object.fromEntries([...document.querySelectorAll('#pw-rules li')].map((li) => [li.dataset.rule, li]));
 
@@ -106,7 +105,6 @@ function clearInvalid() {
 form.addEventListener('submit', async (e) => {
   e.preventDefault();
   errorEl.classList.add('hidden');
-  successEl.classList.add('hidden');
   clearInvalid();
   const problem = evaluate();
   if (problem) {
@@ -127,20 +125,22 @@ form.addEventListener('submit', async (e) => {
       inviteCode: mode === 'invite' ? form.invite.value.trim() : undefined,
       acceptTerms: form.terms.checked,
     });
-    if (res && res.user) {
-      // Compte créé sur la formule gratuite : on enchaîne sur le choix d'une
-      // formule (la page propose aussi de continuer en gratuit). Le bandeau de
-      // confirmation d'adresse y est affiché si la vérification est active.
-      window.location.href = res.verificationRequired ? '/tarifs.html?bienvenue=1&verif=1' : '/tarifs.html?bienvenue=1';
-      return;
-    }
-    // Adresse déjà utilisée : réponse neutre du serveur, on renvoie vers la connexion.
-    // Le message du serveur est en français : hors FR, notre clé (même formulation neutre).
-    successEl.textContent = (currentLang() === DEFAULT_LANG && res && res.message) || t('register.created');
-    successEl.classList.remove('hidden');
-    setTimeout(() => (window.location.href = '/login.html'), 2500);
+    // Compte créé et session ouverte : on enchaîne sur le choix d'une formule
+    // (la page propose aussi de continuer en gratuit). Le bandeau de
+    // confirmation d'adresse y est affiché si la vérification est active.
+    window.location.href = res && res.verificationRequired ? '/tarifs.html?bienvenue=1&verif=1' : '/tarifs.html?bienvenue=1';
   } catch (err) {
     errorEl.textContent = err instanceof ApiError ? err.message : t('errors.generic');
+    // Adresse déjà inscrite : on reste sur la page (pas de redirection
+    // surprise) et on propose la connexion d'un clic.
+    if (err instanceof ApiError && err.code === 'EMAIL_TAKEN') {
+      const link = document.createElement('a');
+      link.href = '/login.html';
+      link.className = 'underline font-semibold';
+      link.textContent = t('nav.login');
+      errorEl.append(' ', link);
+      form.email.setAttribute('aria-invalid', 'true');
+    }
     errorEl.classList.remove('hidden');
     submitBtn.disabled = false;
   }

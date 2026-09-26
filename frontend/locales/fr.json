@@ -195,7 +195,8 @@
       "QUOTA_EXCEEDED": "Quota mensuel atteint. Changez de formule ou achetez un pack.",
       "SUBSCRIPTION_CANCEL_FAILED": "Votre abonnement n'a pas pu être résilié. Réessayez dans un instant.",
       "WINDOW_EXPIRED": "Le délai de rétractation de 14 jours est écoulé.",
-      "WITHDRAWAL_CONSENT_REQUIRED": "Vous devez demander expressément le démarrage immédiat du service pour poursuivre."
+      "WITHDRAWAL_CONSENT_REQUIRED": "Vous devez demander expressément le démarrage immédiat du service pour poursuivre.",
+      "EMAIL_TAKEN": "Un compte existe déjà avec cette adresse."
     },
     "generic": "Une erreur est survenue. Réessayez.",
     "network": "Connexion au serveur impossible",
@@ -668,7 +669,6 @@
   },
   "register": {
     "consent_html": "J'ai lu et j'accepte les <a class=\"text-primary-container underline\" href=\"/legal.html#mentions\" rel=\"noopener\" target=\"_blank\">mentions légales</a>, la <a class=\"text-primary-container underline\" href=\"/legal.html#confidentialite\" rel=\"noopener\" target=\"_blank\">politique de confidentialité</a> et les <a class=\"text-primary-container underline\" href=\"/legal.html#cgu\" rel=\"noopener\" target=\"_blank\">conditions d'utilisation</a>. Je certifie détenir les droits sur les photos que je déposerai.",
-    "created": "Si cette adresse est disponible, votre compte a été créé. Connectez-vous.",
     "haveAccount": "Déjà un compte ? Se connecter",
     "inviteCode": "Code d'invitation",
     "modeClosed": "Les inscriptions sont fermées : l'accès se fait sur invitation. Contactez l'administrateur.",

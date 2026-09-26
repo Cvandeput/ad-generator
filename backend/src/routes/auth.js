@@ -133,8 +133,12 @@ router.post('/register', registerLimiter, async (req, res, next) => {
     if (issues.length) return res.status(400).json({ error: 'Mot de passe refusé : ' + issues.join(' ; '), issues });
     if (!acceptTerms) return res.status(400).json({ error: 'Vous devez accepter les mentions légales et la politique de confidentialité' });
 
-    // Réponse identique que l'email existe ou non : pas d'énumération de comptes.
-    // (En mode invite, le détenteur du code est de confiance ; on reste neutre.)
+    // Adresse déjà inscrite : on le dit clairement (choix produit du 26/09/2026).
+    // L'ancienne réponse neutre (« si cette adresse est disponible, le compte a
+    // été créé ») évitait de révéler qu'une adresse a un compte, mais perdait
+    // les vrais utilisateurs : message ambigu puis renvoi vers la connexion.
+    // Le sondage d'adresses reste borné par registerLimiter (5 tentatives par
+    // heure et par IP, réussies ou non).
     // `deleted_at IS NULL` n'est PAS nécessaire ici — l'adresse d'un compte
     // supprimé a été neutralisée, donc elle est libre et la personne a le droit
     // de revenir. Ce qu'elle ne récupère pas, c'est le quota gratuit : voir
@@ -142,7 +146,7 @@ router.post('/register', registerLimiter, async (req, res, next) => {
     const existing = db.prepare('SELECT id FROM users WHERE email = ?').get(email);
     if (existing) {
       audit('register.duplicate', req, { email });
-      return res.status(202).json({ ok: true, message: 'Si cette adresse est disponible, le compte a été créé. Connectez-vous.' });
+      return res.status(409).json({ code: 'EMAIL_TAKEN', error: 'Un compte existe déjà avec cette adresse.' });
     }
 
     // Cette adresse a-t-elle déjà eu un compte supprimé ? On ne conserve pas
