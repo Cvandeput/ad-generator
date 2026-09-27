@@ -8,8 +8,8 @@
 // invente UNE scène dans le monde du thème. Build Prompt applique la priorité :
 // décor manuel > scène IA (JSON valide) > repli preset statique.
 
-import fs from 'node:fs';
-import path from 'node:path';
+import fs from "node:fs";
+import path from "node:path";
 import {
   PRESETS,
   FIDELITY,
@@ -19,7 +19,7 @@ import {
   DA_FEWSHOT,
   THEME_BRIEFS,
   MAX_PRODUCTS,
-} from '../shared/prompt.mjs';
+} from "../shared/prompt.mjs";
 
 // --- Node « Build DA Request » : valide le token, nettoie les entrées, assemble
 // le corps de requête du Directeur Artistique (brief + PHOTOS), fait suivre le body. ---
@@ -86,7 +86,7 @@ daContents.push({ role: 'user', parts: userParts });
 const daBody = {
   systemInstruction: { parts: [{ text: DA_SYSTEM }] },
   contents: daContents,
-  generationConfig: { responseMimeType: 'application/json', responseSchema: DA_SCHEMA, temperature: 0.7 }
+  generationConfig: { responseMimeType: 'application/json', responseSchema: DA_SCHEMA, thinkingConfig: { thinkingLevel: 'low' } }
 };
 
 return [{ json: { daBody, body: { ...body, brand: cleanBrand, flavor: cleanFlavor }, desc, art, productCount } }];
@@ -206,103 +206,122 @@ const VERTEX = (modelExpr) =>
   `=https://aiplatform.googleapis.com/v1/projects/{{ $env.GCP_PROJECT }}/locations/global/publishers/google/models/${modelExpr}:generateContent`;
 
 const workflow = {
-  name: 'Generation Publicites IA - Nano Banana (Vertex AI)',
+  name: "Generation Publicites IA - Nano Banana (Vertex AI)",
   nodes: [
     {
-      parameters: { httpMethod: 'POST', path: 'generate-ads', responseMode: 'responseNode', options: {} },
-      name: 'Webhook',
-      type: 'n8n-nodes-base.webhook',
+      parameters: {
+        httpMethod: "POST",
+        path: "generate-ads",
+        responseMode: "responseNode",
+        options: {},
+      },
+      name: "Webhook",
+      type: "n8n-nodes-base.webhook",
       typeVersion: 2,
       position: [240, 300],
-      webhookId: 'generate-ads',
+      webhookId: "generate-ads",
     },
     {
       parameters: { jsCode: buildDaRequestCode },
-      name: 'Build DA Request',
-      type: 'n8n-nodes-base.code',
+      name: "Build DA Request",
+      type: "n8n-nodes-base.code",
       typeVersion: 2,
       position: [440, 300],
     },
     {
       parameters: {
-        method: 'POST',
+        method: "POST",
         // Modèle TEXTE multimodal (voit les photos). Projet + modèle via variables d'env n8n.
-        url: VERTEX("{{ $env.GEMINI_TEXT_MODEL || 'gemini-2.5-flash' }}"),
-        authentication: 'predefinedCredentialType',
-        nodeCredentialType: 'googleApi',
+        url: VERTEX("{{ $env.GEMINI_TEXT_MODEL || 'gemini-3.8-flash' }}"),
+        authentication: "predefinedCredentialType",
+        nodeCredentialType: "googleApi",
         sendBody: true,
-        specifyBody: 'json',
-        jsonBody: '={{ JSON.stringify($json.daBody) }}',
+        specifyBody: "json",
+        jsonBody: "={{ JSON.stringify($json.daBody) }}",
         options: { timeout: 45000 },
       },
-      name: 'Directeur Artistique',
-      type: 'n8n-nodes-base.httpRequest',
+      name: "Directeur Artistique",
+      type: "n8n-nodes-base.httpRequest",
       typeVersion: 4.2,
       position: [640, 300],
-      credentials: { googleApi: { id: 'REMPLACER', name: 'Google Service Account' } },
+      credentials: {
+        googleApi: { id: "REMPLACER", name: "Google Service Account" },
+      },
       // Repli obligatoire : une erreur du modèle texte ne doit pas faire échouer
       // la génération. Build Prompt bascule alors sur le preset statique.
       continueOnFail: true,
-      onError: 'continueRegularOutput',
+      onError: "continueRegularOutput",
     },
     {
       parameters: { jsCode: buildPromptCode },
-      name: 'Build Prompt',
-      type: 'n8n-nodes-base.code',
+      name: "Build Prompt",
+      type: "n8n-nodes-base.code",
       typeVersion: 2,
       position: [840, 300],
     },
     {
       parameters: {
-        method: 'POST',
+        method: "POST",
         // Endpoint Vertex AI (global). GEMINI_MODEL : gemini-3.1-flash-image (défaut),
         // gemini-3-pro-image (qualité max), gemini-2.5-flash-image (retiré le 2 oct. 2026).
         url: VERTEX("{{ $env.GEMINI_MODEL || 'gemini-3.1-flash-image' }}"),
-        authentication: 'predefinedCredentialType',
-        nodeCredentialType: 'googleApi',
+        authentication: "predefinedCredentialType",
+        nodeCredentialType: "googleApi",
         sendBody: true,
-        specifyBody: 'json',
-        jsonBody: '={{ JSON.stringify($json.geminiBody) }}',
+        specifyBody: "json",
+        jsonBody: "={{ JSON.stringify($json.geminiBody) }}",
         options: { timeout: 120000 },
       },
-      name: 'Nano Banana (Vertex)',
-      type: 'n8n-nodes-base.httpRequest',
+      name: "Nano Banana (Vertex)",
+      type: "n8n-nodes-base.httpRequest",
       typeVersion: 4.2,
       position: [1040, 300],
-      credentials: { googleApi: { id: 'REMPLACER', name: 'Google Service Account' } },
+      credentials: {
+        googleApi: { id: "REMPLACER", name: "Google Service Account" },
+      },
     },
     {
       parameters: { jsCode: extractCode },
-      name: 'Extract Image',
-      type: 'n8n-nodes-base.code',
+      name: "Extract Image",
+      type: "n8n-nodes-base.code",
       typeVersion: 2,
       position: [1240, 300],
     },
     {
       parameters: {
-        respondWith: 'json',
+        respondWith: "json",
         responseBody:
           '={{ { "image": $json.image, "mimeType": $json.mimeType, "prompt": $json.prompt, "artDirectionSource": $json.artDirectionSource, "productCount": $json.productCount, "products": $json.products, "model": $json.model, "imageSize": $json.imageSize } }}',
         options: {},
       },
-      name: 'Respond',
-      type: 'n8n-nodes-base.respondToWebhook',
+      name: "Respond",
+      type: "n8n-nodes-base.respondToWebhook",
       typeVersion: 1,
       position: [1440, 300],
     },
   ],
   connections: {
-    Webhook: { main: [[{ node: 'Build DA Request', type: 'main', index: 0 }]] },
-    'Build DA Request': { main: [[{ node: 'Directeur Artistique', type: 'main', index: 0 }]] },
-    'Directeur Artistique': { main: [[{ node: 'Build Prompt', type: 'main', index: 0 }]] },
-    'Build Prompt': { main: [[{ node: 'Nano Banana (Vertex)', type: 'main', index: 0 }]] },
-    'Nano Banana (Vertex)': { main: [[{ node: 'Extract Image', type: 'main', index: 0 }]] },
-    'Extract Image': { main: [[{ node: 'Respond', type: 'main', index: 0 }]] },
+    Webhook: { main: [[{ node: "Build DA Request", type: "main", index: 0 }]] },
+    "Build DA Request": {
+      main: [[{ node: "Directeur Artistique", type: "main", index: 0 }]],
+    },
+    "Directeur Artistique": {
+      main: [[{ node: "Build Prompt", type: "main", index: 0 }]],
+    },
+    "Build Prompt": {
+      main: [[{ node: "Nano Banana (Vertex)", type: "main", index: 0 }]],
+    },
+    "Nano Banana (Vertex)": {
+      main: [[{ node: "Extract Image", type: "main", index: 0 }]],
+    },
+    "Extract Image": { main: [[{ node: "Respond", type: "main", index: 0 }]] },
   },
   pinData: {},
-  settings: { executionOrder: 'v1' },
+  settings: { executionOrder: "v1" },
 };
 
-const out = path.join('n8n', 'generateur-publicite.json');
-fs.writeFileSync(out, JSON.stringify(workflow, null, 2) + '\n');
-console.log(`✅ ${out} régénéré (${Object.keys(PRESETS).length} thèmes, DA multimodal + inventaire produits).`);
+const out = path.join("n8n", "generateur-publicite.json");
+fs.writeFileSync(out, JSON.stringify(workflow, null, 2) + "\n");
+console.log(
+  `✅ ${out} régénéré (${Object.keys(PRESETS).length} thèmes, DA multimodal + inventaire produits).`,
+);
