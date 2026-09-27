@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="fr">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <!-- i18n : masque le document le temps de l'hydratation (cf. js/i18n-boot.js). -->
+    <script src="/js/i18n-boot.js"></script>
+
+    <title data-i18n="serverError.metaTitle">Service momentanément indisponible</title>
+    <meta name="robots" content="noindex, nofollow" />
+    <link rel="icon" href="/img/icons/favicon.ico" sizes="48x48" />
+    <link rel="icon" type="image/png" sizes="32x32" href="/img/icons/favicon-32.png" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/img/icons/apple-touch-icon.png" />
+    <meta name="theme-color" content="#f6f3ee" />
+    <!-- Polices auto-hébergées (/fonts) : aucune requête vers Google. -->
+    <link rel="preload" href="/fonts/inter-latin.woff2" as="font" type="font/woff2" crossorigin />
+    <link rel="preload" href="/fonts/inter-tight-latin.woff2" as="font" type="font/woff2" crossorigin />
+    <link rel="preload" href="/fonts/material-symbols-outlined.woff2" as="font" type="font/woff2" crossorigin />
+    <link rel="stylesheet" href="/css/app.css" />
+  </head>
+  <!--
+    Chrome STATIQUE, pas mountChrome() : cette page s'affiche précisément quand
+    le backend ne répond plus. Appeler /api/auth/me ici ferait attendre le
+    visiteur le temps d'un timeout pour, au mieux, dessiner une barre de
+    navigation anonyme. Le peu de chrome nécessaire est donc écrit en dur, sur
+    le modèle de verify.html.
+  -->
+  <body class="bg-background text-on-surface font-body-base antialiased w-full min-h-screen flex flex-col">
+    <div class="h-[60px] flex-shrink-0 flex items-center justify-between gap-md px-lg">
+      <a href="/" class="flex items-center gap-sm min-h-[44px]" aria-label="" data-i18n-attr="aria-label:nav.homeAria">
+        <img src="/img/logo-adcraft.webp" alt="" data-i18n-attr="alt:nav.logoAlt" width="105" height="24" class="h-6 w-auto" />
+      </a>
+      <div id="lang-slot" class="flex items-center"></div>
+    </div>
+
+    <main class="flex-1 flex items-center justify-center px-lg pb-xl">
+      <div class="w-full max-w-[460px] bg-surface-container-lowest border border-outline-variant rounded-xl p-lg flex flex-col items-center gap-md text-center">
+        <span class="material-symbols-outlined text-[36px] text-outline" aria-hidden="true">cloud_off</span>
+        <p class="font-label-md text-label-md text-outline tracking-[0.08em] uppercase" data-i18n="serverError.code">Erreur serveur</p>
+        <h1 class="font-headline-md text-headline-md text-on-surface" data-i18n="serverError.title">Le service ne répond pas</h1>
+        <p class="font-body-base text-body-base text-secondary" data-i18n="serverError.text">L'incident est de notre côté, pas du vôtre. Vos visuels et votre historique ne sont pas affectés. Réessayez dans quelques instants.</p>
+        <div class="flex gap-sm flex-wrap justify-center pt-xs">
+          <button type="button" id="retry" class="h-11 lg:h-9 px-lg rounded bg-primary-container text-on-primary flex items-center justify-center font-label-md text-label-md hover:bg-primary transition-colors" data-i18n="serverError.retry">Réessayer</button>
+          <a href="/legal.html#contact" class="h-11 lg:h-9 px-lg rounded border border-outline-variant bg-surface-container-lowest text-on-surface-variant flex items-center justify-center font-label-md text-label-md hover:bg-surface-container transition-colors" data-i18n="footer.contact">Contact</a>
+        </div>
+      </div>
+    </main>
+
+    <footer class="px-lg py-md flex flex-wrap justify-center gap-md">
+      <span class="font-label-sm text-label-sm text-outline" data-i18n="footer.copyrightFixed">© 2026</span>
+      <a href="/legal.html#mentions" class="font-label-sm text-label-sm text-secondary hover:text-on-surface inline-flex items-center justify-center min-h-[44px] min-w-[44px] lg:min-h-0 lg:min-w-0" data-i18n="footer.legalNotice">Mentions légales</a>
+    </footer>
+
+    <script type="module" src="/js/50x.js"></script>
+  </body>
+</html>

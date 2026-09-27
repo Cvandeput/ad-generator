@@ -1,0 +1,929 @@
+{
+  "account": {
+    "delete": {
+      "checkbox": "I understand that this deletion is permanent.",
+      "confirm": "Delete permanently",
+      "cta": "Delete my account",
+      "doneNotice": "Your account has been deleted. Your subscription is cancelled and your images have been erased.",
+      "erased": [
+        "Your email address and password: the account becomes anonymous and nobody can sign in to it.",
+        "The photos you uploaded and the visuals generated ({{count}}), removed from disk.",
+        "Your sessions on every device, and the descriptions you entered."
+      ],
+      "erasedTitle": "What is erased",
+      "intro": "This action cannot be undone. Read exactly what it does before confirming.",
+      "kept": [
+        "Usage records ({{generations}}) without your name: date, theme, cost. They can no longer be traced back to you.",
+        "Invoices already issued, held by our payment provider, for {{years}} years."
+      ],
+      "keptTitle": "What is kept",
+      "password": "Your password, to confirm",
+      "passwordRequired": "Enter your password to confirm.",
+      "teaser": "You can delete your account at any time. We explain first what is erased and what is kept.",
+      "title": "Delete your account",
+      "why": "Keeping billing data answers an accounting obligation; it covers neither your profile nor your photos, which are genuinely deleted."
+    },
+    "title": "Your account",
+    "signedInAs": "Signed in as {{email}}.",
+    "plan": {
+      "seePlans": "See plans"
+    },
+    "password": {
+      "title": "Password",
+      "intro": "Choose a password you don't use anywhere else.",
+      "current": "Current password",
+      "new": "New password",
+      "show": "Show password",
+      "rules": {
+        "different": "Different from your current password"
+      },
+      "submit": "Save password",
+      "saving": "Saving…",
+      "success": "Password changed. For your security, your other devices have been signed out; you remain signed in here.",
+      "errors": {
+        "badCurrent": "Your current password is incorrect.",
+        "rejected": "This password isn't accepted: avoid common passwords, predictable sequences and repeated characters.",
+        "same": "Your new password must be different from your current one.",
+        "attemptsLeft_one": "{{count}} attempt left before you are signed out for security.",
+        "attemptsLeft_other": "{{count}} attempts left before you are signed out for security."
+      },
+      "open": "Change password",
+      "reauth": "For your security, first confirm your current password."
+    },
+    "language": {
+      "title": "Language",
+      "hint": "Interface language. Your choice is saved in this browser."
+    },
+    "sessions": {
+      "title": "Sessions",
+      "text": "Used a shared device or lost a phone? Close all your sessions in one go.",
+      "logoutAll": "Sign out of all devices",
+      "confirmTitle": "Sign out of all devices?",
+      "confirmText": "All your sessions will be closed, including this one. You will need to sign in again on each device.",
+      "confirm": "Sign out everywhere"
+    }
+  },
+  "admin": {
+    "gens": {
+      "deleteConfirm": "Delete generation #{{id}} and its files?",
+      "failed": "failed",
+      "filterAria": "Filter generations by status",
+      "head": [
+        "#",
+        "Account",
+        "Brand",
+        "Theme",
+        "Status",
+        "Model",
+        "Products",
+        "AD",
+        "Cost",
+        "Date",
+        ""
+      ],
+      "regionAria": "Recent generations (horizontally scrolling table)",
+      "rowStatus": {
+        "done": "done",
+        "error": "failed",
+        "pending": "in progress"
+      },
+      "status": {
+        "all": "All",
+        "done": "Succeeded",
+        "error": "Failed",
+        "pending": "In progress"
+      },
+      "title": "Recent generations"
+    },
+    "models": {
+      "head": [
+        "Model",
+        "Generations",
+        "Cost"
+      ],
+      "regionAria": "Models used (horizontally scrolling table)",
+      "title": "Models used"
+    },
+    "noData": "No data.",
+    "notAdmin": "This console is for administrators only.",
+    "stats": {
+      "accounts": "Accounts",
+      "accountsHint": "{{verified}} verified · {{week}} this week",
+      "generations": "Generations",
+      "generationsHint": "{{done}} succeeded · {{errors}} failed",
+      "thisMonth": "This month",
+      "thisMonthHint": "{{amount}} · today {{today}}",
+      "totalCost": "Total cost"
+    },
+    "subtitle_html": "Restricted to the accounts listed in <code>ADMIN_EMAILS</code>. Unlimited generations, no quota.",
+    "themes": {
+      "artDirector": "Art director: {{auto}} scenes composed, {{fallback}} fallbacks{{rate}}.",
+      "failureRate": " ({{pct}} text node failure rate)",
+      "head": [
+        "Theme",
+        "Generations"
+      ],
+      "regionAria": "Most requested themes (horizontally scrolling table)",
+      "title": "Most requested themes"
+    },
+    "title": "Administration",
+    "users": {
+      "deleteConfirm": "Permanently delete {{email}}? The account, its history and its files are erased. This cannot be undone.",
+      "deletedOn": "Account deleted on {{date}}",
+      "head": [
+        "#",
+        "Email",
+        "Plan",
+        "Succeeded",
+        "Cost",
+        "Credits",
+        "Signed up",
+        "Last sign-in",
+        "Actions"
+      ],
+      "lockedTitle": "Account locked",
+      "noActions": "account deleted",
+      "planAdmin": "admin (unlimited)",
+      "regionAria": "Accounts (horizontally scrolling table)",
+      "revoke": "Revoke sessions",
+      "searchAria": "Filter accounts by email",
+      "searchPlaceholder": "Filter by email…",
+      "showDeleted": "Deleted accounts",
+      "title": "Accounts",
+      "unlock": "Unlock",
+      "unverifiedTitle": "Address not confirmed",
+      "verify": "Verify"
+    }
+  },
+  "categories": {
+    "alcool": "Alcohol",
+    "autre": "Other",
+    "boisson": "Drink",
+    "boisson_énergisante": "Energy drink",
+    "chips": "Chips",
+    "cosmétique": "Cosmetics",
+    "parfum": "Perfume",
+    "snack": "Snack",
+    "épicerie": "Groceries"
+  },
+  "common": {
+    "backHome": "Back to home",
+    "cancel": "Cancel",
+    "delete": "Delete",
+    "download": "Download",
+    "email": "Email address",
+    "emailPlaceholder": "name@example.com",
+    "loading": "Loading…",
+    "password": "Password",
+    "retry": "Retry",
+    "sending": "Sending…",
+    "skipToContent": "Skip to content"
+  },
+  "cookies": {
+    "region": "Cookie notice",
+    "short": "{{brand}} only uses one technical cookie, to keep you signed in. No tracking.",
+    "more": "Learn more",
+    "close": "Dismiss the cookie notice"
+  },
+  "errors": {
+    "code": {
+      "ADMIN_ACCOUNT": "An administrator account cannot be deleted from this page.",
+      "ALREADY_PENDING": "A request is already being processed.",
+      "AMOUNT_CHANGED": "The amount has changed, please confirm again.",
+      "BAD_PASSWORD": "Incorrect password.",
+      "EMAIL_NOT_VERIFIED": "Confirm your email address to run a generation.",
+      "GENERATIONS_PENDING": "Generations are still in progress; please try again once they have finished.",
+      "NOT_ELIGIBLE": "Withdrawal is not possible for this contract.",
+      "NO_PACK": "There is no generation pack to withdraw from.",
+      "NO_SUBSCRIPTION": "There is no current contract to withdraw from.",
+      "QUOTA_EXCEEDED": "Monthly quota reached. Switch plan or buy a pack.",
+      "SUBSCRIPTION_CANCEL_FAILED": "Your subscription could not be cancelled. Please try again in a moment.",
+      "WINDOW_EXPIRED": "The 14-day withdrawal period has expired.",
+      "WITHDRAWAL_CONSENT_REQUIRED": "You must expressly request immediate performance of the service to continue.",
+      "EMAIL_TAKEN": "An account already exists with this email address.",
+      "BAD_CURRENT_PASSWORD": "Your current password is incorrect.",
+      "SESSION_CLOSED": "Too many incorrect passwords: for your security, you have been signed out."
+    },
+    "generic": "Something went wrong. Try again.",
+    "network": "Could not reach the server",
+    "status": {
+      "400": "Invalid request.",
+      "401": "Session expired. Please sign in again.",
+      "402": "Quota reached. Switch plan or buy a generation pack.",
+      "403": "You are not allowed to do that.",
+      "404": "Not found.",
+      "409": "That conflicts with the current state of the account.",
+      "413": "File too large.",
+      "415": "Unsupported file format.",
+      "429": "Too many requests in a short time. Wait a moment.",
+      "500": "The server hit a problem. Try again in a few moments."
+    }
+  },
+  "footer": {
+    "contact": "Contact",
+    "cookies": "Cookies",
+    "copyright": "© {{year}} {{brand}}",
+    "copyrightFixed": "© 2026 {{brand}}",
+    "legalLinks": "Legal links",
+    "legalNotice": "Legal notice",
+    "privacy": "Privacy",
+    "terms": "Terms"
+  },
+  "history": {
+    "empty": {
+      "none": "No visual generated yet. Run a generation to see your work here.",
+      "title": "No results",
+      "firstTitle": "No visuals yet",
+      "firstCta": "Create my first visual",
+      "onlyFailures": "No generation has succeeded yet. Open the failures above to see why and retry them.",
+      "filtered": "No visual matches these filters.",
+      "resetCta": "Reset filters"
+    },
+    "failureReason": "Reason: {{message}}",
+    "failuresCount_one": "{{count}} failed generation",
+    "failuresCount_other": "{{count}} failed generations",
+    "filters": {
+      "allCategories": "All categories",
+      "allThemes": "All themes",
+      "brandAria": "Search for a brand",
+      "brandPlaceholder": "Search for a brand…",
+      "categoryAria": "Filter by category",
+      "reset": "Reset",
+      "sortAria": "Sort the visuals",
+      "sortBrand": "Brand (A → Z)",
+      "sortNewest": "Newest first",
+      "sortOldest": "Oldest first",
+      "themeAria": "Filter by theme"
+    },
+    "loadMore": "Load more",
+    "subtitle": "Browse and manage the visuals you generated.",
+    "thumbUnavailable": "Preview unavailable",
+    "title": "History",
+    "unknownError": "Unknown error"
+  },
+  "home": {
+    "fidelity": {
+      "afterAlt": "A jar of Nutella staged on a wooden board with hazelnuts",
+      "beforeAlt": "A jar of Nutella, raw photo",
+      "privacy_html": "Your photos are sent to Google Cloud (Vertex AI) for the time it takes to generate, then kept in your history until you delete them. <a href=\"/legal.html#confidentialite\" class=\"text-primary-container underline\">Privacy policy</a>.",
+      "text": "Label, logo, typography and colours are taken straight from your photos, with no reinterpretation. Only the scene around the product is composed. That constraint is what separates a usable visual from a stock illustration.",
+      "title": "Your packaging, untouched"
+    },
+    "gallery": {
+      "item1Alt": "A bag of Lay's crisps staged on a wooden worktop",
+      "item1Caption": "Chips · Classic",
+      "item2Alt": "A Red Bull can staged in a neon night scene",
+      "item2Caption": "Drink · Night",
+      "item3Alt": "A champagne bottle staged in an elegant dining room",
+      "item3Caption": "Spirits · Luxury",
+      "item4Alt": "A box of Ferrero Rocher staged in front of a Christmas tree",
+      "item4Caption": "Confectionery · Christmas",
+      "subtitle": "Real output from the tool, no retouching.",
+      "title": "Examples"
+    },
+    "hero": {
+      "afterAlt": "A Red Bull can staged on a basketball court at sunset, visual generated by {{brand}}",
+      "beforeAlt": "A Red Bull can, raw photo taken on a phone",
+      "bullets": "Seven scene themes · 4:5 format, ready for social · packaging left untouched · several products per visual",
+      "ctaExamples": "See examples",
+      "ctaStudio": "Open the studio",
+      "eyebrow": "Generative product photography",
+      "text": "Upload a photo of your product. {{brand}} builds a scene that matches what you sell, without ever touching the packaging. The visual is ready in under two minutes.",
+      "title": "Studio-grade product shots, without the studio."
+    },
+    "labels": {
+      "generated": "Generated visual",
+      "raw": "Raw photo"
+    },
+    "steps": {
+      "one": {
+        "text": "One to fourteen photos, phone shots are fine. One product per photo, or several products in the same photo: they will all show up in the visual.",
+        "title": "Upload your photos"
+      },
+      "subtitle": "No brief to write, no photo editor to open.",
+      "three": {
+        "text": "Classic, Summer, Sport, Luxury… or write the scene you want yourself. The rest is composed for you.",
+        "title": "Pick a theme"
+      },
+      "title": "Three details are enough",
+      "two": {
+        "text": "Brand, category, variant. Say what shape it really is — can, pouch, jar — so the scene lands right.",
+        "title": "Describe the product"
+      }
+    },
+    "cta": {
+      "try": "Try it free",
+      "signup": "Create an account",
+      "login": "Sign in",
+      "offer_one": "{{count}} free visual, no card required",
+      "offer_other": "{{count}} free visuals, no card required",
+      "haveAccount_html": "Already have an account? <a href=\"/login.html\" class=\"text-primary-container underline\">Sign in</a>",
+      "invite_html": "Have an invitation code? <a href=\"/register.html\" class=\"text-primary-container underline\">Create an account</a>"
+    },
+    "audience": {
+      "title": "For anyone who sells a product",
+      "subtitle": "From the corner shop to the agency, the need is the same: polished visuals, fast, without organising a photo shoot.",
+      "shops": {
+        "title": "Online shops",
+        "text": "Give every product in your catalogue a campaign visual, without a photo shoot. The packaging stays exactly what your customer will receive."
+      },
+      "local": {
+        "title": "Local shops and producers",
+        "text": "Photograph your jar, bottle or gift box on the counter, and post the visual on your social accounts the same day."
+      },
+      "restaurants": {
+        "title": "Restaurants",
+        "text": "Announce the summer menu, a special evening or the festive season with a themed visual, from a photo of your bottles or takeaway products."
+      },
+      "agencies": {
+        "title": "Agencies and community managers",
+        "text": "Produce for several brands without starting from scratch: seven themes or a custom scene, up to six products per visual, and a history to find every creation."
+      }
+    },
+    "pricing": {
+      "title": "Free to try, then from {{price}}/month",
+      "subtitle": "No commitment, cancel at any time. 14-day right of withdrawal.",
+      "free": "Free",
+      "perMonth": "/month",
+      "quotaLifetime_one": "{{count}} visual in total",
+      "quotaLifetime_other": "{{count}} visuals in total",
+      "quotaMonthly_one": "{{count}} visual a month",
+      "quotaMonthly_other": "{{count}} visuals a month",
+      "pack_one": "Need a top-up? A pack of {{count}} visual for {{amount}}, no subscription.",
+      "pack_other": "Need a top-up? A pack of {{count}} visuals for {{amount}}, no subscription.",
+      "seeAll": "See plan details"
+    },
+    "faq": {
+      "title": "Frequently asked questions",
+      "subtitle": "What to know before you create your account.",
+      "q1": "Do I need a card to try it?",
+      "a1_one": "No. Creating an account is free and includes {{count}} free visual. You are only asked for a card if you choose a subscription or a pack.",
+      "a1_other": "No. Creating an account is free and includes {{count}} free visuals. You are only asked for a card if you choose a subscription or a pack.",
+      "q2": "How long does a visual take?",
+      "a2": "Between 30 seconds and two minutes. You get a 4:5 image, ready to post on social media.",
+      "q3": "What happens to my photos?",
+      "a3_html": "They are sent to Google Cloud (Vertex AI) for the duration of the generation, then kept in your history until you delete them. They are never sold or used for advertising. <a href=\"/legal.html#confidentialite\" class=\"text-primary-container underline\">Privacy policy</a>.",
+      "q4": "Can I use the generated visuals?",
+      "a4_html": "Yes. The terms of use grant you usage rights over visuals generated from your own photos, within the limits of Google Cloud's terms. You must hold the rights to the photos you upload and check each visual before publishing it: the AI can alter a detail, such as the text on a pack. <a href=\"/legal.html#cgu\" class=\"text-primary-container underline\">Terms of use</a>.",
+      "q5": "Can I cancel at any time?",
+      "a5_html": "Yes. Subscriptions carry no commitment: you cancel from the Pricing page, and cancellation takes effect at the end of the period already paid. If you are a consumer, you also have a <a href=\"/legal.html#retractation\" class=\"text-primary-container underline\">14-day right of withdrawal</a>."
+    },
+    "final": {
+      "title": "Try it on your own products",
+      "text": "A smartphone photo is enough. Your visual is ready in under two minutes."
+    }
+  },
+  "legal": {
+    "s1": {
+      "contact_html": "<strong class=\"text-on-surface\">Contact:</strong> <a class=\"text-primary-container underline\" href=\"#contact\">see the Contact section</a>.",
+      "editor_html": "<strong class=\"text-on-surface\">Publisher of the service:</strong> {{brand}}, published by <span class=\"bg-error-container text-on-error-container px-xs rounded\">[Name / company name — TO BE COMPLETED]</span>, <span class=\"bg-error-container text-on-error-container px-xs rounded\">[postal address — TO BE COMPLETED]</span>, Belgium.",
+      "hosting_html": "<strong class=\"text-on-surface\">Hosting:</strong> virtual private server rented from <span class=\"bg-error-container text-on-error-container px-xs rounded\">[host, address — TO BE COMPLETED]</span>. Image generation: Google Cloud (Vertex AI), Google Ireland Limited, Gordon House, Barrow Street, Dublin 4, Ireland.",
+      "ip_html": "<strong class=\"text-on-surface\">Intellectual property:</strong> the site, its code, its design and its logo are the property of the publisher. The brands, logos and packaging visible in the sample visuals belong to their respective owners and are shown only as a technical demonstration.",
+      "title": "1. Legal notice",
+      "vat_html": "<strong class=\"text-on-surface\">Company number (CBE):</strong> <span class=\"bg-error-container text-on-error-container px-xs rounded\">[TO BE COMPLETED or “non-commercial activity”]</span>"
+    },
+    "s2": {
+      "controller": {
+        "text": "The publisher identified in section 1.",
+        "title": "Data controller"
+      },
+      "data": {
+        "account_html": "<strong class=\"text-on-surface\">Account:</strong> email address, password (stored only as a bcrypt hash), date these terms were accepted, date of last sign-in. Purpose: authentication and account management (legal basis: performance of the contract).",
+        "generations_html": "<strong class=\"text-on-surface\">Generations:</strong> uploaded photos, product details entered (brand, category, flavour, description, scene), generated visuals, prompt used, model and cost. Purpose: providing the service, personal history, usage tracking (legal basis: performance of the contract).",
+        "logs_html": "<strong class=\"text-on-surface\">Technical logs:</strong> IP address, timestamp and nature of security events (sign-in, failure, lockout). Purpose: securing the service, preventing abuse (legal basis: legitimate interest). Retention: 30 days.",
+        "title": "Data processed and purposes"
+      },
+      "processors": {
+        "google_html": "The photos you upload and the product details are sent to <strong class=\"text-on-surface\">Google Cloud (Vertex AI)</strong> to compose the scene and generate the visual. Google acts as a processor under its data processing terms; data may be processed outside the European Union under Google’s standard contractual clauses. No data is sold or used for advertising purposes.",
+        "n8n": "Generations are orchestrated by a self-hosted n8n instance running on the same server as the service.",
+        "title": "Processors and transfers"
+      },
+      "retention": {
+        "text": "Photos and visuals: until you delete them (the “Delete” button in your history) or delete your account. Account: until you ask for it to be deleted. Logs: 30 days.",
+        "title": "Retention period"
+      },
+      "rights": {
+        "text_html": "Access, rectification, erasure, restriction, portability and objection: write to us (Contact section). You may also lodge a complaint with the Belgian Data Protection Authority (APD/GBA), Rue de la Presse 35, 1000 Brussels — <a href=\"https://www.autoriteprotectiondonnees.be\" rel=\"noopener\" target=\"_blank\" class=\"text-primary-container underline\">autoriteprotectiondonnees.be</a>.",
+        "title": "Your rights"
+      },
+      "security": {
+        "text": "Encrypted connection (HTTPS), hashed passwords (bcrypt), HttpOnly/Secure/SameSite session cookie, lockout after repeated failures, per-account quotas, strict data isolation between accounts.",
+        "title": "Security"
+      },
+      "title": "2. Privacy policy (GDPR)"
+    },
+    "s3": {
+      "intro_html": "{{brand}} uses <strong class=\"text-on-surface\">no advertising, analytics or tracking cookies</strong>, and no third-party audience measurement service.",
+      "outro": "Strictly necessary cookies do not require consent (art. 129 of the Belgian Electronic Communications Act); the banner shown is purely informational. Fonts are loaded from Google Fonts, which therefore receives your IP address.",
+      "rowNotice_html": "<td class=\"py-sm pr-md\"><code>app.cookieNotice.v1</code></td><td class=\"py-sm pr-md\">Browser local storage</td><td class=\"py-sm pr-md\">Remembering that the notice has been read</td><td class=\"py-sm\">Until browser data is cleared</td>",
+      "rowSession_html": "<td class=\"py-sm pr-md\"><code>__Host-sid</code> (or <code>sid</code> locally)</td><td class=\"py-sm pr-md\">Technical cookie, strictly necessary</td><td class=\"py-sm pr-md\">Keeping you signed in</td><td class=\"py-sm\">24 h of inactivity, 7 days maximum</td>",
+      "tableAria": "Cookies and local storage (horizontally scrolling table)",
+      "thDuration": "Lifetime",
+      "thName": "Name",
+      "thPurpose": "Purpose",
+      "thType": "Type",
+      "title": "3. Cookies and local storage"
+    },
+    "s4": {
+      "p1_html": "<strong class=\"text-on-surface\">4.1 Purpose.</strong> {{brand}} generates ad visuals with artificial intelligence from the product photos you upload. Access is by invitation; the publisher may refuse, suspend or close an account at any time, in particular in the event of abuse.",
+      "p2_html": "<strong class=\"text-on-surface\">4.2 Your commitments.</strong> You certify that you hold the rights required over the photos you upload (products, packaging, brands) and that you will use the generated visuals only in a way that respects trademark owners’ rights. You may not upload unlawful content or photos of identifiable people without their consent, nor attempt to circumvent the quotas and safeguards of the service.",
+      "p3_html": "<strong class=\"text-on-surface\">4.3 Generated visuals.</strong> Visuals are produced by an AI model: they may contain errors (altered packaging text, missing product, artefacts). You check every visual before publishing it. You hold the usage rights over the visuals generated from your own content, within the limits of the Google Cloud terms of use.",
+      "p4_html": "<strong class=\"text-on-surface\">4.4 Quotas and costs.</strong> Every generation has a real cost (image model), shown in the studio and counted in your usage. Hourly and daily quotas apply per account. The publisher may change the quotas or start charging for usage after giving prior notice.",
+      "p5_html": "<strong class=\"text-on-surface\">4.5 Availability and liability.</strong> The service is provided “as is”, with no guarantee of continuous availability or of any particular result. The publisher is not liable for how the visuals are used, nor for indirect damages. Its liability is limited to the amount, if any, paid over the last three months.",
+      "p6_html": "<strong class=\"text-on-surface\">4.6 Account security.</strong> You are responsible for keeping your password confidential. Report any unauthorised use. The “sign out of all devices” function is available through the API, and changing your password revokes the other sessions.",
+      "p7_html": "<strong class=\"text-on-surface\">4.7 Changes.</strong> These terms may change; a new version is submitted to you for acceptance at your next sign-in.",
+      "p8_html": "<strong class=\"text-on-surface\">4.8 Governing law.</strong> Belgian law. In the event of a dispute, the parties shall first attempt to reach an amicable settlement, then the courts of the district where the publisher is established shall have jurisdiction.",
+      "title": "4. Terms of use"
+    },
+    "s5": {
+      "contact_html": "Questions, access requests, exercising your rights or reporting a security issue: <span class=\"bg-error-container text-on-error-container px-xs rounded\">[contact email address — TO BE COMPLETED]</span>.",
+      "disclosure": "Reporting a vulnerability: please give us a reasonable amount of time to fix it before any public disclosure.",
+      "title": "6. Contact"
+    },
+    "title": "Legal information",
+    "toc": {
+      "terms": "Terms of use",
+      "withdrawal": "Withdrawal"
+    },
+    "tocAria": "Contents",
+    "updated_html": "Last updated: 13 September 2026 (version <code>2026-09-13</code>).",
+    "withdrawal": {
+      "form": {
+        "body": "To [publisher — see section 1]:\n\nI hereby give notice that I withdraw from my contract for the supply of the following service:\n\n— Ordered on: ……………………\n— Name of consumer: ……………………\n— Address of consumer: ……………………\n— Account email address: ……………………\n\nSignature (only if this form is notified on paper): ……………………\nDate: ……………………",
+        "note": "Complete and return this form only if you wish to withdraw from the contract.",
+        "title": "Model withdrawal form"
+      },
+      "p1_html": "<strong class=\"text-on-surface\">5.1 Principle.</strong> If you are a consumer, you have <strong class=\"text-on-surface\">14 days</strong> from the conclusion of the contract to withdraw, without giving reasons and without penalty.",
+      "p2_html": "<strong class=\"text-on-surface\">5.2 Immediate performance and proportionate amount.</strong> By subscribing, you expressly request that the service begin immediately, before the end of that period. If you then withdraw, the contract ends but you remain liable for the part already supplied, calculated pro rata of the generations used out of those included in your plan. Example: 60 generations used out of 100, you pay 60% of the price and the balance is refunded to you.",
+      "p3_html": "<strong class=\"text-on-surface\">5.3 Visuals already generated.</strong> Each delivered visual is digital content already supplied: your right of withdrawal lapses for that visual, which is exactly what the pro rata calculation above expresses.",
+      "p4_html": "<strong class=\"text-on-surface\">5.4 Generation packs.</strong> A pack bought separately is a distinct contract, with its own 14-day period running from its purchase. Credits still unused are refunded to you.",
+      "p5_html": "<strong class=\"text-on-surface\">5.5 How to exercise it.</strong> From the <a href=\"/tarifs.html\" class=\"text-primary-container underline\">Pricing</a> page, which shows the exact amount before confirmation; or by an unambiguous statement sent to the contact address, the form below being available but not mandatory.",
+      "p6_html": "<strong class=\"text-on-surface\">5.6 Refund.</strong> It is made no later than 14 days after receipt of your decision, using the same means of payment as the original order, at no cost.",
+      "p7_html": "<strong class=\"text-on-surface\">5.7 Business customers.</strong> The right of withdrawal is reserved for consumers. A purchase made for the purposes of a professional activity does not benefit from it.",
+      "title": "5. Right of withdrawal"
+    }
+  },
+  "login": {
+    "afterAlt": "San Pellegrino staged on a Mediterranean terrace full of flowers",
+    "badCredentials": "Incorrect email address or password.",
+    "beforeAlt": "A San Pellegrino bottle, raw photo",
+    "inviteOnly": "Access is by invitation. Contact the administrator to get an account.",
+    "inviteRequired": " (invitation code required)",
+    "legalLinks_html": "<a class=\"underline\" href=\"/legal.html#mentions\">Legal notice</a> · <a class=\"underline\" href=\"/legal.html#confidentialite\">Privacy</a>",
+    "noAccount_html": "No account yet? <a href=\"/register.html\" class=\"text-primary-container underline\">Create one</a>",
+    "pitchText": "One product photo, three details, a theme — and the visual is ready to post.",
+    "pitchTitle": "The packaging stays put. The scene does not.",
+    "subtitle": "Get back to your studio and your visuals.",
+    "title": "Sign in",
+    "securityLogout": "For your security, you were signed out after several incorrect passwords. Please sign in again."
+  },
+  "meta": {
+    "admin": {
+      "title": "Administration — {{brand}}"
+    },
+    "history": {
+      "description": "The ad visuals you generated with {{brand}}: browse, download, delete.",
+      "title": "History — {{brand}}"
+    },
+    "home": {
+      "description": "{{brand}} builds an ad scene around your product without ever touching the packaging. A 4:5 visual, ready to post in under two minutes.",
+      "ldDescription": "Ad visual generator: upload a product photo, pick a theme, get a 4:5 visual with the packaging left exactly as it is.",
+      "ogDescription": "Upload a photo of your product, pick a theme: {{brand}} builds the scene and leaves the packaging exactly as it is.",
+      "ogImageAlt": "A Red Bull can: raw photo on the left, generated ad visual on a basketball court on the right",
+      "ogTitle": "{{brand}} — Studio-grade product shots, without the studio",
+      "title": "{{brand}} — Studio-grade product shots, without the studio",
+      "twitterDescription": "Raw photo → 4:5 ad visual, packaging intact."
+    },
+    "legal": {
+      "description": "Legal notice, privacy policy (GDPR), cookies and terms of use for the {{brand}} service.",
+      "title": "Legal notice, privacy and terms — {{brand}}"
+    },
+    "login": {
+      "description": "Sign in to your {{brand}} studio.",
+      "title": "Sign in — {{brand}}"
+    },
+    "notFound": {
+      "description": "This page does not exist or has been moved.",
+      "title": "Page not found — {{brand}}"
+    },
+    "pricing": {
+      "description": "{{brand}} plans: how many ad visuals you can generate each month, no commitment.",
+      "title": "Pricing — {{brand}}"
+    },
+    "register": {
+      "description": "Create a {{brand}} account. Free plan included, no card required.",
+      "title": "Create an account — {{brand}}"
+    },
+    "siteName": "{{brand}}",
+    "studio": {
+      "description": "{{brand}} studio: upload your product photos, pick a theme, generate a 4:5 ad visual.",
+      "title": "Studio — {{brand}}"
+    },
+    "verify": {
+      "title": "Confirm your email address — {{brand}}"
+    },
+    "account": {
+      "title": "My account — {{brand}}",
+      "description": "Plan, password, language and deletion of your {{brand}} account."
+    }
+  },
+  "nav": {
+    "admin": "Admin console",
+    "examples": "Examples",
+    "generate": "Generate",
+    "history": "History",
+    "homeAria": "{{brand}} — home",
+    "howItWorks": "How it works",
+    "language": "Language",
+    "login": "Sign in",
+    "logoAlt": "{{brand}}",
+    "logout": "Sign out",
+    "mainNav": "Main navigation",
+    "menu": "Menu",
+    "mobileNav": "Mobile navigation",
+    "pricing": "Pricing",
+    "signup": "Create account",
+    "studio": "Studio",
+    "account": "My account",
+    "accountMenu": "Account menu",
+    "signedInAs": "Signed in as",
+    "tryFree": "Try it free",
+    "faq": "FAQ"
+  },
+  "notFound": {
+    "code": "Error 404",
+    "exitsAria": "Where to go next",
+    "help_html": "Looking for something specific? <a href=\"/legal.html#contact\" class=\"text-primary-container underline\">Get in touch</a>.",
+    "history": "My history",
+    "home": "Back to home",
+    "pricing": "See pricing",
+    "studio": "Open the studio",
+    "text": "The link may be out of date, or the address contains a typo. Here is where to go next.",
+    "title": "This page does not exist"
+  },
+  "plans": {
+    "free": {
+      "features": [
+        "All 7 themes",
+        "History and downloads"
+      ],
+      "label": "Starter kit",
+      "pitch": "To try the tool out."
+    },
+    "pro": {
+      "features": [
+        "Everything in Starter",
+        "Free retry on a failure",
+        "Email support"
+      ],
+      "label": "Pro",
+      "pitch": "For posting on social media regularly."
+    },
+    "starter": {
+      "features": [
+        "All 7 themes",
+        "Custom scene",
+        "Up to 6 products per visual"
+      ],
+      "label": "Starter",
+      "pitch": "For a shop posting a few visuals a week."
+    },
+    "studio": {
+      "features": [
+        "Everything in Pro",
+        "Priority processing"
+      ],
+      "label": "Studio",
+      "pitch": "For an agency or several brands."
+    }
+  },
+  "pricing": {
+    "cta": {
+      "choose": "Choose",
+      "continueFree": "Continue for free",
+      "createAccount": "Create account",
+      "currentPlan": "Current plan",
+      "includedByDefault": "Included by default",
+      "switchPlan": "Switch to this plan"
+    },
+    "current": {
+      "cancelConfirm": "Cancel right now (demo mode)?",
+      "cancelDemo": "Cancel (demo)",
+      "cancelScheduled": " · cancellation scheduled",
+      "credits_one": " · {{count}} credit in reserve",
+      "credits_other": " · {{count}} credits in reserve",
+      "label": "Your plan",
+      "manage": "Manage my subscription",
+      "openStudio": "Open the studio",
+      "pastDue_html": "<span class=\"font-body-sm text-error\">(payment pending)</span>",
+      "renew": " · resets on {{date}}",
+      "unlimited": "{{used}} generations · no limit",
+      "used": "{{used}} / {{quota}} generations used"
+    },
+    "errors": {
+      "billingDisabled_html": "Billing is not enabled on this server (<code>BILLING_ENABLED=false</code>).",
+      "operationFailed": "That did not work",
+      "plansUnavailable": "Could not load the plans."
+    },
+    "faq": {
+      "a1": "It is not counted. Only generations that actually produce a visual use up your quota, and you can retry a failure for free from your history.",
+      "a2": "On your billing date, not on the 1st of the month. Subscribe on the 17th and your quota resets on the 17th every month.",
+      "a3": "No. One-off generation packs, on the other hand, never expire and kick in once your monthly quota is used up.",
+      "a4": "Any time, from “Manage my subscription”. Switching is prorated, and cancelling takes effect at the end of the period you have already paid for.",
+      "a5_html": "You have it for 14 days after subscribing. Because the service starts immediately at your request, you only pay for the part you have used: the balance is refunded to you. Details and form: <a href=\"/legal.html#retractation\" class=\"text-primary-container underline\">Withdrawal section</a>.",
+      "q1": "What happens if a generation fails?",
+      "q2": "When does my counter reset?",
+      "q3": "Do unused generations roll over?",
+      "q4": "Can I switch plans or cancel?",
+      "q5": "What about the 14-day right of withdrawal?",
+      "title": "Frequently asked questions"
+    },
+    "free": "Free",
+    "loadingPlans": "Loading plans…",
+    "noCard": "no card required",
+    "notices": {
+      "checkoutCancel": "Payment cancelled, nothing was charged.",
+      "checkoutSuccess": "Payment recorded. Your plan is active — if the counter below is not up to date yet, refresh in a few seconds.",
+      "demoMode_html": "<strong>Prototype — demo mode.</strong> No Stripe key configured: the buttons simulate a subscription in the database so quotas can be tested. No payment, no card.",
+      "demoPack_html": "Credits added in <strong>demo mode</strong>.",
+      "demoSubscribed_html": "Plan activated in <strong>demo mode</strong>: nothing was charged, no call to Stripe.",
+      "packSuccess": "Generation pack credited.",
+      "verif_html": "Your account is created. <strong>A confirmation email is on its way</strong>: click the link to unlock your free generations. You can already pick a plan — it is active straight away, no need to wait for the confirmation.",
+      "welcome": "Your account is created. You can start for free or subscribe right away — payment happens on a secure Stripe page."
+    },
+    "onboardingSubNoFree": "Pick the plan that matches your volume. Secure payment through Stripe, cancel in one click.",
+    "onboardingSub_one": "Your account starts with {{count}} free generation. Subscribe whenever you want to go further: secure payment through Stripe, cancel in one click.",
+    "onboardingSub_other": "Your account starts with {{count}} free generations. Subscribe whenever you want to go further: secure payment through Stripe, cancel in one click.",
+    "onboardingTitle": "Welcome — pick your plan",
+    "pack": {
+      "buy": "Buy the pack",
+      "text_one": "A pack of {{count}} generation for {{amount}}, no subscription. The credit never expires and kicks in once your monthly quota is used up.",
+      "text_other": "A pack of {{count}} generations for {{amount}}, no subscription. Credits never expire and kick in once your monthly quota is used up.",
+      "title": "Need more this month?"
+    },
+    "perMonth": "/month",
+    "quotaLifetime_one": "{{count}} generation in total",
+    "quotaLifetime_other": "{{count}} generations in total",
+    "quotaMonthly_one": "{{count}} generation / month",
+    "quotaMonthly_other": "{{count}} generations / month",
+    "recommended": "Recommended",
+    "redirecting": "Redirecting…",
+    "subtitle": "Every plan includes a number of generations per month. The counter resets on your billing date. No commitment, cancel in one click.",
+    "title": "Visuals, not complicated plans",
+    "unitPrice": "that is {{amount}} per visual",
+    "manageAccountHint": "Password, language or account deletion:",
+    "manageAccount": "Manage my account"
+  },
+  "register": {
+    "consent_html": "I have read and accept the <a href=\"/legal.html#mentions\" target=\"_blank\" rel=\"noopener\" class=\"text-primary-container underline\">legal notice</a>, the <a href=\"/legal.html#confidentialite\" target=\"_blank\" rel=\"noopener\" class=\"text-primary-container underline\">privacy policy</a> and the <a href=\"/legal.html#cgu\" target=\"_blank\" rel=\"noopener\" class=\"text-primary-container underline\">terms of use</a>. I certify that I hold the rights to the photos I upload.",
+    "haveAccount": "Already have an account? Sign in",
+    "inviteCode": "Invitation code",
+    "modeClosed": "Sign-ups are closed: access is by invitation. Contact the administrator.",
+    "modeInvite": "An invitation code is required to create an account.",
+    "modeOpen": "A few seconds, and the studio is yours.",
+    "rules": {
+      "classes": "3 types out of: lowercase, uppercase, digit, symbol",
+      "email": "Does not contain your email address",
+      "length": "12 characters minimum"
+    },
+    "submit": "Create my account",
+    "title": "Create an account",
+    "unavailable": "Service unavailable, try again later.",
+    "pitchTitle": "Your first visual in under two minutes.",
+    "pitchText": "Upload a photo of your product and pick a theme: the scene is built around it, and the packaging stays yours.",
+    "points": {
+      "format": "4:5 format, ready to post on social media",
+      "noCommitment": "No subscription needed to get started"
+    },
+    "showPassword": "Show password",
+    "errors": {
+      "email": "Enter a valid email address.",
+      "password": "Your password doesn't meet the rules below yet.",
+      "invite": "Enter your invitation code.",
+      "terms": "Tick the box to accept the terms before creating your account."
+    }
+  },
+  "serverError": {
+    "code": "Server error",
+    "metaTitle": "Service temporarily unavailable — {{brand}}",
+    "retry": "Try again",
+    "text": "The problem is on our side, not yours. Your visuals and history are unaffected. Please try again in a moment.",
+    "title": "The service is not responding"
+  },
+  "studio": {
+    "art": {
+      "help": "If you fill this in, your scene replaces the theme’s. Packaging fidelity still applies.",
+      "label": "Scene you want",
+      "placeholder": "e.g. on a hay bale in a stone barn, low morning light",
+      "summary": "Describe the scene you want"
+    },
+    "empty": {
+      "text": "Complete the three steps, then click “Generate the visual”. It takes 30 to 120 seconds.",
+      "title": "Your visual will appear here",
+      "example": "Example",
+      "before": "Your photo",
+      "after": "The visual",
+      "beforeAlt": "Example: raw product photo taken on a phone",
+      "afterAlt": "Example: the same product staged in an advertising visual"
+    },
+    "error": {
+      "title": "Generation failed"
+    },
+    "errors": {
+      "noBrand": "Enter the brand.",
+      "noCategory": "Pick a category.",
+      "noImage": "Add at least one image.",
+      "noTheme": "Pick a theme."
+    },
+    "generate": "Generate the visual",
+    "generating": "Generating…",
+    "photos": {
+      "add": "Add",
+      "count": "{{n}} / {{max}}",
+      "help": "One or more products per photo: they will all show up in the visual. Several angles of the same product count as one.",
+      "drop": "Drag your photos here or click to browse",
+      "dropTouch": "Tap to choose your photos",
+      "formats": "JPG, PNG, WebP · 1 to 14 photos",
+      "addLabel": "Add photos",
+      "skipped_one": "{{count}} file skipped: JPG, PNG or WebP only, 14 photos at most.",
+      "skipped_other": "{{count}} files skipped: JPG, PNG or WebP only, 14 photos at most."
+    },
+    "preview": {
+      "open": "Open “{{name}}” full size",
+      "remove": "Remove"
+    },
+    "product": {
+      "brand": "Brand",
+      "brandPlaceholder": "e.g. Red Bull",
+      "category": "Category",
+      "categoryPlaceholder": "Select…",
+      "count": "Number of distinct products",
+      "countHelp": "Fill this in if the AI gets the number of products to show wrong (1 to 6).",
+      "countPlaceholder": "Detected automatically",
+      "description": "Description",
+      "descriptionHelp": "Say what shape it really is: can, pouch, jar, gift box…",
+      "descriptionPlaceholder": "e.g. croissant filled with Nutella",
+      "flavor": "Flavour",
+      "flavorPlaceholder": "e.g. peach",
+      "optional": "(optional)",
+      "more": "More options",
+      "moreHint": "flavour, shape, number of products"
+    },
+    "progress": {
+      "cancel": "Cancel",
+      "step1": "Uploading the images",
+      "step2": "Composing the visual",
+      "step3": "High-definition render",
+      "text": "This can take up to ~2 minutes. Keep the page open.",
+      "title": "Generating…"
+    },
+    "quota": {
+      "cta": "See the plans",
+      "title": "Quota reached"
+    },
+    "result": {
+      "alt": "Generated visual",
+      "badge": "Scene composed by AI"
+    },
+    "srTitle": "Visual generation studio",
+    "terms": "Terms of use",
+    "unitCost": "≈ {{amount}} per visual ({{model}}{{size}}) · {{perHour}}/hour, {{perDay}}/day · 30 to 120 s",
+    "unverified": {
+      "title": "Confirm your email address"
+    },
+    "steps": {
+      "one": {
+        "title": "Upload your photos"
+      },
+      "two": {
+        "title": "Describe the product"
+      },
+      "three": {
+        "title": "Pick a theme"
+      },
+      "short": {
+        "photos": "Photos",
+        "product": "Product",
+        "scene": "Scene"
+      },
+      "done": "step complete"
+    },
+    "usage": {
+      "duration": "30 to 120 s per visual",
+      "trialLeft_one": "You have {{count}} trial generation left",
+      "trialLeft_other": "You have {{count}} trial generations left",
+      "periodLeft_one": "You have {{count}} generation left this month",
+      "periodLeft_other": "You have {{count}} generations left this month",
+      "none": "You have used all your generations",
+      "monthCount_one": "{{count}} visual generated this month",
+      "monthCount_other": "{{count}} visuals generated this month",
+      "left_one": "You have {{count}} generation left",
+      "left_other": "You have {{count}} generations left"
+    }
+  },
+  "terms": {
+    "accept": "I have read and accept these documents.",
+    "acceptBtn": "Accept and continue",
+    "error": "That failed, try again.",
+    "intro_html": "To keep using {{brand}}, please read and accept the <a href=\"/legal.html#mentions\" target=\"_blank\" rel=\"noopener\" class=\"text-primary-container underline\">legal notice</a>, the <a href=\"/legal.html#confidentialite\" target=\"_blank\" rel=\"noopener\" class=\"text-primary-container underline\">privacy policy</a> and the <a href=\"/legal.html#cgu\" target=\"_blank\" rel=\"noopener\" class=\"text-primary-container underline\">terms of use</a>.",
+    "logoutBtn": "Sign me out",
+    "title": "Legal notice and terms"
+  },
+  "themes": {
+    "classique": "Classic",
+    "ete": "Summer",
+    "extravagant": "Bold",
+    "fete": "Night",
+    "luxe": "Luxury",
+    "noel": "Christmas",
+    "sport": "Sport"
+  },
+  "time": {
+    "dayTime": "{{day}}, {{time}}",
+    "now": "Just now"
+  },
+  "ui": {
+    "deleteConfirm": "Permanently delete this generation?\nThe generated visual will be lost, this cannot be undone.",
+    "deleteFailed": "The deletion failed.",
+    "loadFailed": "Could not load.",
+    "noFailures": "No failures.",
+    "retryFailed": "The retry failed.",
+    "retrying": "Retrying…"
+  },
+  "usage": {
+    "header_one": "{{count}} image · {{amount}} this month",
+    "header_other": "{{count}} images · {{amount}} this month",
+    "remaining_one": "{{count}} generation left",
+    "remaining_other": "{{count}} generations left",
+    "remainingNone": "No generations left",
+    "month_one": "{{count}} visual this month",
+    "month_other": "{{count}} visuals this month"
+  },
+  "verify": {
+    "askEmail": "Your email address:",
+    "done": {
+      "text": "Your account is active and your free generations are unlocked.",
+      "title": "Address confirmed"
+    },
+    "expired": {
+      "text": "This link has already been used or has passed its validity period. Request a new one below.",
+      "title": "Invalid or expired link"
+    },
+    "failed": {
+      "text": "Try again in a few moments.",
+      "title": "Confirmation failed"
+    },
+    "incomplete": {
+      "text": "This link does not carry a confirmation token. Open it directly from the email you received.",
+      "title": "Incomplete link"
+    },
+    "pending": "Confirming…",
+    "resend": "Get a new link",
+    "sent": {
+      "text": "Check your inbox.",
+      "title": "On its way"
+    }
+  },
+  "verifyBanner": {
+    "failed": "Could not send",
+    "resend": "Resend the email",
+    "sent": "Email sent",
+    "text_html": "Confirm your address <strong>{{email}}</strong> to unlock your free generations. Check your spam folder too."
+  },
+  "withdrawal": {
+    "confirm": {
+      "checkbox": "I have read the amount above and I confirm my withdrawal.",
+      "cta": "Confirm withdrawal",
+      "packEffect": "The credits still in reserve are removed from your account.",
+      "subEffect": "Your subscription ends immediately and access to generations stops.",
+      "title": "Confirm your withdrawal"
+    },
+    "consent": {
+      "checkbox": "I expressly request that performance begin immediately, before the end of the 14-day withdrawal period. I acknowledge that I lose my right of withdrawal for each visual actually generated and that, if I withdraw, I must pay pro rata for the part already supplied.",
+      "confirm": "Confirm and pay",
+      "explain": "You keep your right of withdrawal for 14 days. If you exercise it, you only pay for the part you have used: the balance is refunded to you.",
+      "introPack": "You are about to buy {{count}} generations. The credits are available immediately.",
+      "introSub": "You are about to subscribe to the {{plan}} plan. The service starts immediately.",
+      "title": "Before payment"
+    },
+    "cta": "Withdraw",
+    "daysLeft_one": "You have {{count}} day left, until {{date}}.",
+    "daysLeft_other": "You have {{count}} days left, until {{date}}.",
+    "errors": {
+      "amountChanged": "The amount has changed since this page was displayed. It will now reload."
+    },
+    "manualReview": "You have already exercised this right recently: your request will be recorded and handled manually within 14 days.",
+    "notices": {
+      "done": "Withdrawal recorded. {{amount}} will be refunded to your original payment method.",
+      "review": "Request recorded ({{amount}}). It will be handled manually within 14 days."
+    },
+    "pack": {
+      "detail": "You have {{left}} of {{total}} credits left: the refund would be {{amount}}.",
+      "title": "Right of withdrawal — generation pack"
+    },
+    "sub": {
+      "detail": "You have used {{used}} of the {{total}} generations in your plan: the refund would be {{amount}}.",
+      "title": "Right of withdrawal — 14 days"
+    }
+  }
+}

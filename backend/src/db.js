@@ -89,6 +89,53 @@ ensureColumn('users', 'email_verified_at', 'TEXT');
 // (backend/src/admin.js) — jamais modifiable par une requête HTTP.
 ensureColumn('users', 'role', "TEXT NOT NULL DEFAULT 'user'");
 
+// --- Suppression de compte (art. 17) : désactivation + pseudonymisation ------
+// On ne supprime PAS la ligne : les `generations` y sont rattachées par clé
+// étrangère et servent de trace comptable. L'identité, elle, est effacée
+// (adresse neutralisée, mot de passe écrasé) — cf. docs/SUPPRESSION-COMPTE.md.
+// `deleted_at` non nul = compte désactivé : TOUTE lecture de `users` doit
+// l'exclure, sinon un compte supprimé se reconnecte.
+ensureColumn('users', 'deleted_at', 'TEXT');
+ensureColumn('users', 'deletion_reason', 'TEXT');
+// Empreinte HMAC-SHA256 de l'adresse d'origine. Conservée APRÈS suppression,
+// sans l'adresse en clair : elle ne permet pas de retrouver qui c'était, mais
+// elle permet de reconnaître une réinscription. Sans elle, l'adresse se libère
+// et le même utilisateur recrée un compte pour rafler un nouveau quota gratuit
+// — l'abus que config.js documente déjà pour l'inscription ouverte.
+ensureColumn('users', 'email_hash', 'TEXT');
+db.exec('CREATE INDEX IF NOT EXISTS idx_users_email_hash ON users(email_hash)');
+// Quota gratuit déchu : posé à la réinscription d'une adresse déjà supprimée.
+// Le compte fonctionne normalement, il n'a simplement plus de générations
+// offertes (il peut s'abonner). Lu par billing/quota.js.
+ensureColumn('users', 'free_quota_forfeited', 'INTEGER NOT NULL DEFAULT 0');
+// Colonnes de facturation posées ICI aussi, et pas seulement par
+// billing/store.js `migrate()` : celle-ci ne tourne qu'avec BILLING_ENABLED=true,
+// or la suppression de compte (deletion.js) et la console d'administration les
+// lisent et les écrivent toujours. Sans elles, une base qui n'a jamais eu la
+// facturation activée ne peut supprimer aucun compte. `migrate()` reste
+// idempotente : elle voit les colonnes et ne fait rien.
+ensureColumn('users', 'stripe_customer_id', 'TEXT');
+ensureColumn('users', 'extra_credits', 'INTEGER NOT NULL DEFAULT 0');
+
+// --- Consentement à l'exécution immédiate (art. VI.53 / 14(3) CDE) -----------
+// Sans cette trace, la rétractation donne droit au remboursement INTÉGRAL :
+// le prorata n'est opposable que si le consommateur a expressément demandé que
+// l'exécution commence pendant les 14 jours. On horodate, on garde la version
+// du texte accepté et l'IP — c'est la pièce à produire en cas de litige.
+ensureColumn('users', 'withdrawal_consent_at', 'TEXT');
+ensureColumn('users', 'withdrawal_consent_version', 'TEXT');
+ensureColumn('users', 'withdrawal_consent_ip', 'TEXT');
+
+// Petit magasin clé/valeur pour les secrets dérivés qui doivent survivre à une
+// rotation de SESSION_SECRET (le poivre des empreintes d'e-mail, notamment :
+// s'il change, toutes les empreintes existantes deviennent incomparables).
+db.exec(`
+  CREATE TABLE IF NOT EXISTS app_meta (
+    key   TEXT PRIMARY KEY,
+    value TEXT NOT NULL
+  );
+`);
+
 // Jetons à usage unique (vérification d'e-mail, réinitialisation de mot de
 // passe plus tard). Seul le SHA-256 du jeton est stocké.
 db.exec(`

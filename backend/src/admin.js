@@ -12,18 +12,21 @@ export function syncAdmins() {
     : db.prepare("UPDATE users SET role = 'user' WHERE role = 'admin'").run().changes;
   let promoted = 0;
   for (const e of emails) {
-    promoted += db.prepare("UPDATE users SET role = 'admin' WHERE email = ? AND role != 'admin'").run(e).changes;
+    // deleted_at IS NULL : un compte supprimé ne doit jamais être re-promu.
+    promoted += db.prepare("UPDATE users SET role = 'admin' WHERE email = ? AND role != 'admin' AND deleted_at IS NULL").run(e).changes;
   }
   if (promoted || demoted) console.log(`🛡️  Rôles administrateur : ${promoted} ajouté(s), ${demoted} retiré(s)`);
-  const total = db.prepare("SELECT COUNT(*) n FROM users WHERE role = 'admin'").get().n;
-  const absent = emails.filter((e) => !db.prepare('SELECT 1 FROM users WHERE email = ?').get(e));
+  const total = db.prepare("SELECT COUNT(*) n FROM users WHERE role = 'admin' AND deleted_at IS NULL").get().n;
+  const absent = emails.filter((e) => !db.prepare('SELECT 1 FROM users WHERE email = ? AND deleted_at IS NULL').get(e));
   if (absent.length) console.warn(`⚠️  ADMIN_EMAILS : aucun compte pour ${absent.join(', ')} (le rôle sera posé à la création du compte).`);
   if (!total) console.warn('⚠️  Aucun compte administrateur. Renseigne ADMIN_EMAILS dans .env.');
   return total;
 }
 
+// Filtre critique : sans `deleted_at IS NULL`, une session survivante d'un
+// ancien admin supprimé rouvrirait la console d'administration.
 export const isAdmin = (userId) =>
-  db.prepare("SELECT 1 FROM users WHERE id = ? AND role = 'admin'").get(userId) !== undefined;
+  db.prepare("SELECT 1 FROM users WHERE id = ? AND role = 'admin' AND deleted_at IS NULL").get(userId) !== undefined;
 
 // Appelé à la création d'un compte : une adresse listée devient admin tout de
 // suite, sans attendre un redémarrage.

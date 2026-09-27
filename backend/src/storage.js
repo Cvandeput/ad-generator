@@ -22,10 +22,21 @@ export function purgeGenerationFiles(genId, outputPath) {
   return files;
 }
 
-// Tous les fichiers d'un compte (suppression de compte, art. 17).
-export function purgeUserFiles(userId) {
-  const rows = db.prepare('SELECT id, output_path FROM generations WHERE user_id = ?').all(userId);
+// Relevé des fichiers d'un compte, SANS rien effacer. Séparé de l'effacement
+// pour la suppression de compte : elle relève les chemins dans sa transaction
+// SQL (qui les met ensuite à NULL) et n'efface le disque qu'après le commit.
+export function listUserFiles(userId) {
+  return db.prepare('SELECT id, output_path FROM generations WHERE user_id = ?').all(userId);
+}
+
+// Efface les fichiers d'un relevé fait par listUserFiles().
+export function purgeFiles(rows) {
   let files = 0;
   for (const r of rows) files += purgeGenerationFiles(r.id, r.output_path);
   return { generations: rows.length, files };
+}
+
+// Tous les fichiers d'un compte (suppression de compte, art. 17).
+export function purgeUserFiles(userId) {
+  return purgeFiles(listUserFiles(userId));
 }

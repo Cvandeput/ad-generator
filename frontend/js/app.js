@@ -2,35 +2,91 @@
 import { api } from './api.js';
 import { renderThemeButtons, escapeHtml, IMG_FALLBACK_ATTRS, brokenThumb, wireImageFallbacks } from './components.js';
 import { mountChrome, refreshUsage } from './nav.js';
+import { t, money, percent } from './i18n.js';
 
 const MAX_IMAGES = 14;
 const ALLOWED = ['image/jpeg', 'image/png', 'image/webp'];
+// Seuil sous lequel on propose les formules à côté du solde de générations.
+const LOW_REMAINING = 2;
 
-const dropzone = document.getElementById('dropzone');
+const dropzone = document.getElementById('dropzone'); // grande zone (aucune photo)
+const dropzoneAdd = document.getElementById('dropzone-add'); // tuile « Ajouter » (rangée de vignettes)
+const photoRow = document.getElementById('photo-row');
+const photoNote = document.getElementById('photo-note');
 const fileInput = document.getElementById('file-input');
 const previews = document.getElementById('previews');
 const photoCount = document.getElementById('photo-count');
 const themesEl = document.getElementById('themes');
+const brandInput = document.getElementById('brand');
+const categoryInput = document.getElementById('category');
 const generateBtn = document.getElementById('generate');
 const genLabel = generateBtn.querySelector('.js-generate-label');
+const formError = document.getElementById('form-error');
 const resultBody = document.getElementById('result-body');
+// Nœud gardé en mémoire : showEmpty() le remet en place tel quel (textes déjà
+// traduits, pastilles d'étapes à jour) après une annulation.
+const emptyState = document.getElementById('empty-state');
 
 let files = []; // File[]
 let selectedTheme = null;
+let currentUser = null; // { isAdmin, … } renvoyé par /api/auth/me
 
 // --- Chrome commun (nav, footer, cookies, CGU) + garde d'authentification ---
 wireImageFallbacks();
 mountChrome({ requireAuth: true }).then((user) => {
+  currentUser = user;
   if (user) loadUsage();
 });
 
+// --- Étapes 1 · Photos, 2 · Produit, 3 · Mise en scène ---
+// Pastilles numérotées du panneau et de l'état vide de la toile : cochées quand
+// l'étape est remplie, la première étape incomplète est mise en avant. Mêmes
+// conditions que la validation au clic sur Générer (aucune règle ajoutée).
+function stepsDone() {
+  return [files.length > 0, Boolean(brandInput.value.trim() && categoryInput.value.trim()), Boolean(selectedTheme)];
+}
+
+function paintSteps() {
+  const done = stepsDone();
+  const current = done.indexOf(false) + 1; // 0 = tout est prêt
+  document.querySelectorAll('.js-step-badge').forEach((el) => {
+    const n = Number(el.dataset.step);
+    const isDone = done[n - 1];
+    const isCurrent = n === current;
+    el.classList.toggle('bg-primary-container', isDone);
+    el.classList.toggle('text-on-primary', isDone);
+    el.classList.toggle('border-primary-container', isDone || isCurrent);
+    el.classList.toggle('text-primary-container', !isDone && isCurrent);
+    el.classList.toggle('border-outline-variant', !isDone && !isCurrent);
+    el.classList.toggle('text-secondary', !isDone && !isCurrent);
+    el.innerHTML = isDone
+      ? `<span class="material-symbols-outlined text-[14px]" aria-hidden="true">check</span><span class="sr-only">${escapeHtml(t('studio.steps.done'))}</span>`
+      : String(n);
+  });
+}
+
+// À chaque changement du formulaire : pastilles + effacement du message de
+// validation affiché sous le bouton Générer.
+function onFormChange() {
+  paintSteps();
+  formError.classList.add('hidden');
+  formError.textContent = '';
+}
+
+brandInput.addEventListener('input', onFormChange);
+categoryInput.addEventListener('change', onFormChange);
+paintSteps();
+
 // --- Thèmes (injectés depuis la source unique) ---
 themesEl.innerHTML = renderThemeButtons();
+themesEl.querySelectorAll('.theme-btn').forEach((btn) => btn.setAttribute('aria-pressed', 'false'));
 themesEl.querySelectorAll('.theme-btn').forEach((btn) =>
   btn.addEventListener('click', () => {
     selectedTheme = btn.dataset.theme;
+    onFormChange();
     themesEl.querySelectorAll('.theme-btn').forEach((b) => {
       const active = b === btn;
+      b.setAttribute('aria-pressed', String(active));
       // Bordure accent 2px sur l'aperçu + pastille cochée (cf. renderThemeButtons).
       const preview = b.querySelector('.theme-preview');
       preview.classList.toggle('border-2', active);
@@ -67,30 +123,51 @@ artInput.addEventListener('input', () => {
 });
 
 // --- Dropzone ---
+// Deux cibles de dépôt : la grande zone (aucune photo) et la rangée de
+// vignettes (photos déjà ajoutées). Les boutons s'ouvrent aussi au clavier.
 dropzone.addEventListener('click', () => fileInput.click());
-dropzone.addEventListener('dragover', (e) => {
-  e.preventDefault();
-  dropzone.classList.add('drag-over');
-});
-dropzone.addEventListener('dragleave', () => dropzone.classList.remove('drag-over'));
-dropzone.addEventListener('drop', (e) => {
-  e.preventDefault();
-  dropzone.classList.remove('drag-over');
-  addFiles(e.dataTransfer.files);
-});
+dropzoneAdd.addEventListener('click', () => fileInput.click());
+for (const zone of [dropzone, photoRow]) {
+  zone.addEventListener('dragover', (e) => {
+    e.preventDefault();
+    zone.classList.add('drag-over');
+  });
+  // dragleave part aussi en survolant un enfant : on ne retire l'état qu'en
+  // sortant vraiment de la zone (sinon clignotement).
+  zone.addEventListener('dragleave', (e) => {
+    if (!zone.contains(e.relatedTarget)) zone.classList.remove('drag-over');
+  });
+  zone.addEventListener('drop', (e) => {
+    e.preventDefault();
+    zone.classList.remove('drag-over');
+    addFiles(e.dataTransfer.files);
+  });
+}
+// Photo lâchée à côté de la zone : le navigateur l'ouvrirait à la place du
+// Studio et le formulaire serait perdu.
+window.addEventListener('dragover', (e) => e.preventDefault());
+window.addEventListener('drop', (e) => e.preventDefault());
 fileInput.addEventListener('change', () => addFiles(fileInput.files));
 
 function addFiles(fileList) {
+  let skipped = 0; // format refusé ou au-delà de MAX_IMAGES : on le dit
   for (const f of fileList) {
-    if (!ALLOWED.includes(f.type)) continue;
-    if (files.length >= MAX_IMAGES) break;
+    if (!ALLOWED.includes(f.type) || files.length >= MAX_IMAGES) {
+      skipped += 1;
+      continue;
+    }
     files.push(f);
   }
   fileInput.value = '';
+  photoNote.textContent = skipped ? t('studio.photos.skipped', { count: skipped }) : '';
+  photoNote.classList.toggle('hidden', !skipped);
   renderPreviews();
 }
 
 function renderPreviews() {
+  // Élément focalisé AVANT le rendu : un bouton « retirer » va disparaître.
+  const active = document.activeElement;
+  const removedIndex = active?.classList?.contains('remove') ? Number(active.dataset.i) : -1;
   previews.innerHTML = '';
   files.forEach((f, i) => {
     const url = URL.createObjectURL(f);
@@ -99,10 +176,10 @@ function renderPreviews() {
     // Vignette 64×80 (maquette) ; clic = ouverture pleine taille (vérifier la
     // bonne photo). Bouton retirer au survol.
     cell.innerHTML = `
-      <a href="${url}" target="_blank" rel="noopener" title="Ouvrir « ${escapeHtml(f.name)} » en grand" class="block w-full h-full">
+      <a href="${url}" target="_blank" rel="noopener" title="${escapeHtml(t('studio.preview.open', { name: f.name }))}" class="block w-full h-full">
         <img src="${url}" class="w-full h-full object-cover" alt="${escapeHtml(f.name)}" />
       </a>
-      <button data-i="${i}" class="remove absolute top-0.5 right-0.5 w-4 h-4 bg-surface-container-lowest rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity border border-outline-variant text-error z-10" aria-label="Retirer">
+      <button data-i="${i}" class="remove absolute top-0.5 right-0.5 w-6 h-6 lg:w-4 lg:h-4 bg-surface-container-lowest rounded-full flex items-center justify-center opacity-100 lg:opacity-0 lg:group-hover:opacity-100 lg:focus-visible:opacity-100 transition-opacity border border-outline text-error z-10" aria-label="${escapeHtml(t('studio.preview.remove'))}">
         <span class="material-symbols-outlined text-[11px]">close</span>
       </button>`;
     previews.appendChild(cell);
@@ -114,7 +191,30 @@ function renderPreviews() {
       renderPreviews();
     })
   );
-  if (photoCount) photoCount.textContent = `${files.length} / ${MAX_IMAGES}`;
+  if (photoCount) photoCount.textContent = t('studio.photos.count', { n: files.length, max: MAX_IMAGES });
+
+  // Grande zone tant qu'il n'y a rien, rangée de vignettes ensuite ; la tuile
+  // « Ajouter » disparaît à MAX_IMAGES.
+  const hasFiles = files.length > 0;
+  const canAdd = files.length < MAX_IMAGES;
+  dropzone.classList.toggle('hidden', hasFiles);
+  photoRow.classList.toggle('hidden', !hasFiles);
+  photoRow.classList.toggle('flex', hasFiles);
+  dropzoneAdd.classList.toggle('hidden', !canAdd);
+  dropzoneAdd.classList.toggle('flex', canAdd);
+  restoreFocus(active, removedIndex);
+  onFormChange();
+}
+
+// Le focus clavier ne doit pas tomber sur <body> quand l'élément focalisé
+// disparaît (zone repliée, vignette retirée) : on le pose sur le voisin utile.
+function restoreFocus(active, removedIndex) {
+  const visible = (el) => el && document.body.contains(el) && !el.classList.contains('hidden');
+  if (removedIndex < 0 && active !== dropzone && active !== dropzoneAdd) return;
+  if (removedIndex < 0 && visible(active)) return;
+  const removes = previews.querySelectorAll('.remove');
+  const next = removedIndex >= 0 ? removes[Math.min(removedIndex, removes.length - 1)] : null;
+  [next, dropzoneAdd, dropzone].find(visible)?.focus();
 }
 
 // --- Génération ---
@@ -128,10 +228,14 @@ generateBtn.addEventListener('click', async () => {
   const artDirection = document.getElementById('art-direction').value.trim();
   const productCount = document.getElementById('product-count').value.trim();
 
-  if (files.length === 0) return showError('Ajoutez au moins une image.');
-  if (!brand) return showError('Renseignez la marque.');
-  if (!category) return showError('Choisissez une catégorie.');
-  if (!selectedTheme) return showError('Choisissez un thème.');
+  // Champ manquant : message sous le bouton (là où l'on vient de cliquer, y
+  // compris sur mobile où la toile est plus bas) ; la toile garde son état et
+  // ses pastilles montrent l'étape à compléter.
+  if (files.length === 0) return showFormError(t('studio.errors.noImage'));
+  if (!brand) return showFormError(t('studio.errors.noBrand'));
+  if (!category) return showFormError(t('studio.errors.noCategory'));
+  if (!selectedTheme) return showFormError(t('studio.errors.noTheme'));
+  onFormChange();
 
   const fd = new FormData();
   fd.append('brand', brand);
@@ -157,16 +261,21 @@ generateBtn.addEventListener('click', async () => {
     if (abortController.signal.aborted) showEmpty();
     else if (err.status === 403 && err.data?.code === 'EMAIL_NOT_VERIFIED') showUnverified(err);
     else if (err.status === 402) showQuota(err);
-    else showError(err.message || 'Échec de la génération');
+    else showError(err.message || t('studio.error.title'));
   } finally {
     abortController = null;
     setLoading(false);
   }
 });
 
+function showFormError(msg) {
+  formError.textContent = msg;
+  formError.classList.remove('hidden');
+}
+
 function setLoading(on) {
   generateBtn.disabled = on;
-  if (genLabel) genLabel.textContent = on ? 'Génération…' : 'Générer le visuel';
+  if (genLabel) genLabel.textContent = on ? t('studio.generating') : t('studio.generate');
 }
 
 // Une étape de l'attente longue (rendue puis pilotée par setStep dans le timer).
@@ -185,21 +294,21 @@ function startProgress(onCancel) {
   resultBody.innerHTML = `
     <div class="w-full max-w-[400px] flex flex-col gap-lg bg-surface-container-lowest border border-outline-variant rounded-lg p-lg">
       <div class="flex flex-col gap-xs text-center">
-        <span class="font-headline-md text-headline-md text-on-surface">Génération en cours…</span>
-        <span class="font-body-sm text-body-sm text-secondary">Cela peut prendre jusqu'à ~2 minutes. Gardez la page ouverte.</span>
+        <span class="font-headline-md text-headline-md text-on-surface">${escapeHtml(t('studio.progress.title'))}</span>
+        <span class="font-body-sm text-body-sm text-secondary">${escapeHtml(t('studio.progress.text'))}</span>
       </div>
       <ol class="flex flex-col gap-sm">
-        ${stepRow(1, 'Envoi des images')}
-        ${stepRow(2, 'Composition du visuel (Gemini)')}
-        ${stepRow(3, 'Rendu haute définition')}
+        ${stepRow(1, t('studio.progress.step1'))}
+        ${stepRow(2, t('studio.progress.step2'))}
+        ${stepRow(3, t('studio.progress.step3'))}
       </ol>
       <div class="flex flex-col gap-xs">
         <div class="progress-track"><div id="prog-bar" class="progress-bar" style="width:3%"></div></div>
-        <span id="prog-pct" class="font-label-sm text-label-sm text-secondary text-right">3 %</span>
+        <span id="prog-pct" class="font-label-sm text-label-sm text-secondary text-right">${percent(0.03)}</span>
       </div>
       <button id="cancel-gen" type="button"
-        class="self-center px-lg py-sm bg-surface-container-lowest border border-outline-variant rounded text-on-surface font-label-md text-label-md hover:bg-surface-container transition-colors">
-        Annuler
+        class="self-center px-lg min-h-[44px] lg:min-h-0 lg:py-sm inline-flex items-center bg-surface-container-lowest border border-outline-variant rounded text-on-surface font-label-md text-label-md hover:bg-surface-container transition-colors">
+        ${escapeHtml(t('studio.progress.cancel'))}
       </button>
     </div>`;
 
@@ -236,7 +345,7 @@ function startProgress(onCancel) {
     const t = Date.now() - start;
     const pct = Math.min(95, (t / target) * 95);
     if (bar) bar.style.width = `${pct.toFixed(1)}%`;
-    if (pctEl) pctEl.textContent = `${Math.round(pct)} %`;
+    if (pctEl) pctEl.textContent = percent(Math.round(pct) / 100);
     setStep(t > 45000 ? 3 : t > 4000 ? 2 : 1);
   }, 500);
 
@@ -244,7 +353,7 @@ function startProgress(onCancel) {
     finish() {
       clearInterval(timer);
       if (bar) bar.style.width = '100%';
-      if (pctEl) pctEl.textContent = '100 %';
+      if (pctEl) pctEl.textContent = percent(1);
       setStep(4);
     },
     stop() {
@@ -255,26 +364,29 @@ function startProgress(onCancel) {
 
 function showResult(data) {
   const url = data.url;
-  const cost = typeof data.costEur === 'number' ? `${data.costEur.toFixed(3).replace('.', ',')} €` : '';
+  // Coût de revient : admin seulement (le serveur ne l'envoie plus aux clients).
+  const cost = currentUser?.isAdmin && typeof data.costEur === 'number' ? money(data.costEur, 3) : '';
+  // Badge en z-10 : toute <img> est en z-index 2 (passage devant le grain,
+  // css/input.css) et recouvrirait sinon ce calque absolu sans z-index.
   resultBody.innerHTML = `
     <div class="flex flex-col items-center gap-md">
       <div class="relative w-full max-w-[420px] aspect-[4/5] bg-surface-container-low rounded overflow-hidden shadow-[0_1px_2px_rgba(26,28,28,0.06),0_12px_32px_rgba(26,28,28,0.10)]">
-        <img src="${url}" class="w-full h-full object-cover" alt="Visuel généré" ${IMG_FALLBACK_ATTRS} />
+        <img src="${url}" class="w-full h-full object-cover" alt="${escapeHtml(t('studio.result.alt'))}" ${IMG_FALLBACK_ATTRS} />
         ${brokenThumb()}
-        <div class="absolute top-sm left-sm flex items-center gap-xs bg-surface-container-lowest border border-outline-variant rounded-full pl-sm pr-md py-xs">
+        <div class="absolute top-sm left-sm z-10 flex items-center gap-xs bg-surface-container-lowest border border-outline-variant rounded-full pl-sm pr-md py-xs">
           <span class="w-1.5 h-1.5 rounded-full bg-primary-container"></span>
-          <span class="font-label-sm text-label-sm font-semibold text-on-surface-variant">Décor composé par l'IA${cost ? ` · ${cost}` : ''}</span>
+          <span class="font-label-sm text-label-sm font-semibold text-on-surface-variant">${escapeHtml(t('studio.result.badge'))}${cost ? ` · ${escapeHtml(cost)}` : ''}</span>
         </div>
       </div>
       <div class="flex items-center gap-sm">
-        <button type="button" id="js-rerun" class="h-8 px-md border border-outline-variant rounded bg-surface-container-lowest flex items-center gap-xs text-on-surface-variant hover:bg-surface-container transition-colors">
+        <button type="button" id="js-rerun" class="h-11 lg:h-8 px-md border border-outline-variant rounded bg-surface-container-lowest flex items-center gap-xs text-on-surface-variant hover:bg-surface-container transition-colors">
           <span class="material-symbols-outlined text-[15px]">refresh</span>
-          <span class="font-label-md text-label-md">Relancer</span>
+          <span class="font-label-md text-label-md">${escapeHtml(t('common.retry'))}</span>
         </button>
         <a href="${url}?download=1" download
-           class="h-8 px-md rounded bg-primary-container text-on-primary flex items-center gap-xs hover:bg-primary transition-colors">
+           class="h-11 lg:h-8 px-md rounded bg-primary-container text-on-primary flex items-center gap-xs hover:bg-primary transition-colors">
           <span class="material-symbols-outlined text-[15px]">download</span>
-          <span class="font-label-md text-label-md">Télécharger</span>
+          <span class="font-label-md text-label-md">${escapeHtml(t('common.download'))}</span>
         </a>
       </div>
     </div>`;
@@ -282,16 +394,10 @@ function showResult(data) {
   if (rerun) rerun.addEventListener('click', () => generateBtn.click());
 }
 
-// État vide (défaut + après annulation) : même carte centrée que app.html.
+// État vide (défaut + après annulation) : le nœud d'app.html, remis tel quel.
 function showEmpty() {
-  resultBody.innerHTML = `
-    <div class="flex flex-col items-center gap-md opacity-60">
-      <span class="material-symbols-outlined text-[48px] text-outline-variant">auto_awesome</span>
-      <div class="flex flex-col gap-xs">
-        <span class="font-headline-md text-headline-md text-on-surface">Toile de création</span>
-        <span class="font-body-sm text-body-sm text-secondary">Configurez vos paramètres puis cliquez sur « Générer » pour visualiser le résultat.</span>
-      </div>
-    </div>`;
+  resultBody.replaceChildren(emptyState);
+  paintSteps();
 }
 
 // Adresse non confirmée : on propose le renvoi sur place plutôt qu'un message sec.
@@ -302,21 +408,21 @@ function showUnverified(err) {
         <span class="material-symbols-outlined text-[32px] text-on-error-container">mark_email_unread</span>
       </div>
       <div class="flex flex-col gap-xs">
-        <span class="font-headline-md text-headline-md text-on-surface">Confirmez votre adresse</span>
+        <span class="font-headline-md text-headline-md text-on-surface">${escapeHtml(t('studio.unverified.title'))}</span>
         <span class="font-body-sm text-body-sm text-secondary">${escapeHtml(err.message)}</span>
       </div>
-      <button type="button" id="js-resend" class="h-9 px-lg rounded bg-primary-container text-on-primary flex items-center font-label-md text-label-md hover:bg-primary transition-colors">Renvoyer l'e-mail</button>
+      <button type="button" id="js-resend" class="h-11 lg:h-9 px-lg rounded bg-primary-container text-on-primary flex items-center font-label-md text-label-md hover:bg-primary transition-colors">${escapeHtml(t('verifyBanner.resend'))}</button>
     </div>`;
   document.getElementById('js-resend')?.addEventListener('click', async (e) => {
     const btn = e.currentTarget;
     btn.disabled = true;
-    btn.textContent = 'Envoi…';
+    btn.textContent = t('common.sending');
     try {
       await api.resendVerification();
-      btn.textContent = 'E-mail envoyé';
+      btn.textContent = t('verifyBanner.sent');
     } catch {
       btn.disabled = false;
-      btn.textContent = "Renvoyer l'e-mail";
+      btn.textContent = t('verifyBanner.resend');
     }
   });
 }
@@ -330,10 +436,10 @@ function showQuota(err) {
         <span class="material-symbols-outlined text-[32px] text-secondary">lock_clock</span>
       </div>
       <div class="flex flex-col gap-xs">
-        <span class="font-headline-md text-headline-md text-on-surface">Quota atteint</span>
+        <span class="font-headline-md text-headline-md text-on-surface">${escapeHtml(t('studio.quota.title'))}</span>
         <span class="font-body-sm text-body-sm text-secondary">${escapeHtml(err.message)}</span>
       </div>
-      <a href="/tarifs.html" class="h-9 px-lg rounded bg-primary-container text-on-primary flex items-center font-label-md text-label-md hover:bg-primary transition-colors">Voir les formules</a>
+      <a href="/tarifs.html" class="h-11 lg:h-9 px-lg rounded bg-primary-container text-on-primary flex items-center font-label-md text-label-md hover:bg-primary transition-colors">${escapeHtml(t('studio.quota.cta'))}</a>
     </div>`;
   if (d.quota) loadUsage();
 }
@@ -345,18 +451,58 @@ function showError(msg) {
         <span class="material-symbols-outlined text-[32px] text-error">error</span>
       </div>
       <div class="flex flex-col gap-xs">
-        <span class="font-headline-md text-headline-md text-on-surface">Échec de la génération</span>
+        <span class="font-headline-md text-headline-md text-on-surface">${escapeHtml(t('studio.error.title'))}</span>
         <span class="font-body-sm text-body-sm text-secondary">${escapeHtml(msg)}</span>
       </div>
     </div>`;
 }
 
-// Coût unitaire réel (grille tarifaire du modèle configuré) + conso du mois.
+// Ligne sous le bouton Générer.
+//   · admin : coût unitaire réel (grille tarifaire du modèle configuré) ;
+//   · client : générations restantes + durée, jamais de montant ni de modèle,
+//     avec un lien vers les formules quand il en reste peu ou plus du tout.
 async function loadUsage() {
   const u = await refreshUsage();
-  const el = document.getElementById('unit-cost');
+  const el = document.getElementById('usage-info');
   if (!u || !el) return;
-  const eur = u.unit.eur.toFixed(3).replace('.', ',');
-  const size = u.unit.imageSize ? ` ${u.unit.imageSize}` : '';
-  el.textContent = `≈ ${eur} € par visuel (${u.unit.model}${size}) · ${u.quota.perHour}/h, ${u.quota.perDay}/jour · 30 à 120 s`;
+  if (currentUser?.isAdmin && u.unit) {
+    el.textContent = t('studio.unitCost', {
+      amount: money(u.unit.eur, 3),
+      model: u.unit.model,
+      size: u.unit.imageSize ? ` ${u.unit.imageSize}` : '',
+      perHour: u.quota.perHour,
+      perDay: u.quota.perDay,
+    });
+    return;
+  }
+
+  const parts = [];
+  let low = false;
+  const b = u.billing; // absent quand la facturation est désactivée
+  if (b && !b.unlimited && typeof b.remaining === 'number') {
+    if (b.remaining <= 0) {
+      parts.push(t('studio.usage.none'));
+      low = true;
+    } else {
+      // Crédits achetés : ni « d'essai » ni « ce mois-ci » ne seraient exacts.
+      const count = b.remaining;
+      parts.push(
+        b.credits > 0
+          ? t('studio.usage.left', { count })
+          : b.lifetime
+            ? t('studio.usage.trialLeft', { count })
+            : t('studio.usage.periodLeft', { count })
+      );
+      low = b.remaining <= LOW_REMAINING;
+    }
+  } else if (!b && u.currentMonth) {
+    parts.push(t('studio.usage.monthCount', { count: u.currentMonth.count }));
+  }
+  parts.push(t('studio.usage.duration'));
+
+  el.innerHTML =
+    escapeHtml(parts.join(' · ')) +
+    (low
+      ? ` · <a href="/tarifs.html" class="font-semibold text-primary-container underline hover:text-primary">${escapeHtml(t('studio.quota.cta'))}</a>`
+      : '');
 }

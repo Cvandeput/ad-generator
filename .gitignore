@@ -19,5 +19,11 @@ UPDATE-VPS.md
 docker-compose.override.yml
 keytest.py
 /k.json
+# Notes internes : le dépôt est PUBLIC. Audits (failles ouvertes, analyse
+# juridique), stratégie commerciale et to-do restent en local.
+docs/A-FAIRE.md
+docs/CONCURRENCE.md
+docs/LEGAL-REVUE.md
+docs/RGPD-AUDIT.md
 # Travail en cours (audit + feuille de route), local uniquement
 ROADMAP-WIP.md

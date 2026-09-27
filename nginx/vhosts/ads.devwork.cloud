@@ -1,3 +1,7 @@
+# RÉFÉRENCE — NE PAS COPIER tel quel sur le VPS : le vhost de production est
+# géré à la main (et par Certbot) dans /etc/nginx/sites-available/. Reporter
+# les changements ligne à ligne, puis `nginx -t` AVANT tout reload.
+#
 # AdCraft — front statique + /api/ vers le backend conteneurisé (127.0.0.1:3000).
 # Reconstruit le 13/09/2026 après la perte des vhosts.
 server {
@@ -10,6 +14,11 @@ server {
     index index.html;
 
     include snippets/adcraft-security.conf;
+    # Pages d'erreur personnalisées (404 / 50x) et la named location @api_error
+    # utilisée juste en dessous. Une seule ligne ajoutée : ce vhost est géré par
+    # Certbot, et une manipulation du 13/09 a déjà vidé les trois vhosts du VPS
+    # (PASSATION.md). On l'étend, on ne le remplace pas.
+    include snippets/adcraft-error-pages.conf;
 
     location /api/ {
         proxy_pass http://127.0.0.1:3000;
@@ -22,6 +31,14 @@ server {
         proxy_send_timeout 180s;
         # Une réponse d'API n'est jamais rejouable : sessions, quotas, images.
         add_header Cache-Control "no-store" always;
+
+        # `off` est déjà le défaut de nginx, écrit ici explicitement : le passer
+        # à `on` — réflexe courant quand on ajoute des pages d'erreur — ferait
+        # servir /404.html en HTML à un client d'API, qui casse sur JSON.parse.
+        proxy_intercept_errors off;
+        # Un 502/504 est généré par nginx lui-même (backend injoignable) :
+        # celui-là serait bien intercepté. On le renvoie en JSON, pas en HTML.
+        error_page 500 502 503 504 = @api_error;
     }
 
     location / {

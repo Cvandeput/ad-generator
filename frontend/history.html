@@ -3,58 +3,60 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Historique — AdCraft</title>
-    <meta name="description" content="Vos visuels publicitaires générés avec AdCraft : consultation, téléchargement, suppression." />
+
+    <!-- i18n : masque le document le temps de l'hydratation (cf. js/i18n-boot.js). -->
+    <script src="/js/i18n-boot.js"></script>
+
+    <title data-i18n="meta.history.title">Historique</title>
+    <meta name="description" data-i18n-attr="content:meta.history.description" content="Vos visuels publicitaires générés : consultation, téléchargement, suppression." />
     <meta name="robots" content="noindex, nofollow" />
     <link rel="icon" href="/img/icons/favicon.ico" sizes="48x48" />
     <link rel="icon" type="image/png" sizes="32x32" href="/img/icons/favicon-32.png" />
     <link rel="icon" type="image/png" sizes="16x16" href="/img/icons/favicon-16.png" />
     <link rel="apple-touch-icon" sizes="180x180" href="/img/icons/apple-touch-icon.png" />
     <link rel="manifest" href="/site.webmanifest" />
-    <meta name="theme-color" content="#1d4ed8" />
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="" />
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet" />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&display=block"
-      rel="stylesheet"
-    />
+    <meta name="theme-color" content="#f6f3ee" />
+    <!-- Polices auto-hébergées (/fonts) : aucune requête vers Google. -->
+    <link rel="preload" href="/fonts/inter-latin.woff2" as="font" type="font/woff2" crossorigin />
+    <link rel="preload" href="/fonts/inter-tight-latin.woff2" as="font" type="font/woff2" crossorigin />
+    <link rel="preload" href="/fonts/material-symbols-outlined.woff2" as="font" type="font/woff2" crossorigin />
     <link rel="stylesheet" href="/css/app.css" />
   </head>
   <body class="bg-background text-on-surface font-body-base antialiased flex flex-col min-h-screen">
     <!-- TopNavBar (rendue par js/nav.js) -->
-    <header id="site-header" data-page="history" class="bg-surface-container-lowest border-b border-outline-variant sticky top-0 z-50 w-full"></header>
+    <header id="site-header" data-page="history" class="bg-surface-container-lowest border-b border-outline-soft sticky top-0 z-50 w-full"></header>
 
     <!-- Contenu -->
     <main class="flex-grow w-full max-w-container-max mx-auto px-lg py-xl flex flex-col gap-lg">
       <!-- En-tête -->
       <div class="flex justify-between items-end gap-md">
         <div class="flex flex-col gap-xs">
-          <h1 class="font-display-lg text-display-lg text-on-surface">Historique</h1>
-          <p class="font-body-base text-body-base text-secondary">Consultez et gérez vos visuels générés.</p>
+          <h1 class="font-display-lg text-display-lg text-on-surface" data-i18n="history.title">Historique</h1>
+          <p class="font-body-base text-body-base text-secondary" data-i18n="history.subtitle">Consultez et gérez vos visuels générés.</p>
         </div>
       </div>
 
-      <!-- Barre d'outils : recherche & filtres -->
-      <div class="flex flex-col md:flex-row gap-sm justify-between items-stretch md:items-center bg-surface-container-lowest p-sm border border-outline-variant rounded-xl">
-        <div class="relative w-full md:flex-1">
-          <span class="material-symbols-outlined absolute left-md top-1/2 -translate-y-1/2 text-outline text-[18px]">search</span>
-          <input id="f-brand" type="text" placeholder="Rechercher une marque…"
-            class="w-full h-[34px] pl-xl pr-md bg-surface-container-lowest border border-outline-variant rounded focus:border-primary-container focus:ring-1 focus:ring-primary-container font-body-sm text-body-sm text-on-surface placeholder:text-outline outline-none transition-colors" />
+      <!-- Barre d'outils : recherche & filtres. Masquée tant que le compte n'a
+           AUCUN visuel (rien à filtrer) ; js/history.js la révèle ensuite. -->
+      <div id="toolbar" class="hidden flex flex-col lg:flex-row gap-sm justify-between items-stretch lg:items-center bg-surface-container-lowest p-sm border border-outline-variant rounded-xl">
+        <div class="relative w-full lg:flex-1">
+          <span class="material-symbols-outlined absolute left-md top-1/2 -translate-y-1/2 text-outline text-[18px]" aria-hidden="true">search</span>
+          <input id="f-brand" type="text" aria-label="Rechercher une marque" placeholder="Rechercher une marque…" data-i18n-attr="aria-label:history.filters.brandAria;placeholder:history.filters.brandPlaceholder"
+            class="w-full h-11 lg:h-[34px] pl-xl pr-md bg-surface-container-lowest border border-outline rounded focus:border-primary-container focus:ring-1 focus:ring-primary-container font-body-sm text-body-sm text-on-surface placeholder:text-outline outline-none transition-colors" />
         </div>
-        <div class="flex gap-sm w-full md:w-auto items-center flex-wrap">
-          <select id="f-category" class="min-w-[160px] h-[34px] px-md bg-surface-container-lowest border border-outline-variant rounded text-on-surface-variant font-label-md text-label-md focus:outline-none focus:border-primary-container focus:ring-1 focus:ring-primary-container transition-colors">
-            <option value="">Toutes catégories</option>
+        <div class="flex gap-sm w-full lg:w-auto items-center flex-wrap">
+          <select id="f-category" aria-label="Filtrer par catégorie" data-i18n-attr="aria-label:history.filters.categoryAria" class="min-w-[160px] flex-1 lg:flex-none h-11 lg:h-[34px] px-md bg-surface-container-lowest border border-outline rounded text-on-surface-variant font-label-md text-label-md focus:outline-none focus:border-primary-container focus:ring-1 focus:ring-primary-container transition-colors">
+            <option value="" data-i18n="history.filters.allCategories">Toutes catégories</option>
           </select>
-          <select id="f-theme" class="min-w-[140px] h-[34px] px-md bg-surface-container-lowest border border-outline-variant rounded text-on-surface-variant font-label-md text-label-md focus:outline-none focus:border-primary-container focus:ring-1 focus:ring-primary-container transition-colors">
-            <option value="">Tous thèmes</option>
+          <select id="f-theme" aria-label="Filtrer par thème" data-i18n-attr="aria-label:history.filters.themeAria" class="min-w-[140px] flex-1 lg:flex-none h-11 lg:h-[34px] px-md bg-surface-container-lowest border border-outline rounded text-on-surface-variant font-label-md text-label-md focus:outline-none focus:border-primary-container focus:ring-1 focus:ring-primary-container transition-colors">
+            <option value="" data-i18n="history.filters.allThemes">Tous thèmes</option>
           </select>
-          <select id="f-sort" class="min-w-[150px] h-[34px] px-md bg-surface-container-lowest border border-outline-variant rounded text-on-surface-variant font-label-md text-label-md focus:outline-none focus:border-primary-container focus:ring-1 focus:ring-primary-container transition-colors">
-            <option value="date-desc">Plus récent</option>
-            <option value="date-asc">Plus ancien</option>
-            <option value="brand-asc">Marque (A → Z)</option>
+          <select id="f-sort" aria-label="Trier les visuels" data-i18n-attr="aria-label:history.filters.sortAria" class="min-w-[150px] flex-1 lg:flex-none h-11 lg:h-[34px] px-md bg-surface-container-lowest border border-outline rounded text-on-surface-variant font-label-md text-label-md focus:outline-none focus:border-primary-container focus:ring-1 focus:ring-primary-container transition-colors">
+            <option value="date-desc" data-i18n="history.filters.sortNewest">Plus récent</option>
+            <option value="date-asc" data-i18n="history.filters.sortOldest">Plus ancien</option>
+            <option value="brand-asc" data-i18n="history.filters.sortBrand">Marque (A → Z)</option>
           </select>
-          <button id="reset" class="px-md h-[34px] text-outline font-label-md text-label-md hover:text-on-surface transition-colors">Réinitialiser</button>
+          <button id="reset" type="button" class="px-md h-11 lg:h-[34px] text-outline font-label-md text-label-md hover:text-on-surface transition-colors" data-i18n="history.filters.reset">Réinitialiser</button>
         </div>
       </div>
 
@@ -63,12 +65,12 @@
 
       <!-- Grille des visuels -->
       <div id="grid" class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-md">
-        <p class="font-body-sm text-body-sm text-secondary">Chargement…</p>
+        <p class="font-body-sm text-body-sm text-secondary" data-i18n="common.loading">Chargement…</p>
       </div>
 
       <!-- Pagination : masqué tant qu'il n'y a pas plus de résultats à charger. -->
       <div id="load-more" class="hidden flex justify-center pt-sm">
-        <button id="load-more-btn" class="h-9 px-lg bg-surface-container-lowest border border-outline-variant rounded text-on-surface-variant font-label-md text-label-md hover:bg-surface-container transition-colors">
+        <button id="load-more-btn" class="h-11 lg:h-9 px-lg bg-surface-container-lowest border border-outline-variant rounded text-on-surface-variant font-label-md text-label-md hover:bg-surface-container transition-colors" data-i18n="history.loadMore">
           Charger plus
         </button>
       </div>

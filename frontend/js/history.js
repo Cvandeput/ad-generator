@@ -1,9 +1,10 @@
 // Page historique : filtres (recherche marque, catégorie, thème, tri) + échecs.
 // N'affiche que les réussites ; les échecs sont signalés par le bandeau repliable.
 import { api } from './api.js';
-import { successCard, failuresBlock, THEME_LABELS, wireImageFallbacks } from './components.js';
+import { successCard, failuresBlock, THEME_LABELS, categoryLabel, wireImageFallbacks, escapeHtml } from './components.js';
 import { wireGridDeletes, wireFailures } from './ui.js';
 import { mountChrome, refreshUsage } from './nav.js';
+import { t } from './i18n.js';
 
 const PAGE = 12; // multiple des colonnes de la grille (2/3/4) → pas de trous
 
@@ -15,6 +16,10 @@ const fCategory = document.getElementById('f-category');
 const fTheme = document.getElementById('f-theme');
 const fBrand = document.getElementById('f-brand');
 const fSort = document.getElementById('f-sort');
+const toolbarEl = document.getElementById('toolbar');
+
+const BTN_PRIMARY = 'min-h-[44px] lg:min-h-0 lg:h-9 px-lg py-xs rounded bg-primary-container text-on-primary inline-flex items-center justify-center gap-xs font-label-md text-label-md hover:bg-primary transition-colors';
+const BTN_GHOST = 'min-h-[44px] lg:min-h-0 lg:h-9 px-lg py-xs rounded border border-outline-variant bg-surface-container-lowest text-on-surface-variant inline-flex items-center justify-center gap-xs font-label-md text-label-md hover:bg-surface-container transition-colors';
 
 let all = [];
 let shown = PAGE; // nombre de cartes affichées (pagination "Charger plus")
@@ -46,7 +51,7 @@ function populateFilters() {
   resetSelect(fCategory);
   resetSelect(fTheme);
   for (const c of [...new Set(all.map((g) => g.category).filter(Boolean))].sort()) {
-    fCategory.appendChild(option(c, c));
+    fCategory.appendChild(option(c, categoryLabel(c)));
   }
   for (const t of [...new Set(all.map((g) => g.theme).filter(Boolean))]) {
     fTheme.appendChild(option(t, THEME_LABELS[t] || t));
@@ -85,6 +90,10 @@ function filteredRows() {
 }
 
 function render() {
+  // Rien à filtrer tant que le compte n'a aucun visuel : la barre de filtres
+  // n'apparaît qu'à partir du premier. Des filtres trop stricts, eux, la
+  // laissent en place (avec un bouton pour tout réinitialiser).
+  toolbarEl.classList.toggle('hidden', all.length === 0);
   const rows = filteredRows();
 
   if (rows.length) {
@@ -94,19 +103,24 @@ function render() {
   }
 
   loadMoreWrap.classList.add('hidden');
-  // État vide explicite : distingue "rien du tout" de "que des échecs".
+  // Trois états vides distincts : aucun visuel du tout (on invite à créer le
+  // premier), uniquement des échecs (on renvoie au bandeau), ou des filtres
+  // qui ne retiennent rien (on propose de les réinitialiser).
   const hasFailures = failuresEl.querySelector('details.js-failures');
+  const filtered = all.length > 0;
+  const title = filtered ? t('history.empty.title') : t('history.empty.firstTitle');
+  const text = filtered ? t('history.empty.filtered') : hasFailures ? t('history.empty.onlyFailures') : t('history.empty.none');
+  const action = filtered
+    ? `<button type="button" class="js-reset-filters ${BTN_GHOST}">${escapeHtml(t('history.empty.resetCta'))}</button>`
+    : `<a href="/app.html" class="${BTN_PRIMARY}"><span class="material-symbols-outlined text-[16px]" aria-hidden="true">auto_awesome</span><span>${escapeHtml(t('history.empty.firstCta'))}</span></a>`;
   gridEl.innerHTML = `
-    <div class="col-span-full border border-outline-variant border-dashed rounded-xl h-[360px] flex flex-col items-center justify-center text-center p-lg bg-surface-container-low/30">
+    <div class="col-span-full border border-outline-variant border-dashed rounded-xl min-h-[360px] flex flex-col items-center justify-center text-center p-lg bg-surface-container-low/30">
       <div class="w-16 h-16 bg-surface-container-high rounded-full flex items-center justify-center mb-md">
-        <span class="material-symbols-outlined text-[32px] text-secondary">image_not_supported</span>
+        <span class="material-symbols-outlined text-[32px] text-secondary" aria-hidden="true">${filtered ? 'filter_alt_off' : 'image_not_supported'}</span>
       </div>
-      <h2 class="font-headline-md text-headline-md text-on-surface mb-xs">Aucun résultat</h2>
-      <p class="font-body-base text-body-base text-secondary max-w-md">${
-        hasFailures
-          ? 'Aucune génération réussie pour cette sélection — dépliez les échecs ci-dessus pour comprendre.'
-          : 'Aucun visuel généré pour le moment. Lancez une génération pour voir vos créations ici.'
-      }</p>
+      <h2 class="font-headline-md text-headline-md text-on-surface mb-xs">${escapeHtml(title)}</h2>
+      <p class="font-body-base text-body-base text-secondary max-w-md mb-lg">${escapeHtml(text)}</p>
+      ${action}
     </div>`;
 }
 
@@ -134,12 +148,17 @@ loadMoreBtn.addEventListener('click', () => {
 
 [fCategory, fTheme, fSort].forEach((el) => el.addEventListener('change', rerenderFromFilters));
 fBrand.addEventListener('input', rerenderFromFilters);
-document.getElementById('reset').addEventListener('click', () => {
+function resetFilters() {
   fCategory.value = '';
   fTheme.value = '';
   fBrand.value = '';
   fSort.value = 'date-desc';
   rerenderFromFilters();
+}
+document.getElementById('reset').addEventListener('click', resetFilters);
+// Bouton « Réinitialiser les filtres » de l'état vide (rendu dans la grille).
+gridEl.addEventListener('click', (e) => {
+  if (e.target.closest('.js-reset-filters')) resetFilters();
 });
 
 function loadUsage() {

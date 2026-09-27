@@ -5,7 +5,17 @@ import { getUser, getSubscription, usedSince, consumeCredit } from './store.js';
 import { isAdmin } from '../admin.js';
 
 export function quotaState(userId) {
-  const user = getUser(userId);
+  const user = getUser(userId); // exclut déjà les comptes supprimés
+  // Compte désactivé (ou introuvable) : aucun quota, aucun crédit. Sans ce
+  // garde, `user.created_at` planterait et une session survivante d'un compte
+  // supprimé obtiendrait un état de quota valide.
+  if (!user) {
+    return {
+      planKey: 'free', planLabel: 'Découverte', status: 'deleted',
+      quota: 0, used: 0, credits: 0, remaining: 0, exhausted: true, lifetime: true,
+      periodStart: null, periodEnd: null, cancelAtPeriodEnd: false, deleted: true,
+    };
+  }
   // Compte administrateur : aucun décompte. Le quota sert à protéger la
   // trésorerie contre les clients, pas contre l'exploitant.
   if (isAdmin(userId)) {
@@ -24,7 +34,12 @@ export function quotaState(userId) {
   const periodStart = active ? sub.period_start : user.created_at;
   const periodEnd = active ? sub.period_end : null;
 
-  const quota = active ? sub.quota_month : plan.quota;
+  // Quota gratuit déchu : l'adresse a déjà eu un compte supprimé. Le compte
+  // fonctionne (il peut s'abonner), il n'a simplement plus de générations
+  // offertes — sinon supprimer puis recréer son compte devient une machine à
+  // quotas gratuits illimités.
+  const freeQuota = user.free_quota_forfeited ? 0 : plan.quota;
+  const quota = active ? sub.quota_month : freeQuota;
   const used = usedSince(userId, periodStart);
   const credits = user.extra_credits || 0;
   const remaining = Math.max(0, quota - used) + credits;

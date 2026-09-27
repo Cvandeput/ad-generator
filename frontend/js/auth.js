@@ -1,6 +1,18 @@
 // Page de connexion. Le lien « Créer un compte » n'apparaît que si le backend
 // autorise l'inscription (REGISTER_MODE=invite|open).
 import { api, ApiError } from './api.js';
+import { t, currentLang, DEFAULT_LANG } from './i18n.js';
+import { renderLangCompact, wireLangLinks } from './nav.js';
+import { escapeHtml } from './components.js';
+
+// Ces pages hors chrome commun (pas de <header id="site-header">) portent tout
+// de même le sélecteur de langue : sans lui, on ne peut plus changer de langue
+// une fois arrivé directement sur /login.html.
+const slot = document.getElementById('lang-slot');
+if (slot) {
+  slot.innerHTML = renderLangCompact();
+  wireLangLinks(slot);
+}
 
 const form = document.getElementById('auth-form');
 const submitBtn = document.getElementById('submit-btn');
@@ -12,6 +24,19 @@ function showError(msg) {
   errorEl.classList.remove('hidden');
 }
 
+// Déconnexion de sécurité : trop de mots de passe actuels erronés depuis
+// « Mon compte » (le serveur a fermé la session). On explique pourquoi, puis
+// on retire le paramètre de l'URL pour qu'un rechargement ne le répète pas.
+{
+  const params = new URLSearchParams(location.search);
+  if (params.get('motif') === 'securite') {
+    showError(t('login.securityLogout'));
+    params.delete('motif');
+    const q = params.toString();
+    history.replaceState(null, '', `${location.pathname}${q ? `?${q}` : ''}${location.hash}`);
+  }
+}
+
 form.addEventListener('submit', async (e) => {
   e.preventDefault();
   errorEl.classList.add('hidden');
@@ -20,7 +45,12 @@ form.addEventListener('submit', async (e) => {
     await api.login(form.email.value.trim(), form.password.value);
     window.location.href = '/app.html';
   } catch (err) {
-    showError(err instanceof ApiError ? err.message : 'Erreur');
+    // Identifiants refusés : le serveur répond 400/401 SANS code métier, et
+    // api.js traduirait alors par le statut (« Session expirée »), faux ici.
+    // En français on garde le message du serveur, comme partout ailleurs.
+    const badCredentials = err instanceof ApiError && (err.status === 400 || err.status === 401);
+    if (badCredentials && !(currentLang() === DEFAULT_LANG && err.serverMessage)) showError(t('login.badCredentials'));
+    else showError(err instanceof ApiError ? err.message : t('errors.generic'));
     submitBtn.disabled = false;
   }
 });
@@ -38,9 +68,8 @@ api
   .then((cfg) => {
     if (!hint || !cfg || cfg.registerMode === 'closed') return;
     hint.innerHTML = `
-      <span class="material-symbols-outlined text-outline text-[18px]">person_add</span>
-      <span class="font-body-sm text-body-sm text-on-surface-variant">Pas encore de compte ?
-        <a href="/register.html" class="text-primary-container underline">Créer un compte</a>${cfg.registerMode === 'invite' ? " (code d'invitation requis)" : ''}.
+      <span class="material-symbols-outlined text-outline text-[18px]" aria-hidden="true">person_add</span>
+      <span class="font-body-sm text-body-sm text-on-surface-variant">${t('login.noAccount_html')}${cfg.registerMode === 'invite' ? escapeHtml(t('login.inviteRequired')) : ''}.
       </span>`;
   })
   .catch(() => {});

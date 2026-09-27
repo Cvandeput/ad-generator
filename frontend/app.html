@@ -3,156 +3,223 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Studio — AdCraft</title>
-    <meta name="description" content="Studio AdCraft : déposez vos photos produit, choisissez un thème, générez un visuel publicitaire 4:5." />
+
+    <!-- i18n : masque le document le temps de l'hydratation (cf. js/i18n-boot.js). -->
+    <script src="/js/i18n-boot.js"></script>
+
+    <title data-i18n="meta.studio.title">Studio</title>
+    <meta name="description" data-i18n-attr="content:meta.studio.description" content="Déposez vos photos produit, choisissez un thème, générez un visuel publicitaire 4:5." />
     <meta name="robots" content="noindex, nofollow" />
     <link rel="icon" href="/img/icons/favicon.ico" sizes="48x48" />
     <link rel="icon" type="image/png" sizes="32x32" href="/img/icons/favicon-32.png" />
     <link rel="icon" type="image/png" sizes="16x16" href="/img/icons/favicon-16.png" />
     <link rel="apple-touch-icon" sizes="180x180" href="/img/icons/apple-touch-icon.png" />
     <link rel="manifest" href="/site.webmanifest" />
-    <meta name="theme-color" content="#1d4ed8" />
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="" />
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet" />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&display=block"
-      rel="stylesheet"
-    />
+    <meta name="theme-color" content="#f6f3ee" />
+    <!-- Polices auto-hébergées (/fonts) : aucune requête vers Google. -->
+    <link rel="preload" href="/fonts/inter-latin.woff2" as="font" type="font/woff2" crossorigin />
+    <link rel="preload" href="/fonts/inter-tight-latin.woff2" as="font" type="font/woff2" crossorigin />
+    <link rel="preload" href="/fonts/material-symbols-outlined.woff2" as="font" type="font/woff2" crossorigin />
     <link rel="stylesheet" href="/css/app.css" />
   </head>
   <body class="bg-background text-on-surface font-body-base min-h-screen lg:h-screen flex flex-col lg:overflow-hidden">
     <!-- TopNavBar (rendue par js/nav.js) -->
-    <header id="site-header" data-page="studio" class="bg-surface-container-lowest border-b border-outline-variant w-full flex-shrink-0 z-50"></header>
+    <header id="site-header" data-page="studio" class="bg-surface-container-lowest border-b border-outline-soft w-full flex-shrink-0 z-50"></header>
 
-    <!-- Corps : panneau de réglages (400px) + toile. Le body ne scrolle jamais ;
-         le panneau scrolle en interne, le pied (Générer) reste fixe. -->
-    <h1 class="sr-only">Studio de génération de visuels</h1>
-    <main class="flex-1 lg:min-h-0 w-full max-w-container-max mx-auto px-lg py-lg flex flex-col lg:flex-row gap-lg lg:overflow-hidden">
+    <!-- Corps : panneau de réglages en trois étapes (celles de l'accueil) + toile.
+         Le body ne scrolle jamais ; le panneau scrolle en interne, le pied
+         (Générer) reste fixe. Les champs facultatifs sont repliés pour que le
+         thème reste visible sans défiler sur un écran 1440×900. -->
+    <h1 class="sr-only" data-i18n="studio.srTitle">Studio de génération de visuels</h1>
+    <main class="flex-1 lg:min-h-0 w-full max-w-container-max mx-auto px-lg py-lg lg:py-md flex flex-col lg:flex-row gap-lg lg:overflow-hidden">
       <!-- Panneau gauche : réglages -->
-      <section class="w-full lg:w-[400px] flex-shrink-0 min-w-0 bg-surface-container-lowest border border-outline-variant rounded-xl flex flex-col lg:overflow-hidden">
-        <div class="lg:flex-1 lg:min-h-0 lg:overflow-y-auto p-lg flex flex-col gap-lg">
-          <!-- Photos -->
-          <div class="flex flex-col gap-sm">
-            <div class="flex items-baseline justify-between">
-              <span class="font-label-sm text-label-sm font-semibold tracking-[0.08em] uppercase text-secondary">Photos du produit</span>
+      <section class="w-full md:max-w-[620px] md:self-center lg:max-w-none lg:self-auto lg:w-[440px] xl:w-[480px] flex-shrink-0 min-w-0 bg-surface-container-lowest border border-outline-variant rounded-xl flex flex-col lg:overflow-hidden">
+        <div id="settings" class="lg:flex-1 lg:min-h-0 lg:overflow-y-auto p-lg flex flex-col gap-md">
+          <!-- Étape 1 : photos. Grande zone de dépôt tant qu'il n'y a rien,
+               puis rangée de vignettes + tuile « Ajouter » (cf. renderPreviews). -->
+          <div id="step-photos" class="flex flex-col gap-sm">
+            <div class="flex items-center justify-between gap-sm">
+              <h2 class="flex items-center gap-sm font-label-md text-label-md text-on-surface">
+                <span class="js-step-badge w-6 h-6 rounded-full border border-outline-variant text-secondary flex items-center justify-center font-label-sm text-label-sm font-semibold shrink-0" data-step="1">1</span>
+                <span data-i18n="studio.steps.one.title">Déposez vos photos</span>
+              </h2>
               <span id="photo-count" class="font-label-sm text-label-sm text-outline">0 / 14</span>
             </div>
-            <p class="font-body-sm text-body-sm text-secondary">Déposez de 1 à 14 photos. Un produit par photo, ou plusieurs produits sur une même photo : ils apparaîtront tous dans le visuel. Plusieurs angles du même produit comptent pour un seul.</p>
-            <div class="flex flex-wrap gap-sm items-start">
+            <button type="button" id="dropzone" aria-describedby="photo-formats photo-help"
+              class="js-dropzone w-full min-h-[112px] rounded-lg border-2 border-dashed border-outline-variant bg-background flex flex-col items-center justify-center gap-xs px-md py-md text-center cursor-pointer hover:border-primary-container hover:bg-surface-container-low focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-container focus-visible:ring-offset-2 transition-colors">
+              <span class="w-10 h-10 rounded-full bg-primary-fixed text-primary-container flex items-center justify-center" aria-hidden="true">
+                <span class="material-symbols-outlined text-[22px]">add_photo_alternate</span>
+              </span>
+              <span class="font-label-md text-label-md text-on-surface">
+                <span class="[@media(pointer:coarse)]:hidden" data-i18n="studio.photos.drop">Glissez vos photos ici ou cliquez pour choisir</span>
+                <span class="hidden [@media(pointer:coarse)]:inline" data-i18n="studio.photos.dropTouch">Touchez pour choisir vos photos</span>
+              </span>
+              <span id="photo-formats" class="font-label-sm text-label-sm text-outline" data-i18n="studio.photos.formats">JPG, PNG, WebP · 1 à 14 photos</span>
+            </button>
+            <div id="photo-row" class="hidden flex-wrap gap-sm items-start rounded-lg">
               <div id="previews" class="contents"></div>
-              <div id="dropzone" class="w-16 h-20 rounded border border-dashed border-outline-variant bg-background flex flex-col items-center justify-center gap-xs cursor-pointer hover:bg-surface-container transition-colors">
-                <span class="material-symbols-outlined text-outline text-[18px]">add</span>
-                <span class="font-label-sm text-label-sm text-outline">Ajouter</span>
-              </div>
-              <input id="file-input" type="file" accept="image/jpeg,image/png,image/webp" multiple class="hidden" />
+              <button type="button" id="dropzone-add" aria-label="Ajouter des photos" data-i18n-attr="aria-label:studio.photos.addLabel"
+                class="js-dropzone w-16 h-20 rounded border border-dashed border-outline bg-background flex flex-col items-center justify-center gap-xs cursor-pointer hover:bg-surface-container focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-container focus-visible:ring-offset-2 transition-colors">
+                <span class="material-symbols-outlined text-outline text-[18px]" aria-hidden="true">add</span>
+                <span class="font-label-sm text-label-sm text-outline" data-i18n="studio.photos.add">Ajouter</span>
+              </button>
             </div>
+            <input id="file-input" type="file" accept="image/jpeg,image/png,image/webp" multiple class="hidden" />
+            <p id="photo-note" class="hidden font-body-sm text-body-sm text-error" role="status"></p>
+            <p id="photo-help" class="font-body-sm text-body-sm text-outline" data-i18n="studio.photos.help">Un ou plusieurs produits par photo : tous apparaîtront dans le visuel. Plusieurs angles d'un même produit comptent pour un seul.</p>
           </div>
 
-          <div class="h-px bg-outline-variant"></div>
+          <div class="h-px shrink-0 bg-outline-variant"></div>
 
-          <!-- Produit -->
-          <div class="flex flex-col gap-md">
-            <span class="font-label-sm text-label-sm font-semibold tracking-[0.08em] uppercase text-secondary">Produit</span>
+          <!-- Étape 2 : produit. Marque et catégorie (obligatoires) visibles ;
+               le reste est replié dans « Plus d'options ». -->
+          <div id="step-product" class="flex flex-col gap-md">
+            <h2 class="flex items-center gap-sm font-label-md text-label-md text-on-surface">
+              <span class="js-step-badge w-6 h-6 rounded-full border border-outline-variant text-secondary flex items-center justify-center font-label-sm text-label-sm font-semibold shrink-0" data-step="2">2</span>
+              <span data-i18n="studio.steps.two.title">Décrivez le produit</span>
+            </h2>
 
-            <div class="flex flex-col gap-xs">
-              <label class="font-label-md text-label-md text-on-surface" for="brand">Marque</label>
-              <input id="brand" type="text" placeholder="Ex : Red Bull"
-                class="w-full h-9 border border-outline-variant rounded px-md font-body-base text-on-surface bg-surface-container-lowest focus:outline-none focus:border-primary-container focus:ring-1 focus:ring-primary-container placeholder:text-outline transition-colors" />
-            </div>
-
-            <div class="flex gap-md">
-              <div class="flex-1 flex flex-col gap-xs">
-                <label class="font-label-md text-label-md text-on-surface" for="category">Catégorie</label>
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-md">
+              <div class="flex flex-col gap-xs min-w-0">
+                <label class="font-label-md text-label-md text-on-surface" for="brand" data-i18n="studio.product.brand">Marque</label>
+                <input id="brand" type="text" placeholder="Ex : Red Bull" data-i18n-attr="placeholder:studio.product.brandPlaceholder"
+                  class="w-full h-11 lg:h-9 border border-outline rounded px-md font-body-base text-on-surface bg-surface-container-lowest focus:outline-none focus:border-primary-container focus:ring-1 focus:ring-primary-container placeholder:text-outline transition-colors" />
+              </div>
+              <div class="flex flex-col gap-xs min-w-0">
+                <label class="font-label-md text-label-md text-on-surface" for="category" data-i18n="studio.product.category">Catégorie</label>
                 <select id="category"
-                  class="w-full h-9 border border-outline-variant rounded px-md font-body-base text-on-surface bg-surface-container-lowest focus:outline-none focus:border-primary-container focus:ring-1 focus:ring-primary-container appearance-none transition-colors">
-                  <option value="" disabled selected>Sélectionner…</option>
-                  <option value="boisson">Boisson</option>
-                  <option value="boisson énergisante">Boisson énergisante</option>
-                  <option value="alcool">Alcool</option>
-                  <option value="chips">Chips</option>
-                  <option value="snack">Snack</option>
-                  <option value="cosmétique">Cosmétique</option>
-                  <option value="parfum">Parfum</option>
-                  <option value="épicerie">Épicerie</option>
-                  <option value="autre">Autre</option>
+                  class="w-full h-11 lg:h-9 border border-outline rounded px-md font-body-base text-on-surface bg-surface-container-lowest focus:outline-none focus:border-primary-container focus:ring-1 focus:ring-primary-container appearance-none transition-colors">
+                  <option value="" disabled selected data-i18n="studio.product.categoryPlaceholder">Sélectionner…</option>
+                  <option value="boisson" data-i18n="categories.boisson">Boisson</option>
+                  <option value="boisson énergisante" data-i18n="categories.boisson_énergisante">Boisson énergisante</option>
+                  <option value="alcool" data-i18n="categories.alcool">Alcool</option>
+                  <option value="chips" data-i18n="categories.chips">Chips</option>
+                  <option value="snack" data-i18n="categories.snack">Snack</option>
+                  <option value="cosmétique" data-i18n="categories.cosmétique">Cosmétique</option>
+                  <option value="parfum" data-i18n="categories.parfum">Parfum</option>
+                  <option value="épicerie" data-i18n="categories.épicerie">Épicerie</option>
+                  <option value="autre" data-i18n="categories.autre">Autre</option>
                 </select>
               </div>
-              <div class="flex-1 flex flex-col gap-xs">
-                <label class="font-label-md text-label-md text-on-surface" for="flavor">Goût <span class="text-outline font-body-sm">(optionnel)</span></label>
-                <input id="flavor" type="text" placeholder="Ex : pêche"
-                  class="w-full h-9 border border-outline-variant rounded px-md font-body-base text-on-surface bg-surface-container-lowest focus:outline-none focus:border-primary-container focus:ring-1 focus:ring-primary-container placeholder:text-outline transition-colors" />
-              </div>
             </div>
 
-            <div class="flex flex-col gap-xs">
-              <label class="font-label-md text-label-md text-on-surface" for="product-count">Nombre de produits distincts <span class="text-outline font-body-sm">(optionnel)</span></label>
-              <input id="product-count" type="number" min="1" max="6" step="1" inputmode="numeric" placeholder="Détecté automatiquement"
-                class="w-full h-9 border border-outline-variant rounded px-md font-body-base text-on-surface bg-surface-container-lowest focus:outline-none focus:border-primary-container focus:ring-1 focus:ring-primary-container placeholder:text-outline transition-colors" />
-              <p class="font-body-sm text-body-sm text-outline">À renseigner si l'IA se trompe sur le nombre de produits à afficher (1 à 6).</p>
-            </div>
+            <details id="product-more" class="group">
+              <summary class="flex items-center gap-xs cursor-pointer list-none text-on-surface hover:text-primary-container transition-colors min-h-[44px] lg:min-h-0">
+                <span class="material-symbols-outlined text-[18px] transform group-open:rotate-90 transition-transform" aria-hidden="true">chevron_right</span>
+                <span class="font-label-md text-label-md"><span data-i18n="studio.product.more">Plus d'options</span> <span class="text-outline font-body-sm">(<span data-i18n="studio.product.moreHint">goût, forme, nombre de produits</span>)</span></span>
+              </summary>
+              <div class="flex flex-col gap-md mt-md">
+                <div class="flex flex-col gap-xs">
+                  <label class="font-label-md text-label-md text-on-surface" for="flavor"><span data-i18n="studio.product.flavor">Goût</span> <span class="text-outline font-body-sm" data-i18n="studio.product.optional">(optionnel)</span></label>
+                  <input id="flavor" type="text" placeholder="Ex : pêche" data-i18n-attr="placeholder:studio.product.flavorPlaceholder"
+                    class="w-full h-11 lg:h-9 border border-outline rounded px-md font-body-base text-on-surface bg-surface-container-lowest focus:outline-none focus:border-primary-container focus:ring-1 focus:ring-primary-container placeholder:text-outline transition-colors" />
+                </div>
 
-            <div class="flex flex-col gap-xs">
-              <div class="flex justify-between items-baseline">
-                <label class="font-label-md text-label-md text-on-surface" for="description">Description <span class="text-outline font-body-sm">(optionnel)</span></label>
-                <span id="desc-count" class="font-label-sm text-label-sm text-outline hidden">0/120</span>
+                <div class="flex flex-col gap-xs">
+                  <div class="flex justify-between items-baseline">
+                    <label class="font-label-md text-label-md text-on-surface" for="description"><span data-i18n="studio.product.description">Description</span> <span class="text-outline font-body-sm" data-i18n="studio.product.optional">(optionnel)</span></label>
+                    <span id="desc-count" class="font-label-sm text-label-sm text-outline hidden">0/120</span>
+                  </div>
+                  <textarea id="description" rows="2" maxlength="120" placeholder="Ex : croissant fourré au Nutella" data-i18n-attr="placeholder:studio.product.descriptionPlaceholder"
+                    class="w-full border border-outline rounded px-md py-sm font-body-base text-on-surface bg-surface-container-lowest focus:outline-none focus:border-primary-container focus:ring-1 focus:ring-primary-container placeholder:text-outline transition-colors resize-none"></textarea>
+                  <p class="font-body-sm text-body-sm text-outline" data-i18n="studio.product.descriptionHelp">Précisez la forme réelle : canette, sachet, pot, coffret…</p>
+                </div>
+
+                <div class="flex flex-col gap-xs">
+                  <label class="font-label-md text-label-md text-on-surface" for="product-count"><span data-i18n="studio.product.count">Nombre de produits distincts</span> <span class="text-outline font-body-sm" data-i18n="studio.product.optional">(optionnel)</span></label>
+                  <input id="product-count" type="number" min="1" max="6" step="1" inputmode="numeric" placeholder="Détecté automatiquement" data-i18n-attr="placeholder:studio.product.countPlaceholder"
+                    class="w-full h-11 lg:h-9 border border-outline rounded px-md font-body-base text-on-surface bg-surface-container-lowest focus:outline-none focus:border-primary-container focus:ring-1 focus:ring-primary-container placeholder:text-outline transition-colors" />
+                  <p class="font-body-sm text-body-sm text-outline" data-i18n="studio.product.countHelp">À renseigner si l'IA se trompe sur le nombre de produits à afficher (1 à 6).</p>
+                </div>
               </div>
-              <textarea id="description" rows="2" maxlength="120" placeholder="Ex : croissant fourré au Nutella"
-                class="w-full border border-outline-variant rounded px-md py-sm font-body-base text-on-surface bg-surface-container-lowest focus:outline-none focus:border-primary-container focus:ring-1 focus:ring-primary-container placeholder:text-outline transition-colors resize-none"></textarea>
-              <p class="font-body-sm text-body-sm text-outline">Précisez la forme réelle : canette, sachet, pot, coffret…</p>
-            </div>
+            </details>
           </div>
 
-          <div class="h-px bg-outline-variant"></div>
+          <div class="h-px shrink-0 bg-outline-variant"></div>
 
-          <!-- Thèmes -->
-          <div class="flex flex-col gap-sm">
-            <div class="flex justify-between items-baseline">
-              <span class="font-label-sm text-label-sm font-semibold tracking-[0.08em] uppercase text-secondary">Thème de mise en scène</span>
-              <span class="font-label-sm text-label-sm text-outline">1 thème</span>
-            </div>
+          <!-- Étape 3 : mise en scène -->
+          <div id="step-scene" class="flex flex-col gap-sm">
+            <h2 id="themes-title" class="flex items-center gap-sm font-label-md text-label-md text-on-surface">
+              <span class="js-step-badge w-6 h-6 rounded-full border border-outline-variant text-secondary flex items-center justify-center font-label-sm text-label-sm font-semibold shrink-0" data-step="3">3</span>
+              <span data-i18n="studio.steps.three.title">Choisissez un thème</span>
+            </h2>
             <!-- Injecté par renderThemeButtons() (source unique THEMES). -->
-            <div id="themes" class="grid grid-cols-4 gap-sm"></div>
-          </div>
+            <div id="themes" role="group" aria-labelledby="themes-title" class="grid grid-cols-4 md:grid-cols-7 lg:grid-cols-4 gap-sm"></div>
 
-          <!-- Direction artistique manuelle (repliée par défaut) : remplace la scène du thème -->
-          <details id="art-direction-details" class="group flex flex-col gap-md">
-            <summary class="flex items-center gap-xs cursor-pointer list-none text-on-surface hover:text-primary-container transition-colors">
-              <span class="material-symbols-outlined text-[18px] transform group-open:rotate-90 transition-transform">chevron_right</span>
-              <span class="font-label-md text-label-md">Précisez le décor souhaité <span class="text-outline font-body-sm">(optionnel)</span></span>
-            </summary>
-            <div class="flex flex-col gap-sm mt-sm">
-              <div class="flex justify-end">
-                <span id="art-count" class="font-label-sm text-label-sm text-outline hidden">0/200</span>
+            <!-- Direction artistique manuelle (repliée par défaut) : remplace la scène du thème -->
+            <details id="art-direction-details" class="group flex flex-col gap-md">
+              <summary class="flex items-center gap-xs cursor-pointer list-none text-on-surface hover:text-primary-container transition-colors min-h-[44px] lg:min-h-0">
+                <span class="material-symbols-outlined text-[18px] transform group-open:rotate-90 transition-transform" aria-hidden="true">chevron_right</span>
+                <span class="font-label-md text-label-md"><span data-i18n="studio.art.summary">Précisez le décor souhaité</span> <span class="text-outline font-body-sm" data-i18n="studio.product.optional">(optionnel)</span></span>
+              </summary>
+              <div class="flex flex-col gap-sm mt-sm">
+                <div class="flex justify-end">
+                  <span id="art-count" class="font-label-sm text-label-sm text-outline hidden">0/200</span>
+                </div>
+                <textarea id="art-direction" rows="3" maxlength="200" aria-label="Décor souhaité" placeholder="Ex : sur une botte de paille dans une grange en pierre, lumière rasante du matin" data-i18n-attr="aria-label:studio.art.label;placeholder:studio.art.placeholder"
+                  class="w-full border border-outline rounded px-md py-sm font-body-base text-on-surface bg-surface-container-lowest focus:outline-none focus:border-primary-container focus:ring-1 focus:ring-primary-container placeholder:text-outline transition-colors resize-none"></textarea>
+                <p class="font-body-sm text-body-sm text-outline" data-i18n="studio.art.help">S'il est rempli, ce décor remplace celui du thème. La fidélité au packaging reste garantie.</p>
               </div>
-              <textarea id="art-direction" rows="3" maxlength="200" placeholder="Ex : sur une botte de paille dans une grange en pierre, lumière rasante du matin"
-                class="w-full border border-outline-variant rounded px-md py-sm font-body-base text-on-surface bg-surface-container-lowest focus:outline-none focus:border-primary-container focus:ring-1 focus:ring-primary-container placeholder:text-outline transition-colors resize-none"></textarea>
-              <p class="font-body-sm text-body-sm text-outline">S'il est rempli, ce décor remplace celui du thème. La fidélité au packaging reste garantie.</p>
-            </div>
-          </details>
+            </details>
+          </div>
         </div>
 
         <!-- Pied de panneau : action primaire (fixe) -->
-        <div class="flex-shrink-0 border-t border-outline-variant bg-surface-container-lowest p-md flex flex-col gap-sm">
-          <button id="generate" class="w-full h-10 bg-primary-container text-on-primary rounded flex items-center justify-center gap-sm hover:bg-primary transition-colors disabled:opacity-60">
+        <div class="flex-shrink-0 border-t border-outline-soft bg-surface-container-lowest p-md flex flex-col gap-sm">
+          <p id="form-error" class="hidden font-body-sm text-body-sm text-error text-center" role="alert"></p>
+          <button id="generate" class="w-full h-11 lg:h-10 bg-primary-container text-on-primary rounded flex items-center justify-center gap-sm hover:bg-primary transition-colors disabled:opacity-60">
             <span class="material-symbols-outlined text-[16px]">auto_awesome</span>
-            <span class="js-generate-label font-label-md text-label-md">Générer le visuel</span>
+            <span class="js-generate-label font-label-md text-label-md" data-i18n="studio.generate">Générer le visuel</span>
           </button>
-          <span id="unit-cost" class="font-label-sm text-label-sm text-outline text-center">Coût par visuel : chargement…</span>
-          <a href="/legal.html#cgu" class="font-label-sm text-label-sm text-outline text-center underline hover:text-on-surface">Conditions d'utilisation</a>
+          <!-- Générations restantes (client) ou coût unitaire (admin) : cf. loadUsage(). -->
+          <p id="usage-info" class="font-label-sm text-label-sm text-outline text-center" data-i18n="studio.usage.duration">30 à 120 s par visuel</p>
+          <a href="/legal.html#cgu" class="font-label-sm text-label-sm text-outline text-center underline hover:text-on-surface inline-flex items-center justify-center min-h-[44px] lg:min-h-0" data-i18n="studio.terms">Conditions d'utilisation</a>
         </div>
       </section>
 
       <!-- Toile / aperçu -->
-      <section class="flex-grow min-w-0 min-h-[360px] lg:min-h-0 flex items-center justify-center bg-surface-container-lowest rounded-xl border border-outline-variant p-lg relative overflow-hidden">
+      <section class="w-full md:max-w-[620px] md:self-center lg:max-w-none lg:self-auto flex-grow min-w-0 min-h-[360px] lg:min-h-0 flex items-center justify-center bg-surface-container-lowest rounded-xl border border-outline-variant p-lg relative overflow-hidden">
         <div id="result-body" class="w-full flex flex-col items-center justify-center gap-md text-center">
-          <!-- État vide par défaut -->
-          <div class="flex flex-col items-center gap-md opacity-60">
-            <span class="material-symbols-outlined text-[48px] text-outline-variant">auto_awesome</span>
+          <!-- État vide (défaut + après annulation, remis en place par showEmpty()) :
+               un exemple avant/après et le rappel des trois étapes, cochées au fil
+               de la saisie. -->
+          <div id="empty-state" class="flex flex-col items-center gap-lg max-w-[480px]">
+            <figure class="m-0 flex flex-col items-center gap-sm">
+              <span class="font-label-sm text-label-sm font-semibold tracking-[0.08em] uppercase text-secondary" data-i18n="studio.empty.example">Exemple</span>
+              <div class="flex items-center gap-sm lg:gap-md">
+                <div class="flex flex-col items-center gap-xs">
+                  <div class="w-24 h-24 lg:w-32 lg:h-32 rounded-lg overflow-hidden border border-outline-variant bg-surface-container-low">
+                    <img src="/img/site/hero-avant.webp" width="600" height="600" alt="Exemple : photo brute d'un produit, prise au smartphone" data-i18n-attr="alt:studio.empty.beforeAlt" class="w-full h-full object-cover" decoding="async" />
+                  </div>
+                  <span class="font-label-sm text-label-sm text-outline" data-i18n="studio.empty.before">Votre photo</span>
+                </div>
+                <span class="material-symbols-outlined text-[20px] text-outline" aria-hidden="true">arrow_forward</span>
+                <div class="flex flex-col items-center gap-xs">
+                  <div class="w-28 lg:w-40 aspect-[4/5] rounded-lg overflow-hidden border border-outline-variant bg-surface-container-low shadow-[0_1px_2px_rgba(26,28,28,0.06),0_12px_32px_rgba(26,28,28,0.10)]">
+                    <img src="/img/site/hero-apres.webp" width="896" height="1152" alt="Exemple : le même produit mis en scène dans un visuel publicitaire" data-i18n-attr="alt:studio.empty.afterAlt" class="w-full h-full object-cover" decoding="async" />
+                  </div>
+                  <span class="font-label-sm text-label-sm text-outline" data-i18n="studio.empty.after">Le visuel</span>
+                </div>
+              </div>
+            </figure>
             <div class="flex flex-col gap-xs">
-              <span class="font-headline-md text-headline-md text-on-surface">Toile de création</span>
-              <span class="font-body-sm text-body-sm text-secondary">Configurez vos paramètres puis cliquez sur « Générer » pour visualiser le résultat.</span>
+              <span class="font-headline-md text-headline-md text-on-surface" data-i18n="studio.empty.title">Votre visuel apparaîtra ici</span>
+              <span class="font-body-sm text-body-sm text-secondary" data-i18n="studio.empty.text">Suivez les trois étapes, puis cliquez sur « Générer le visuel ». Comptez 30 à 120 secondes.</span>
             </div>
+            <ol class="flex flex-wrap justify-center gap-sm">
+              <li class="flex items-center gap-xs pl-xs pr-md py-xs rounded-full border border-outline-variant bg-surface-container-lowest">
+                <span class="js-step-badge w-6 h-6 rounded-full border border-outline-variant text-secondary flex items-center justify-center font-label-sm text-label-sm font-semibold shrink-0" data-step="1">1</span>
+                <span class="font-label-md text-label-md text-on-surface-variant" data-i18n="studio.steps.short.photos">Photos</span>
+              </li>
+              <li class="flex items-center gap-xs pl-xs pr-md py-xs rounded-full border border-outline-variant bg-surface-container-lowest">
+                <span class="js-step-badge w-6 h-6 rounded-full border border-outline-variant text-secondary flex items-center justify-center font-label-sm text-label-sm font-semibold shrink-0" data-step="2">2</span>
+                <span class="font-label-md text-label-md text-on-surface-variant" data-i18n="studio.steps.short.product">Produit</span>
+              </li>
+              <li class="flex items-center gap-xs pl-xs pr-md py-xs rounded-full border border-outline-variant bg-surface-container-lowest">
+                <span class="js-step-badge w-6 h-6 rounded-full border border-outline-variant text-secondary flex items-center justify-center font-label-sm text-label-sm font-semibold shrink-0" data-step="3">3</span>
+                <span class="font-label-md text-label-md text-on-surface-variant" data-i18n="studio.steps.short.scene">Mise en scène</span>
+              </li>
+            </ol>
           </div>
         </div>
       </section>

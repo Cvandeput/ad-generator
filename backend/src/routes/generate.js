@@ -7,7 +7,16 @@ import requireAuth from '../middleware/requireAuth.js';
 import db, { OUTPUTS_DIR, UPLOADS_DIR } from '../db.js';
 import { config } from '../config.js';
 import { costForModel } from '../pricing.js';
+import { purgeGenerationFiles } from '../storage.js';
+import { isAdmin } from '../admin.js';
 import { THEMES, CATEGORIES, MAX_PRODUCTS } from '../../../shared/prompt.mjs';
+
+// Facturation optionnelle, chargée comme dans server.js : BILLING_ENABLED=false
+// → aucun module de facturation importé, /api/usage répond sans état de quota.
+// quotaState() ne sert qu'à la requête, donc après la migration faite par
+// billing/routes.js (importé par server.js).
+const BILLING = process.env.BILLING_ENABLED === 'true';
+const billingQuota = BILLING ? await import('../billing/quota.js') : null;
 
 const router = Router();
 
@@ -121,13 +130,27 @@ async function performGeneration(genId, params, images) {
     const outPath = path.join(OUTPUTS_DIR, `${genId}.${ext}`);
     fs.writeFileSync(outPath, buf);
 
-    db.prepare(
+    // Garde « compte encore actif » : l'appel à n8n dure de longues secondes, et
+    // le compte a pu être supprimé entre-temps. Sans elle, on réécrirait
+    // `output_path`/`prompt_used` sur la ligne pseudonymisée et l'image
+    // resterait sur le disque. Aucune ligne touchée (compte supprimé, ou
+    // génération effacée pendant l'appel) → on efface ce qu'on vient d'écrire.
+    const info = db.prepare(
       `UPDATE generations SET status='done', output_path=?, mime_type=?, prompt_used=?, art_direction_source=?,
-       cost_usd=?, model=?, image_size=? WHERE id=?`
+       cost_usd=?, model=?, image_size=? WHERE id=? AND user_id IN (SELECT id FROM users WHERE deleted_at IS NULL)`
     ).run(outPath, mimeType, promptUsed, artDirectionSource, cost.usd, cost.model, cost.imageSize, genId);
+    if (info.changes === 0) {
+      purgeGenerationFiles(genId, outPath);
+      const gone = new Error('Non authentifié');
+      gone.status = 401;
+      gone.genId = genId;
+      gone.accountGone = true;
+      throw gone;
+    }
 
     return { id: genId, status: 'done', url: `/api/image/${genId}`, costUsd: cost.usd, costEur: cost.usd * config.usdToEur, model: cost.model };
   } catch (err) {
+    if (err.accountGone) throw err; // rien à écrire sur une ligne pseudonymisée
     const message = err.name === 'AbortError' ? 'Délai dépassé (n8n/Gemini)' : err.message;
     db.prepare(`UPDATE generations SET status='error', error=? WHERE id=?`).run(message, genId);
     const wrapped = new Error(message);
@@ -137,13 +160,24 @@ async function performGeneration(genId, params, images) {
   }
 }
 
+// Le coût interne (fournisseur, modèle, montant) ne sort que vers un admin : le
+// client paie un prix de formule, pas le prix de revient.
+function publicResult(result, userId) {
+  if (isAdmin(userId)) return result;
+  const { costUsd, costEur, model, ...rest } = result;
+  return rest;
+}
+
+// Même garde que la mise à jour finale : une requête partie avant la
+// suppression du compte (upload en cours) n'insère rien. Retourne null alors.
 function insertPending(p) {
-  return db
+  const info = db
     .prepare(
       `INSERT INTO generations (user_id, brand, category, flavor, theme, description, art_direction, product_count, input_count, status)
-       VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, 'pending')`
+       SELECT ?, ?, ?, ?, ?, ?, ?, ?, ?, 'pending' WHERE EXISTS (SELECT 1 FROM users WHERE id = ? AND deleted_at IS NULL)`
     )
-    .run(p.userId, p.brand, p.category, p.flavor || null, p.theme, p.description || null, p.artDirection || null, p.productCount || null, p.inputCount).lastInsertRowid;
+    .run(p.userId, p.brand, p.category, p.flavor || null, p.theme, p.description || null, p.artDirection || null, p.productCount || null, p.inputCount, p.userId);
+  return info.changes ? info.lastInsertRowid : null;
 }
 
 router.post('/generate', requireAuth, hourly, daily, upload.array('images', MAX_IMAGES), async (req, res) => {
@@ -171,6 +205,7 @@ router.post('/generate', requireAuth, hourly, daily, upload.array('images', MAX_
   if (sniffed.some((m) => !m)) return res.status(400).json({ error: 'Un des fichiers n’est pas une image JPEG/PNG/WebP valide' });
 
   const genId = insertPending({ userId: req.session.userId, brand, category, flavor, theme, description, artDirection, productCount, inputCount: files.length });
+  if (!genId) return res.status(401).json({ error: 'Non authentifié' });
 
   // Persiste les images d'entrée (réutilisées par une éventuelle relance).
   const inputDir = path.join(UPLOADS_DIR, String(genId));
@@ -183,7 +218,7 @@ router.post('/generate', requireAuth, hourly, daily, upload.array('images', MAX_
 
   try {
     const result = await performGeneration(genId, { userId: req.session.userId, brand, category, flavor, theme, description, artDirection, productCount }, images);
-    res.json(result);
+    res.json(publicResult(result, req.session.userId));
   } catch (err) {
     res.status(err.status || 502).json({ id: err.genId || genId, status: 'error', error: err.message });
   }
@@ -211,6 +246,7 @@ router.post('/generation/:id/retry', requireAuth, hourly, daily, async (req, res
     productCount: orig.product_count || null,
   };
   const genId = insertPending({ ...params, inputCount: images.length });
+  if (!genId) return res.status(401).json({ error: 'Non authentifié' });
 
   const srcDir = path.join(UPLOADS_DIR, String(orig.id));
   const dstDir = path.join(UPLOADS_DIR, String(genId));
@@ -218,7 +254,7 @@ router.post('/generation/:id/retry', requireAuth, hourly, daily, async (req, res
   for (const name of fs.readdirSync(srcDir)) fs.copyFileSync(path.join(srcDir, name), path.join(dstDir, name));
 
   try {
-    res.json(await performGeneration(genId, params, images));
+    res.json(publicResult(await performGeneration(genId, params, images), req.session.userId));
   } catch (err) {
     res.status(err.status || 502).json({ id: err.genId || genId, status: 'error', error: err.message });
   }
@@ -264,6 +300,9 @@ router.get('/history', requireAuth, (req, res) => {
     if (r.status in counts) counts[r.status] = r.n;
   }
 
+  // Coût et modèle : réservés aux admins (cf. publicResult). L'historique
+  // client ne les affiche pas.
+  const admin = isAdmin(uid);
   res.json({
     items: rows.map((r) => ({
       id: r.id,
@@ -274,8 +313,7 @@ router.get('/history', requireAuth, (req, res) => {
       description: r.description,
       status: r.status,
       error: r.error,
-      costEur: r.cost_usd * config.usdToEur,
-      model: r.model,
+      ...(admin ? { costEur: r.cost_usd * config.usdToEur, model: r.model } : {}),
       createdAt: r.created_at,
       url: r.status === 'done' ? `/api/image/${r.id}` : null,
     })),
@@ -283,9 +321,34 @@ router.get('/history', requireAuth, (req, res) => {
   });
 });
 
-// Suivi de consommation : ce mois, tout-temps, 6 derniers mois + prix unitaire courant.
+// État du quota d'abonnement (facturation active uniquement). Un admin n'a pas
+// de décompte : quotaState renvoie Infinity, que JSON sérialiserait en null.
+function billingState(uid) {
+  if (!billingQuota) return null;
+  try {
+    const s = billingQuota.quotaState(uid);
+    if (s.unlimited) return { plan: s.planKey, used: s.used, unlimited: true };
+    return {
+      plan: s.planKey,
+      used: s.used,
+      quota: s.quota,
+      remaining: s.remaining,
+      credits: s.credits,
+      lifetime: s.lifetime, // formule gratuite : quota « à vie », pas mensuel
+      periodEnd: s.periodEnd,
+    };
+  } catch (err) {
+    // Le compteur d'en-tête ne doit pas tomber avec la facturation.
+    console.warn(`[usage] état du quota indisponible : ${err.message}`);
+    return null;
+  }
+}
+
+// Suivi de consommation : ce mois, tout-temps, 6 derniers mois, état du quota.
+// Montants et prix unitaire (prix de revient) : admins seulement.
 router.get('/usage', requireAuth, (req, res) => {
   const uid = req.session.userId;
+  const admin = isAdmin(uid);
   const month = new Date().toISOString().slice(0, 7); // YYYY-MM (UTC)
   const cur = db
     .prepare(
@@ -303,17 +366,23 @@ router.get('/usage', requireAuth, (req, res) => {
     )
     .all(uid);
 
-  const withEur = (r) => ({ count: r.n, usd: r.usd, eur: r.usd * config.usdToEur });
-  const unit = unitCost();
-  res.json({
+  const withEur = (r) => (admin ? { count: r.n, usd: r.usd, eur: r.usd * config.usdToEur } : { count: r.n });
+  const body = {
     month,
-    rate: config.usdToEur,
-    unit: { usd: unit.usd, eur: unit.usd * config.usdToEur, model: unit.model, imageSize: unit.imageSize },
+    isAdmin: admin,
     quota: { perHour: config.genPerHour, perDay: config.genPerDay },
     currentMonth: withEur(cur),
     allTime: withEur(all),
     months: months.map((r) => ({ month: r.m, ...withEur(r) })),
-  });
+  };
+  if (admin) {
+    const unit = unitCost();
+    body.rate = config.usdToEur;
+    body.unit = { usd: unit.usd, eur: unit.usd * config.usdToEur, model: unit.model, imageSize: unit.imageSize };
+  }
+  const billing = billingState(uid);
+  if (billing) body.billing = billing;
+  res.json(body);
 });
 
 // Sert l'image générée. Vérifie l'appartenance au compte.
