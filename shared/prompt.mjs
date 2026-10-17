@@ -66,11 +66,20 @@ export const THEME_BRIEFS = {
       'seamless studio backdrop in a tone derived from the packaging colors',
       'matte stone or ceramic tabletop with a soft graduated wall behind',
       'linen-covered surface with one shallow window-light shadow',
+      'soft paper sweep in a packaging-derived pastel, gentle floor-to-wall curve',
+      'dark moody studio, a single pool of light on a matte surface',
+      'textured plaster wall backdrop with one narrow hard shadow',
     ],
     light: 'large softbox key from one side, gentle rim light to separate the product from the backdrop, soft natural shadow',
     palette: 'two or three tones derived from the packaging, neutral and calm',
     energy: 'still, composed, editorial',
     camera: 'eye level or slightly above, 85mm look, shallow but readable depth of field',
+    cameras: [
+      'eye level or slightly above, 85mm look, shallow but readable depth of field',
+      'three-quarter high angle looking down, 100mm, product centred',
+      'straight-on front view, symmetrical, 85mm, product dead centre',
+      'tight macro on the upper third of the product, soft falloff',
+    ],
     props: 'at most two small real props tied to the product (an ingredient, a glass), placed off-centre, never touching the label',
     forbid: 'busy scenes, landscapes, kitchens, farms, smoke, neon, podiums with gold trim',
   },
@@ -89,6 +98,12 @@ export const THEME_BRIEFS = {
     palette: 'saturated summer tones: azure, sand, coral, lime, warm white',
     energy: 'relaxed, bright, vacation',
     camera: 'low sun angle, wide-ish lens, product in the near foreground',
+    cameras: [
+      'low sun angle, wide-ish lens, product in the near foreground',
+      'high three-quarter looking down onto the surface, 35mm',
+      'ground-level angle with the horizon high, product towering',
+      'eye-level medium shot, product off-centre, the scene breathing around it',
+    ],
     props: 'only what belongs to the product (citrus and ice for a drink, sunglasses or a straw hat for a cosmetic, a bowl for snacks), maximum three',
     forbid: 'ice cubes or condensation on non-beverage products, indoor scenes, wet sand under food packaging, generic stock-photo beach clichés',
   },
@@ -101,11 +116,19 @@ export const THEME_BRIEFS = {
       'product levitating in a void of saturated color with a single dynamic element',
       'infinite reflective floor with giant floating shapes echoing the packaging colors',
       'theatrical stage with colored spotlights and dramatic haze',
+      'product oversized among floating glass prisms splitting colored light',
+      'retro-futurist set of concentric neon rings around the product',
     ],
     light: 'dramatic colored spotlights, strong chiaroscuro, glossy highlights',
     palette: 'bold complementary color blocking pushed to the extreme, built from the packaging colors',
     energy: 'explosive but controlled: one frozen high-speed element, not a storm of everything',
     camera: 'dynamic low or Dutch angle, wide lens, product centred and large in frame',
+    cameras: [
+      'dynamic low or Dutch angle, wide lens, product centred and large in frame',
+      'straight-on hero shot, product monumental and centred, symmetrical',
+      'extreme low angle looking up, product towering against the backdrop',
+      'slight top-down three-quarter over a reflective floor',
+    ],
     props: 'one dynamic element matched to the product (liquid crown for a drink, flying crumbs for a snack, silk or petals for a perfume, sparks for tech), nothing else',
     forbid: 'electric arcs plus smoke plus shattered ice plus sparks all at once, anything covering the label, cartoon look',
   },
@@ -126,6 +149,12 @@ export const THEME_BRIEFS = {
     palette: 'punchy high-contrast: the packaging colors against concrete, tarmac, turf or steel',
     energy: 'kinetic: water spray, chalk or dust kicked up, condensation droplets, motion-blurred athletes as distant silhouettes with no visible faces',
     camera: 'very low angle at ground level, wide lens, product large in the foreground, action blurred behind',
+    cameras: [
+      'very low angle at ground level, wide lens, product large in the foreground, action blurred behind',
+      'eye-level tracking shot, product sharp, motion blur sweeping behind',
+      'high angle looking down at the surface, product and ground texture',
+      'dramatic Dutch angle, wide lens, action diagonal across the frame',
+    ],
     props: 'the surface itself plus one or two sport objects in use (a ball mid-bounce, a towel, a whistle, chalk), never arranged as a still life',
     forbid: 'locker rooms, benches, empty gyms, isolated dumbbells or kettlebells, yoga mats, water bottles as decoration, clean white studios',
   },
@@ -143,6 +172,12 @@ export const THEME_BRIEFS = {
     palette: 'deep night blues and blacks with magenta, gold and electric accents',
     energy: 'loud, festive, alive: confetti mid-air, glitter, blurred dancing crowd in the far background',
     camera: 'eye level to slightly low, shallow depth of field, product sharp against bokeh',
+    cameras: [
+      'eye level to slightly low, shallow depth of field, product sharp against bokeh',
+      'low angle looking up, lights streaking overhead, product large',
+      'tight three-quarter, product sharp, dense colored bokeh filling the frame',
+      'slightly high angle over the counter, reflections and bokeh below',
+    ],
     props: 'confetti, glasses, sparklers, garlands — what a party actually has, maximum three kinds',
     forbid: 'empty clubs, daylight, faces, hands holding the product, sterile bar shots',
   },
@@ -155,11 +190,19 @@ export const THEME_BRIEFS = {
       'hotel bar in leather and dark walnut with a single warm lamp',
       'velvet or heavy silk drape studio in a color drawn from the packaging',
       'polished stone slab with a thin shaft of light across it',
+      'still black reflecting pool, the product mirrored, one precise rim of light',
+      'soft gradient backdrop in a deep packaging tone, product on brushed metal',
     ],
     light: 'single soft key with a precise rim, deep controlled shadows, one specular highlight on the packaging',
     palette: 'derived from the packaging: deep green, burgundy, ivory, champagne, graphite — black-and-gold only if the packaging is black and gold',
     energy: 'silent, slow, exclusive',
     camera: 'eye level, longer lens, generous negative space, product slightly off-centre',
+    cameras: [
+      'eye level, longer lens, generous negative space, product slightly off-centre',
+      'tight detail with a single precise highlight, the rest falling into shadow',
+      'low angle, product rising against the dark backdrop, empty space above',
+      'straight-on, perfectly centred, symmetrical and still',
+    ],
     props: 'at most one precious object (crystal glass, silk ribbon, a single flower), never a pedestal',
     forbid: 'marble podiums with gold rims, smoke wisps, spotlights from above, jewellery-store clichés, cluttered sets',
   },
@@ -177,6 +220,12 @@ export const THEME_BRIEFS = {
     palette: 'packaging colors first, then traditional accents: deep red, forest green, warm gold, snow white',
     energy: 'calm, warm, generous',
     camera: 'eye level, shallow depth of field, product sharp among soft festive bokeh',
+    cameras: [
+      'eye level, shallow depth of field, product sharp among soft festive bokeh',
+      'high three-quarter over the table, candles and props soft around it',
+      'low angle, warm bokeh rising behind the product',
+      'tight close-up, product sharp, dense warm bokeh',
+    ],
     props: 'three at most, all from the chosen register (no baubles on a snowy branch scene, no snow on a dining table)',
     forbid: 'baubles + snow + fireplace + tree + fairy lights all together, red-and-green-only palette, cartoon Santa elements',
   },
@@ -222,7 +271,7 @@ export const DA_SYSTEM = `You are an art director for commercial product photogr
 
 STEP 1 — INVENTORY. Look at every reference photo. List each DISTINCT product (packaging unit) visible across ALL photos. Two photos of the same packaging from different angles are ONE product. One photo may contain several different products: list each of them. For each product give a short name (as printed on the packaging), its physical form (can, bottle, bag, jar, box, tube…) and its dominant packaging colors. If the brief states an expected product count, honor it and reconcile with what you see.
 
-STEP 2 — SCENE. The theme brief defines the WORLD of the picture (its settings, light, energy). Choose ONE candidate setting from the brief that fits what the product is and when it is consumed, then make it concrete: the exact surface the product(s) rest on, at most three props that belong to that world AND to that product, the framing, the light, the palette (start from the packaging colors), the mood. Never leave the theme's world for the product's "natural environment": a Sport theme is an arena, not a gym storage room; a Luxe theme is materials and restraint, not a gold podium.
+STEP 2 — SCENE. The theme brief defines the WORLD of the picture (its setting, light, energy). It gives you ONE committed setting: keep that exact setting — do NOT swap it for another — and make it concrete: the exact surface the product(s) rest on, at most three props that belong to that world AND to that product, the framing, the light, the palette (start from the packaging colors), the mood. Never leave the theme's world for the product's "natural environment": a Sport theme is an arena, not a gym storage room; a Luxe theme is materials and restraint, not a gold podium.
 
 STEP 3 — ARRANGEMENT. If there are several products, describe how they are grouped in one frame so that every label faces the camera and no product hides another.
 
@@ -260,22 +309,48 @@ export const DA_SCHEMA = {
 };
 
 // Brief textuel envoyé au DA pour un thème.
-export function themeBriefText(theme) {
+export function themeBriefText(theme, choice = {}) {
   const b = THEME_BRIEFS[theme] || THEME_BRIEFS.classique;
+  const cams = b.cameras && b.cameras.length ? b.cameras : [b.camera];
+  const si = Number.isInteger(choice.setting) ? choice.setting : 0;
+  const ci = Number.isInteger(choice.camera) ? choice.camera : 0;
+  const setting = b.settings[si] || b.settings[0];
+  const camera = cams[ci] || cams[0];
   return [
     `THEME: ${b.label}`,
     `INTENT: ${b.intent}`,
-    `CANDIDATE SETTINGS (choose one): ${b.settings.map((s, i) => `(${i + 1}) ${s}`).join(' ')}`,
+    `SETTING (use this exact setting — make it concrete, do NOT swap it for another): ${setting}`,
     `LIGHT: ${b.light}`,
     `PALETTE: ${b.palette}`,
     `ENERGY: ${b.energy}`,
-    `CAMERA: ${b.camera}`,
+    `CAMERA: ${camera}`,
     `PROPS: ${b.props}`,
     `FORBID: ${b.forbid}`,
   ].join('\n');
 }
 
-export const daUserText = ({ brand, category, description, flavor, theme, productCount }) =>
+// Tirage pondéré (uniforme) du décor et de la caméra, avec anti-répétition :
+// exclut les indices vus récemment tant qu'il reste des options libres.
+// recent = { setting:number[], camera:number[] } (les K derniers tirages du thème).
+// Retourne { setting, camera }. Fonction pure (rnd injectable pour les tests).
+export function pickVariant(theme, recent = {}, rnd = Math.random) {
+  const b = THEME_BRIEFS[theme] || THEME_BRIEFS.classique;
+  const nS = (b.settings && b.settings.length) || 1;
+  const nC = (b.cameras && b.cameras.length) || 1;
+  const pick = (n, used) => {
+    let pool = [];
+    for (let i = 0; i < n; i++) if (!used.includes(i)) pool.push(i);
+    if (!pool.length) {                       // tout a été vu : on n'exclut que le dernier
+      const last = used.length ? used[used.length - 1] : -1;
+      for (let i = 0; i < n; i++) if (i !== last) pool.push(i);
+      if (!pool.length) pool = [0];
+    }
+    return pool[Math.floor(rnd() * pool.length)];
+  };
+  return { setting: pick(nS, recent.setting || []), camera: pick(nC, recent.camera || []) };
+}
+
+export const daUserText = ({ brand, category, description, flavor, theme, productCount, choice }) =>
   [
     `brand: ${brand}`,
     `category: ${category}`,
@@ -283,7 +358,7 @@ export const daUserText = ({ brand, category, description, flavor, theme, produc
     `flavour: ${flavor || '(none)'}`,
     `expected product count: ${productCount ? productCount : '(not specified — count from the photos)'}`,
     '',
-    themeBriefText(theme),
+    themeBriefText(theme, choice),
   ].join('\n');
 
 // Exemples few-shot (texte seulement : ils fixent le niveau de spécificité et
@@ -291,7 +366,7 @@ export const daUserText = ({ brand, category, description, flavor, theme, produc
 export const DA_FEWSHOT = [
   {
     role: 'user',
-    text: daUserText({ brand: 'Red Bull', category: 'boisson énergisante', description: '', flavor: '', theme: 'sport', productCount: 1 }),
+    text: daUserText({ brand: 'Red Bull', category: 'boisson énergisante', description: '', flavor: '', theme: 'sport', productCount: 1, choice: { setting: 1 } }),
   },
   {
     role: 'model',
@@ -309,7 +384,7 @@ export const DA_FEWSHOT = [
   },
   {
     role: 'user',
-    text: daUserText({ brand: 'Lay\'s', category: 'chips', description: 'two flavours, two bags', flavor: '', theme: 'fete', productCount: 2 }),
+    text: daUserText({ brand: 'Lay\'s', category: 'chips', description: 'two flavours, two bags', flavor: '', theme: 'fete', productCount: 2, choice: { setting: 2 } }),
   },
   {
     role: 'model',
@@ -330,7 +405,7 @@ export const DA_FEWSHOT = [
   },
   {
     role: 'user',
-    text: daUserText({ brand: 'San Pellegrino', category: 'boisson', description: 'glass bottle', flavor: 'lemon', theme: 'luxe', productCount: 1 }),
+    text: daUserText({ brand: 'San Pellegrino', category: 'boisson', description: 'glass bottle', flavor: 'lemon', theme: 'luxe', productCount: 1, choice: { setting: 0 } }),
   },
   {
     role: 'model',

@@ -51,20 +51,59 @@ const DA_SCHEMA = ${JSON.stringify(DA_SCHEMA)};
 const DA_FEWSHOT = ${JSON.stringify(DA_FEWSHOT)};
 const THEME_BRIEFS = ${JSON.stringify(THEME_BRIEFS)};
 
-function themeBriefText(t) {
+// Tirage pondere decor+camera avec anti-repetition. MIROIR de pickVariant()
+// dans shared/prompt.mjs : garder les deux synchronises.
+function pickVariant(theme, recent) {
+  const b = THEME_BRIEFS[theme] || THEME_BRIEFS.classique;
+  const nS = (b.settings && b.settings.length) || 1;
+  const nC = (b.cameras && b.cameras.length) || 1;
+  recent = recent || {};
+  const pick = (n, used) => {
+    used = used || [];
+    let pool = [];
+    for (let i = 0; i < n; i++) { if (used.indexOf(i) === -1) pool.push(i); }
+    if (!pool.length) {
+      const last = used.length ? used[used.length - 1] : -1;
+      for (let i = 0; i < n; i++) { if (i !== last) pool.push(i); }
+      if (!pool.length) pool = [0];
+    }
+    return pool[Math.floor(Math.random() * pool.length)];
+  };
+  return { setting: pick(nS, recent.setting), camera: pick(nC, recent.camera) };
+}
+
+function themeBriefText(t, choice) {
   const b = THEME_BRIEFS[t] || THEME_BRIEFS.classique;
+  choice = choice || {};
+  const cams = (b.cameras && b.cameras.length) ? b.cameras : [b.camera];
+  const si = Number.isInteger(choice.setting) ? choice.setting : 0;
+  const ci = Number.isInteger(choice.camera) ? choice.camera : 0;
+  const setting = b.settings[si] || b.settings[0];
+  const camera = cams[ci] || cams[0];
   return [
     'THEME: ' + b.label,
     'INTENT: ' + b.intent,
-    'CANDIDATE SETTINGS (choose one): ' + b.settings.map((s, i) => '(' + (i + 1) + ') ' + s).join(' '),
+    'SETTING (use this exact setting \u2014 make it concrete, do NOT swap it for another): ' + setting,
     'LIGHT: ' + b.light,
     'PALETTE: ' + b.palette,
     'ENERGY: ' + b.energy,
-    'CAMERA: ' + b.camera,
+    'CAMERA: ' + camera,
     'PROPS: ' + b.props,
     'FORBID: ' + b.forbid,
   ].join(NL);
 }
+
+// Anti-repetition persistante (option A) : on garde les K derniers decors/cameras
+// tires par theme dans les donnees statiques du workflow, et on les exclut.
+const sd = $getWorkflowStaticData('global');
+sd.adVariant = sd.adVariant || {};
+const rec = sd.adVariant[theme] || { setting: [], camera: [] };
+const choice = pickVariant(theme, rec);
+const _b = THEME_BRIEFS[theme] || THEME_BRIEFS.classique;
+const KS = Math.max(1, Math.min(((_b.settings || []).length) - 1, 4));
+rec.setting = (rec.setting || []).concat(choice.setting).slice(-KS);
+rec.camera = (rec.camera || []).concat(choice.camera).slice(-2);
+sd.adVariant[theme] = rec;
 
 const daContents = DA_FEWSHOT.map((ex) => ({ role: ex.role, parts: [{ text: ex.text }] }));
 const userText = [
@@ -74,7 +113,7 @@ const userText = [
   'flavour: ' + (cleanFlavor || '(none)'),
   'expected product count: ' + (productCount ? productCount : '(not specified — count from the photos)'),
   '',
-  themeBriefText(theme),
+  themeBriefText(theme, choice),
   '',
   'Reference photos follow (' + images.length + ').',
 ].join(NL);
@@ -89,7 +128,7 @@ const daBody = {
   generationConfig: { responseMimeType: 'application/json', responseSchema: DA_SCHEMA, thinkingConfig: { thinkingLevel: 'low' } }
 };
 
-return [{ json: { daBody, body: { ...body, brand: cleanBrand, flavor: cleanFlavor }, desc, art, productCount } }];
+return [{ json: { daBody, body: { ...body, brand: cleanBrand, flavor: cleanFlavor }, desc, art, productCount, variant: choice } }];
 `.trim();
 
 // --- Node « Build Prompt » : fusionne la réponse du Directeur Artistique avec le
@@ -98,7 +137,7 @@ return [{ json: { daBody, body: { ...body, brand: cleanBrand, flavor: cleanFlavo
 const buildPromptCode = `
 const da = $input.first().json;                       // reponse Directeur Artistique (ou erreur si continueOnFail)
 const ctx = $('Build DA Request').first().json;       // body original + champs nettoyes
-const { body, desc, art, productCount } = ctx;
+const { body, desc, art, productCount, variant } = ctx;
 const { brand, category, flavor, theme, images } = body;
 const NL = String.fromCharCode(10);
 
@@ -181,7 +220,7 @@ const geminiBody = {
   contents: [{ role: 'user', parts }],
   generationConfig: { responseModalities: ['TEXT', 'IMAGE'], imageConfig }
 };
-return [{ json: { geminiBody, prompt, artDirectionSource: source, productCount: n, products, model, imageSize } }];
+return [{ json: { geminiBody, prompt, artDirectionSource: source, productCount: n, products, model, imageSize, variant } }];
 `.trim();
 
 const extractCode = `
@@ -199,7 +238,7 @@ for (const c of candidates) {
 }
 if (!image) { throw new Error('Vertex/Gemini: aucune image renvoyee. ' + JSON.stringify(resp).slice(0, 800)); }
 const bp = $('Build Prompt').first().json;
-return [{ json: { image, mimeType, prompt: bp.prompt, artDirectionSource: bp.artDirectionSource, productCount: bp.productCount, products: bp.products, model: bp.model, imageSize: bp.imageSize } }];
+return [{ json: { image, mimeType, prompt: bp.prompt, artDirectionSource: bp.artDirectionSource, productCount: bp.productCount, products: bp.products, model: bp.model, imageSize: bp.imageSize, variant: bp.variant } }];
 `.trim();
 
 const VERTEX = (modelExpr) =>
@@ -291,7 +330,7 @@ const workflow = {
       parameters: {
         respondWith: "json",
         responseBody:
-          '={{ { "image": $json.image, "mimeType": $json.mimeType, "prompt": $json.prompt, "artDirectionSource": $json.artDirectionSource, "productCount": $json.productCount, "products": $json.products, "model": $json.model, "imageSize": $json.imageSize } }}',
+          '={{ { "image": $json.image, "mimeType": $json.mimeType, "prompt": $json.prompt, "artDirectionSource": $json.artDirectionSource, "productCount": $json.productCount, "products": $json.products, "model": $json.model, "imageSize": $json.imageSize, "variant": $json.variant } }}',
         options: {},
       },
       name: "Respond",
